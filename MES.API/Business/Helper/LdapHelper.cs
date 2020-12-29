@@ -4,9 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics;
-using MES.API.Business;
+using MES.Data.Business;
 
-namespace MES.API.Helper
+namespace MES.Data.Helper
 {
 	public class LdapHelper
 	{

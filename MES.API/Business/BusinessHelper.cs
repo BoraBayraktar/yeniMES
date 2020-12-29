@@ -5,7 +5,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Text;
 
-namespace MES.API.Business
+namespace MES.Data.Business
 {
     public class BusinessHelper
     {

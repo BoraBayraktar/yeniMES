@@ -1,12 +1,12 @@
-﻿using MES.API.Functions;
-using MES.API.Interfaces;
+﻿using MES.Data.Functions;
+using MES.Data.Interfaces;
 using MES.DB.Model;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using MES.API.Model;
+using MES.Data.Model;
 
-namespace MES.API.Business
+namespace MES.Data.Business
 {
     public class RuleLogic
     {

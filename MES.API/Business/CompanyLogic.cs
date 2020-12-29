@@ -1,11 +1,11 @@
-﻿using MES.API.Functions;
-using MES.API.Interfaces;
+﻿using MES.Data.Interfaces;
 using MES.DB.Model;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using MES.Data.Functions;
 
-namespace MES.API.Business
+namespace MES.Data.Business
 {
     public class CompanyLogic
     {

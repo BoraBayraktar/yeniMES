@@ -1,9 +1,9 @@
-﻿using MES.API.Functions;
-using MES.API.Interfaces;
+﻿using MES.Data.Functions;
+using MES.Data.Interfaces;
 using MES.DB.Model;
 using System.Collections.Generic;
 
-namespace MES.API.Business
+namespace MES.Data.Business
 {
     public class UserLogic
     {

@@ -1,10 +1,10 @@
-﻿using MES.API.Functions;
+﻿using MES.Data.Functions;
 using MES.DB.Model;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace MES.API.Business
+namespace MES.Data.Business
 {
     public class UserTypeMenuLogic
     {

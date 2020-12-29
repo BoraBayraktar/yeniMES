@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace MES.API.Business
+namespace MES.Data.Business
 {
     public class ExcellLogic
     {

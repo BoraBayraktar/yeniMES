@@ -1,5 +1,6 @@
 ﻿using MES.DB.Model;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using System.Linq;
 
 namespace MES.DB
@@ -95,7 +96,7 @@ namespace MES.DB
                 //optionsBuilder.UseSqlServer(@"Server=.;Database=MesDB;Trusted_Connection=True;");
                 ////optionsBuilder.UseSqlServer(appConfiguration.ConnectionString);
                 //optionsBuilder.UseSqlServer(appConfiguration.ConnectionString);
-                optionsBuilder.UseSqlServer("Server =.\\MSSQLSERVER01; Database = KVK.Digital; user Id = admin; password = 12345678;");
+                optionsBuilder.UseSqlServer("Server =.\\MSSQLSERVER01; Database = MES; user Id = admin; password = 12345678;");
             }
         }
 

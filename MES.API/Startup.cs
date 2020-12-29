@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MES.API
+namespace MES.Data
 {
     public class Startup
     {
