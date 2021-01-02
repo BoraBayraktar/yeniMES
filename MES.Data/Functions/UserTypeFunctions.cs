@@ -15,7 +15,7 @@ namespace MES.Data.Functions
         {
             using (MesContext context = new MesContext())
             {
-                var userTypeList = context.USER_TYPE.Include(q => q.CREATED_USER)
+                var userTypeList = context.USER_TYPE
                                                     .Include(q=>q.USERTYPE_MENUS)
                                                     .Where(q => q.IS_DELETED == false)
                                                     .ToList();

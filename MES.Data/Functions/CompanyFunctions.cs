@@ -15,7 +15,7 @@ namespace MES.Data.Functions
         {
             using (MesContext context = new MesContext())
             {
-                var companyList = context.COMPANY.Include(q => q.CREATED_USER)
+                var companyList = context.COMPANY
                                                  .Include(q => q.HOLDING)
                                                  .Where(q => q.IS_DELETED == false)
                                                  .ToList();
@@ -86,7 +86,6 @@ namespace MES.Data.Functions
                         cmp.HOLDING_ID = company.HOLDING_ID;
 
                         cmp.UPDATED_DATE = DateTime.Now;
-                        cmp.UPDATED_USER_ID = company.UPDATED_USER_ID;
                     }
                     context.Entry(cmp).State = EntityState.Modified;
                     context.SaveChanges();

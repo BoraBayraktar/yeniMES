@@ -49,7 +49,6 @@ namespace MES.Data.Functions
                     if (_ldap != null)
                     {
                         _ldap.UPDATED_DATE = DateTime.Now;
-                        _ldap.UPDATED_USER_ID = ldapInfo.UPDATED_USER_ID;
 
                         _ldap.ServerAddress = ldapInfo.ServerAddress;
                         _ldap.PortNumber = ldapInfo.PortNumber;

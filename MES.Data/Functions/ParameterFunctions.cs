@@ -15,7 +15,7 @@ namespace MES.Data.Functions
         {
             using (MesContext context = new MesContext())
             {
-                var parameterList = context.PARAMETER.Include(q => q.CREATED_USER)
+                var parameterList = context.PARAMETER
                                                      .Include(q => q.MAIN_PROCESS)
                                                      .Include(q => q.PARAMETER_TYPE)
                                                      .Include(q => q.PARENT_PARAMETER)

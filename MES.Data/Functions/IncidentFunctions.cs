@@ -17,7 +17,7 @@ namespace MES.Data.Functions
         {
             using (MesContext context = new MesContext())
             {
-                var incidentList = context.INCIDENT.Include(q => q.CREATED_USER)
+                var incidentList = context.INCIDENT
                                                    .Include(q => q.REPORTING_USER)
                                                    .Include(q => q.INCIDENT_STATUS)
                                                    .Include(q => q.INCIDENT_PRIORITY)
@@ -31,7 +31,7 @@ namespace MES.Data.Functions
         {
             using (MesContext context = new MesContext())
             {
-                var incident = context.INCIDENT.Include(q => q.CREATED_USER).Include(q => q.CREATED_USER.DEPARTMENT).FirstOrDefault(q => q.ID == id);
+                var incident = context.INCIDENT.FirstOrDefault(q => q.ID == id);
                 return incident;
             }
         }
@@ -57,7 +57,7 @@ namespace MES.Data.Functions
                     context.SaveChanges();
 
 
-                    var Incident = context.INCIDENT.Include(q => q.CREATED_USER)
+                    var Incident = context.INCIDENT
                                                        .Include(q => q.ASSIGNED_USER)
                                                        .Include(q => q.INCIDENT_STATUS)
                                                        .Include(q => q.CATEGORY)
@@ -250,7 +250,6 @@ namespace MES.Data.Functions
                         Incident.SUBJECT = incident.SUBJECT;
                         Incident.INCIDENT_STATUS_ID = incident.INCIDENT_STATUS_ID;
                         Incident.UPDATED_DATE = DateTime.Now;
-                        Incident.UPDATED_USER_ID = incident.UPDATED_USER_ID;
 
                         Incident.ASSIGNED_GROUP_ID = incident.ASSIGNED_GROUP_ID;
                         Incident.ASSIGNED_USER_ID = incident.ASSIGNED_USER_ID;
@@ -273,7 +272,7 @@ namespace MES.Data.Functions
             {
                 using (MesContext context = new MesContext())
                 {
-                    var Incident = context.INCIDENT.Include(q => q.CREATED_USER)
+                    var Incident = context.INCIDENT
                                                        .Include(q => q.ASSIGNED_USER)
                                                        .Include(q => q.INCIDENT_STATUS)
                                                        .Include(q => q.CATEGORY)
@@ -303,7 +302,6 @@ namespace MES.Data.Functions
 
 
                         Incident.UPDATED_DATE = DateTime.Now;
-                        Incident.UPDATED_USER_ID = incident.UPDATED_USER_ID;
                     }
                     context.Entry(Incident).State = EntityState.Modified;
                     context.SaveChanges();
@@ -557,7 +555,6 @@ namespace MES.Data.Functions
                         INCIDENT_HISTORY history = new INCIDENT_HISTORY()
                         {
                             DESCRIPTION = incidentHistory.DESCRIPTION,
-                            CREATED_USER_ID = incidentHistory.UPDATED_USER_ID,
                             CREATED_DATE = DateTime.Now,
                             VISIBLE_TO_OPERATOR = incidentHistory.VISIBLE_TO_OPERATOR,
                             VISIBLE_TO_USER = incidentHistory.VISIBLE_TO_USER,
@@ -571,7 +568,7 @@ namespace MES.Data.Functions
                         context.INCIDENT_HISTORY.Add(history);
                         context.SaveChanges();
 
-                        var Incident = context.INCIDENT.Include(q => q.CREATED_USER)
+                        var Incident = context.INCIDENT
                                                        .Include(q => q.ASSIGNED_USER)
                                                        .Include(q => q.INCIDENT_STATUS)
                                                        .Include(q => q.CATEGORY)
@@ -596,7 +593,6 @@ namespace MES.Data.Functions
                             Incident.ASSIGNED_USER_ID = incidentHistory.ASSIGNED_USER_ID == 0 ? null : incidentHistory.ASSIGNED_USER_ID;
 
                             Incident.UPDATED_DATE = DateTime.Now;
-                            Incident.UPDATED_USER_ID = incidentHistory.UPDATED_USER_ID;
                         }
                         context.Entry(Incident).State = EntityState.Modified;
                         context.SaveChanges();
@@ -621,7 +617,7 @@ namespace MES.Data.Functions
                     var emailTemplate = context.EMAIL_TEMPLATE.FirstOrDefault(q => q.IS_DELETED == false && q.MAIN_PROCESS_STATUS_ID == incident.INCIDENT_STATUS_ID);
                     if (emailTemplate != null)
                     {
-                        string body = emailTemplate.BODY.Replace("@adSoyad", incident.CREATED_USER.NAME + " " + incident.CREATED_USER.SURNAME)
+                        string body = emailTemplate.BODY
                                                         .Replace("@bildirilenAciliyet", incident.INCIDENT_PRIORITY != null ? incident.INCIDENT_PRIORITY.MAIN_DATA_NAME : "")
                                                         .Replace("@konu", incident.SUBJECT)
                                                         .Replace("@aciklama", incident.DESCRIPTION)
@@ -641,7 +637,7 @@ namespace MES.Data.Functions
                                                         .Replace("@kod", incident.CODE);
 
 
-                        string subject = emailTemplate.SUBJECT.Replace("@adSoyad", incident.CREATED_USER.NAME + " " + incident.CREATED_USER.SURNAME)
+                        string subject = emailTemplate.SUBJECT
                                                               .Replace("@bildirilenAciliyet", incident.INCIDENT_PRIORITY != null ? incident.INCIDENT_PRIORITY.MAIN_DATA_NAME : "")
                                                               .Replace("@konu", incident.SUBJECT)
                                                               .Replace("@aciklama", incident.DESCRIPTION)
@@ -663,22 +659,22 @@ namespace MES.Data.Functions
 
                         if (emailTemplate.TO_CREATED_USER != null)
                         {
-                            if (incident.CREATED_USER != null)
-                            {
-                                MAIL_TO_SEND mailToSend = new MAIL_TO_SEND()
-                                {
-                                    CREATED_DATE = DateTime.Now,
-                                    CREATED_USER_ID = incident.UPDATED_USER_ID,
-                                    IS_DELETED = false,
-                                    IS_SENT = false,
-                                    TO_ADDRESS = incident.CREATED_USER.EMAIL,
-                                    MAIL_SUBJECT = subject,
-                                    MAIL_BODY = body,
-                                    MAIN_PROCESS_ID = emailTemplate.MAIN_PROCESS_ID
-                                };
-                                context.MAIL_TO_SEND.Add(mailToSend);
-                                context.SaveChanges();
-                            }
+                            //if (incident.CREATED_USER != null)
+                            //{
+                            //    MAIL_TO_SEND mailToSend = new MAIL_TO_SEND()
+                            //    {
+                            //        CREATED_DATE = DateTime.Now,
+                            //        CREATED_USER_ID = incident.UPDATED_USER_ID,
+                            //        IS_DELETED = false,
+                            //        IS_SENT = false,
+                            //        TO_ADDRESS = incident.CREATED_USER.EMAIL,
+                            //        MAIL_SUBJECT = subject,
+                            //        MAIL_BODY = body,
+                            //        MAIN_PROCESS_ID = emailTemplate.MAIN_PROCESS_ID
+                            //    };
+                            //    context.MAIL_TO_SEND.Add(mailToSend);
+                            //    context.SaveChanges();
+                            //}
                         }
                         if (emailTemplate.TO_ASSIGNED_USER != null)
                         {
@@ -687,7 +683,6 @@ namespace MES.Data.Functions
                                 MAIL_TO_SEND mailToSend = new MAIL_TO_SEND()
                                 {
                                     CREATED_DATE = DateTime.Now,
-                                    CREATED_USER_ID = incident.UPDATED_USER_ID,
                                     IS_DELETED = false,
                                     IS_SENT = false,
                                     TO_ADDRESS = incident.ASSIGNED_USER.EMAIL,
@@ -712,7 +707,6 @@ namespace MES.Data.Functions
                                         MAIL_TO_SEND mailToSend = new MAIL_TO_SEND()
                                         {
                                             CREATED_DATE = DateTime.Now,
-                                            CREATED_USER_ID = incident.UPDATED_USER_ID,
                                             IS_DELETED = false,
                                             IS_SENT = false,
                                             TO_ADDRESS = item.EXPERT_EMAIL,
@@ -738,7 +732,6 @@ namespace MES.Data.Functions
                                 MAIL_TO_SEND mailToSend = new MAIL_TO_SEND()
                                 {
                                     CREATED_DATE = DateTime.Now,
-                                    CREATED_USER_ID = incident.UPDATED_USER_ID,
                                     IS_DELETED = false,
                                     IS_SENT = false,
                                     TO_ADDRESS = user.EMAIL,
@@ -764,7 +757,6 @@ namespace MES.Data.Functions
                                     MAIL_TO_SEND mailToSend = new MAIL_TO_SEND()
                                     {
                                         CREATED_DATE = DateTime.Now,
-                                        CREATED_USER_ID = incident.UPDATED_USER_ID,
                                         IS_DELETED = false,
                                         IS_SENT = false,
                                         TO_ADDRESS = item.EMAIL,
@@ -829,7 +821,6 @@ namespace MES.Data.Functions
                                     MAIL_TO_SEND mailToSend = new MAIL_TO_SEND()
                                     {
                                         CREATED_DATE = DateTime.Now,
-                                        CREATED_USER_ID = incident.UPDATED_USER_ID,
                                         IS_DELETED = false,
                                         IS_SENT = false,
                                         TO_ADDRESS = item.EMAIL,
@@ -874,7 +865,6 @@ namespace MES.Data.Functions
                                 MAIL_TO_SEND mailToSend = new MAIL_TO_SEND()
                                 {
                                     CREATED_DATE = DateTime.Now,
-                                    CREATED_USER_ID = incident.UPDATED_USER_ID,
                                     IS_DELETED = false,
                                     IS_SENT = false,
                                     TO_ADDRESS = getUser.EMAIL,
@@ -891,7 +881,7 @@ namespace MES.Data.Functions
 
                         if (survey.TO_CREATED_USER != null)
                         {
-                            if (incident.CREATED_USER != null)
+                            if (true)
                             {
                                 body = "";
                                 SURVEY_HISTORY sh = new SURVEY_HISTORY()
@@ -899,8 +889,7 @@ namespace MES.Data.Functions
                                     CREATED_DATE = DateTime.Now,
                                     IS_DELETED = false,
                                     SURVEY_ID = survey.SURVEY_ID,
-                                    UNIQUE_ID = Guid.NewGuid(),
-                                    USER_ID = Convert.ToInt32(incident.CREATED_USER_ID)
+                                    UNIQUE_ID = Guid.NewGuid()
                                 };
 
                                 context.SURVEY_HISTORY.Add(sh);
@@ -915,10 +904,8 @@ namespace MES.Data.Functions
                                 MAIL_TO_SEND mailToSend = new MAIL_TO_SEND()
                                 {
                                     CREATED_DATE = DateTime.Now,
-                                    CREATED_USER_ID = incident.UPDATED_USER_ID,
                                     IS_DELETED = false,
                                     IS_SENT = false,
-                                    TO_ADDRESS = incident.CREATED_USER.EMAIL,
                                     MAIL_SUBJECT = survey.SURVEY_NAME,
                                     MAIL_BODY = body,
                                     MAIN_PROCESS_ID = emailTemplate.MAIN_PROCESS_ID
@@ -955,7 +942,6 @@ namespace MES.Data.Functions
                                 MAIL_TO_SEND mailToSend = new MAIL_TO_SEND()
                                 {
                                     CREATED_DATE = DateTime.Now,
-                                    CREATED_USER_ID = incident.UPDATED_USER_ID,
                                     IS_DELETED = false,
                                     IS_SENT = false,
                                     TO_ADDRESS = incident.ASSIGNED_USER.EMAIL,
@@ -1000,7 +986,6 @@ namespace MES.Data.Functions
                                         MAIL_TO_SEND mailToSend = new MAIL_TO_SEND()
                                         {
                                             CREATED_DATE = DateTime.Now,
-                                            CREATED_USER_ID = incident.UPDATED_USER_ID,
                                             IS_DELETED = false,
                                             IS_SENT = false,
                                             TO_ADDRESS = item.EMAIL,
@@ -1045,7 +1030,6 @@ namespace MES.Data.Functions
                         {
                             incidentResolution.IS_APPROVED = true;
                             incidentResolution.UPDATED_DATE = DateTime.Now;
-                            incidentResolution.UPDATED_USER_ID = userId;
                         }
                         else
                         {
@@ -1060,7 +1044,6 @@ namespace MES.Data.Functions
                         {
                             incident.INCIDENT_STATUS_ID = 41;
                             incident.UPDATED_DATE = DateTime.Now;
-                            incident.UPDATED_USER_ID = userId;
                             context.Entry(incident).State = EntityState.Modified;
                             context.SaveChanges();
                         }
@@ -1095,7 +1078,6 @@ namespace MES.Data.Functions
                         {
                             incidentResolution.IS_APPROVED = false;
                             incidentResolution.UPDATED_DATE = DateTime.Now;
-                            incidentResolution.UPDATED_USER_ID = userId;
                         }
                         else
                         {
@@ -1110,7 +1092,6 @@ namespace MES.Data.Functions
                         {
                             incident.INCIDENT_STATUS_ID = 39;
                             incident.UPDATED_DATE = DateTime.Now;
-                            incident.UPDATED_USER_ID = userId;
                             context.Entry(incident).State = EntityState.Modified;
                             context.SaveChanges();
                         }

@@ -81,7 +81,6 @@ namespace MES.Data.Functions
                         h.NAME = holding.NAME;
                         h.DESCRIPTION = holding.DESCRIPTION;
                         h.UPDATED_DATE = DateTime.Now;
-                        h.UPDATED_USER_ID = holding.UPDATED_USER_ID;
                     }
                     context.Entry(h).State = EntityState.Modified;
                     context.SaveChanges();

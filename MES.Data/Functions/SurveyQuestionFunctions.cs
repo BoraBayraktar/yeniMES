@@ -15,7 +15,7 @@ namespace MES.Data.Functions
         {
             using (MesContext context = new MesContext())
             {
-                var surveyQuestionList = context.SURVEY_QUESTION.Include(q => q.CREATED_USER).Where(q => q.IS_DELETED == false).ToList();
+                var surveyQuestionList = context.SURVEY_QUESTION.Where(q => q.IS_DELETED == false).ToList();
                 return surveyQuestionList;
             }
         }
@@ -24,7 +24,7 @@ namespace MES.Data.Functions
         {
             using (MesContext context = new MesContext())
             {
-                var surveyQuestionList = context.SURVEY_QUESTION.Where(q => q.SURVEY_ID == surveyId && q.IS_DELETED==false).Include(q => q.CREATED_USER).ToList();
+                var surveyQuestionList = context.SURVEY_QUESTION.Where(q => q.SURVEY_ID == surveyId && q.IS_DELETED==false).ToList();
                 return surveyQuestionList;
             }
         }
@@ -79,7 +79,6 @@ namespace MES.Data.Functions
                         sq.SURVEY_ANSWER_TYPE_ID = surveyQuestion.SURVEY_ANSWER_TYPE_ID;
 
                         sq.UPDATED_DATE = DateTime.Now;
-                        sq.UPDATED_USER_ID = surveyQuestion.UPDATED_USER_ID;
                     }
                     context.Entry(sq).State = EntityState.Modified;
                     context.SaveChanges();

@@ -3,10 +3,25 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MES.DB.Migrations
 {
-    public partial class InitialModels : Migration
+    public partial class MES1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "AD_CUSTOMERS",
+                columns: table => new
+                {
+                    CUSTOMER_ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CODE = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    NAME = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    DESCRIPTION = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AD_CUSTOMERS", x => x.CUSTOMER_ID);
+                });
+
             migrationBuilder.CreateTable(
                 name: "GENERAL_SETTINGS",
                 columns: table => new
@@ -110,6 +125,33 @@ namespace MES.DB.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TIMEZONE", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "HOLDING",
+                columns: table => new
+                {
+                    HOLDING_ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CODE = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    NAME = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    DESCRIPTION = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    CUSTOMER_ID = table.Column<int>(type: "int", nullable: true),
+                    CREATED_DATE = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UPDATED_DATE = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CREATED_USER_ID = table.Column<int>(type: "int", nullable: true),
+                    UPDATED_USER_ID = table.Column<int>(type: "int", nullable: true),
+                    IS_DELETED = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_HOLDING", x => x.HOLDING_ID);
+                    table.ForeignKey(
+                        name: "FK_HOLDING_AD_CUSTOMERS_CUSTOMER_ID",
+                        column: x => x.CUSTOMER_ID,
+                        principalTable: "AD_CUSTOMERS",
+                        principalColumn: "CUSTOMER_ID",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -256,6 +298,39 @@ namespace MES.DB.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "COMPANY",
+                columns: table => new
+                {
+                    COMPANY_ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CODE = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    NAME = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    DESCRIPTION = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    HOLDING_ID = table.Column<int>(type: "int", nullable: false),
+                    CREATED_DATE = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UPDATED_DATE = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CREATED_USER_ID = table.Column<int>(type: "int", nullable: true),
+                    UPDATED_USER_ID = table.Column<int>(type: "int", nullable: true),
+                    IS_DELETED = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_COMPANY", x => x.COMPANY_ID);
+                    table.ForeignKey(
+                        name: "FK_COMPANY_HOLDING_HOLDING_ID",
+                        column: x => x.HOLDING_ID,
+                        principalTable: "HOLDING",
+                        principalColumn: "HOLDING_ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_COMPANY_USER_CREATED_USER_ID",
+                        column: x => x.CREATED_USER_ID,
+                        principalTable: "USER",
+                        principalColumn: "USER_ID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "COUNTRY",
                 columns: table => new
                 {
@@ -322,32 +397,6 @@ namespace MES.DB.Migrations
                     table.PrimaryKey("PK_GROUP_TYPE", x => x.ID);
                     table.ForeignKey(
                         name: "FK_GROUP_TYPE_USER_CREATED_USER_ID",
-                        column: x => x.CREATED_USER_ID,
-                        principalTable: "USER",
-                        principalColumn: "USER_ID",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "HOLDING",
-                columns: table => new
-                {
-                    HOLDING_ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CODE = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    NAME = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    DESCRIPTION = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    CREATED_DATE = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UPDATED_DATE = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    CREATED_USER_ID = table.Column<int>(type: "int", nullable: true),
-                    UPDATED_USER_ID = table.Column<int>(type: "int", nullable: true),
-                    IS_DELETED = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_HOLDING", x => x.HOLDING_ID);
-                    table.ForeignKey(
-                        name: "FK_HOLDING_USER_CREATED_USER_ID",
                         column: x => x.CREATED_USER_ID,
                         principalTable: "USER",
                         principalColumn: "USER_ID",
@@ -791,39 +840,6 @@ namespace MES.DB.Migrations
                     table.ForeignKey(
                         name: "FK_GROUP_USER_GROUP_MANAGER_ID",
                         column: x => x.GROUP_MANAGER_ID,
-                        principalTable: "USER",
-                        principalColumn: "USER_ID",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "COMPANY",
-                columns: table => new
-                {
-                    COMPANY_ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CODE = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    NAME = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    DESCRIPTION = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    HOLDING_ID = table.Column<int>(type: "int", nullable: false),
-                    CREATED_DATE = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UPDATED_DATE = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    CREATED_USER_ID = table.Column<int>(type: "int", nullable: true),
-                    UPDATED_USER_ID = table.Column<int>(type: "int", nullable: true),
-                    IS_DELETED = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_COMPANY", x => x.COMPANY_ID);
-                    table.ForeignKey(
-                        name: "FK_COMPANY_HOLDING_HOLDING_ID",
-                        column: x => x.HOLDING_ID,
-                        principalTable: "HOLDING",
-                        principalColumn: "HOLDING_ID",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_COMPANY_USER_CREATED_USER_ID",
-                        column: x => x.CREATED_USER_ID,
                         principalTable: "USER",
                         principalColumn: "USER_ID",
                         onDelete: ReferentialAction.Restrict);
@@ -1963,6 +1979,11 @@ namespace MES.DB.Migrations
                 column: "CREATED_USER_ID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_HOLDING_CUSTOMER_ID",
+                table: "HOLDING",
+                column: "CUSTOMER_ID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_INCIDENT_ASSIGNED_GROUP_ID",
                 table: "INCIDENT",
                 column: "ASSIGNED_GROUP_ID");
@@ -2483,6 +2504,14 @@ namespace MES.DB.Migrations
                 column: "CREATED_USER_ID");
 
             migrationBuilder.AddForeignKey(
+                name: "FK_HOLDING_USER_CREATED_USER_ID",
+                table: "HOLDING",
+                column: "CREATED_USER_ID",
+                principalTable: "USER",
+                principalColumn: "USER_ID",
+                onDelete: ReferentialAction.Restrict);
+
+            migrationBuilder.AddForeignKey(
                 name: "FK_LOCATION_CITY_CITY_ID",
                 table: "LOCATION",
                 column: "CITY_ID",
@@ -2757,6 +2786,9 @@ namespace MES.DB.Migrations
 
             migrationBuilder.DropTable(
                 name: "HOLDING");
+
+            migrationBuilder.DropTable(
+                name: "AD_CUSTOMERS");
         }
     }
 }

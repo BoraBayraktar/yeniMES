@@ -15,7 +15,7 @@ namespace MES.Data.Functions
         {
             using (MesContext context = new MesContext())
             {
-                var wdList = context.WORKING_DAYS.Include(q => q.CREATED_USER).Where(q => q.IS_DELETED == false).ToList();
+                var wdList = context.WORKING_DAYS.Where(q => q.IS_DELETED == false).ToList();
                 return wdList;
             }
         }

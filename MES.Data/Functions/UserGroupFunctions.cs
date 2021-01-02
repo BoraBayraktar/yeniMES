@@ -15,7 +15,7 @@ namespace MES.Data.Functions
         {
             using (MesContext context = new MesContext())
             {
-                var userGroupList = context.USER_GROUP.Include(q => q.CREATED_USER).Where(q => q.IS_DELETED == false).ToList();
+                var userGroupList = context.USER_GROUP.Where(q => q.IS_DELETED == false).ToList();
                 return userGroupList;
             }
         }
@@ -62,7 +62,6 @@ namespace MES.Data.Functions
                         ugroup.NAME = userGroup.NAME;
 
                         ugroup.UPDATED_DATE = DateTime.Now;
-                        ugroup.UPDATED_USER_ID = userGroup.UPDATED_USER_ID;
 
                     }
                     context.Entry(ugroup).State = EntityState.Modified;

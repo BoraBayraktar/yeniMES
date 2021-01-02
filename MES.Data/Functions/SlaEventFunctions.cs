@@ -15,7 +15,7 @@ namespace MES.Data.Functions
         {
             using (MesContext context = new MesContext())
             {
-                var eventList = context.SLA_EVENTS.Include(q => q.CREATED_USER)
+                var eventList = context.SLA_EVENTS
                                                                  .Where(q => q.IS_DELETED == false)
                                                                  .ToList();
                 return eventList;
@@ -94,7 +94,7 @@ namespace MES.Data.Functions
         {
             using (MesContext context = new MesContext())
             {
-                var eventList = context.SLA_EVENTS.Include(q => q.CREATED_USER)
+                var eventList = context.SLA_EVENTS
                                                   .Include(q => q.STATUS_MODEL)
                                                   .Where(q => q.SLA_ID == slaId)
                                                   .Where(q => q.IS_DELETED == false)

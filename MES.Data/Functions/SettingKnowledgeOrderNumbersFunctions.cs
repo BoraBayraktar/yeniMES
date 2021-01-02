@@ -15,7 +15,7 @@ namespace MES.Data.Functions
         {
             using (MesContext context = new MesContext())
             {
-                var orderNumbers = context.ORDER_NUMBERS.Include(q => q.CREATED_USER)
+                var orderNumbers = context.ORDER_NUMBERS
                                                         .Include(q => q.MAINPROCESS_MODEL)
                                                         .Where(q => q.IS_DELETED == false)
                                                         .Where(q => q.SYSTEM_CODE == "KNOWLEDGE")
@@ -76,7 +76,6 @@ namespace MES.Data.Functions
                     if (h != null)
                     {
                         h.UPDATED_DATE = DateTime.Now;
-                        h.UPDATED_USER_ID = status.UPDATED_USER_ID;
                         h.WHICH_STATUS_IN_VISIBLE = status.WHICH_STATUS_IN_VISIBLE;
                     }
                     context.Entry(h).State = EntityState.Modified;

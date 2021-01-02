@@ -1,13 +1,18 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace MES.DB.Model
 {
-    [Table("HOLDING")]
-    public partial class HOLDING : BASE
+    [Table("AD_CUSTOMERS")]
+    public partial class AD_CUSTOMERS
     {
         [Key]
-        public int HOLDING_ID { get; set; }
+        public int CUSTOMER_ID { get; set; }
 
         [StringLength(50)]
         public string CODE { get; set; }
@@ -16,8 +21,6 @@ namespace MES.DB.Model
         [StringLength(50)]
         public string DESCRIPTION { get; set; }
 
-        [ForeignKey("CUSTOMER_ID")]
-        public virtual AD_CUSTOMERS AD_CUSTOMERS { get; set; }
-        //ad_customers
+
     }
 }

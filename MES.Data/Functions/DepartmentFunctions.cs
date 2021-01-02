@@ -15,7 +15,7 @@ namespace MES.Data.Functions
         {
             using (MesContext context = new MesContext())
             {
-                var departmentList = context.DEPARTMENT.Include(q => q.CREATED_USER)
+                var departmentList = context.DEPARTMENT
                                                        .Include(q => q.COMPANY)
                                                        .Where(q => q.IS_DELETED == false)
                                                        .ToList();
@@ -86,7 +86,6 @@ namespace MES.Data.Functions
                         dep.DESCRIPTION = department.DESCRIPTION;
                         dep.COMPANY_ID = department.COMPANY_ID;
                         dep.UPDATED_DATE = DateTime.Now;
-                        dep.UPDATED_USER_ID = department.UPDATED_USER_ID;
                     }
                     context.Entry(dep).State = EntityState.Modified;
                     context.SaveChanges();

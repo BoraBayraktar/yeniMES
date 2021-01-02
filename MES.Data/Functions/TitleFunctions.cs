@@ -15,7 +15,7 @@ namespace MES.Data.Functions
         {
             using (MesContext context = new MesContext())
             {
-                var titleList = context.TITLE.Include(q => q.CREATED_USER).Where(q => q.IS_DELETED == false).ToList();
+                var titleList = context.TITLE.Where(q => q.IS_DELETED == false).ToList();
                 return titleList;
             }
         }
@@ -81,7 +81,6 @@ namespace MES.Data.Functions
                         tt.NAME = title.NAME;
                         tt.DESCRIPTION = title.DESCRIPTION;
                         tt.UPDATED_DATE = DateTime.Now;
-                        tt.UPDATED_USER_ID = title.UPDATED_USER_ID;
                     }
                     context.Entry(tt).State = EntityState.Modified;
                     context.SaveChanges();

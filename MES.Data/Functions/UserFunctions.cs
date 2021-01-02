@@ -24,7 +24,7 @@ namespace MES.Data.Functions
         {
             using (MesContext context = new MesContext())
             {
-                var userList = context.USER.Include(q => q.CREATED_USER)
+                var userList = context.USER
                                            .Include(q => q.DEPARTMENT)
                                            .Include(q => q.TITLE)
                                            .Include(q => q.USER_TYPE)
@@ -102,7 +102,6 @@ namespace MES.Data.Functions
                     if (_user != null)
                     {
                         _user.UPDATED_DATE = DateTime.Now;
-                        _user.UPDATED_USER_ID = user.UPDATED_USER_ID;
 
 
                         _user.NAME = user.NAME;

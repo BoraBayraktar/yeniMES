@@ -16,7 +16,7 @@ namespace MES.Data.Functions
         {
             using (MesContext context = new MesContext())
             {
-                    var slaList = context.SLA.Include(q => q.CREATED_USER)
+                    var slaList = context.SLA
                                                                          .Include(q => q.MAIN_PROCESS_MODEL)
                                                                          .Include(q => q.IMPORTANCE_LEVEL_MODEL)
                                                                          .Include(q => q.WORKING_SCHEDULE_MODEL)

@@ -15,7 +15,7 @@ namespace MES.Data.Functions
         {
             using (MesContext context = new MesContext())
             {
-                var mailList = context.MAIL_TO_SEND.Include(q => q.CREATED_USER).Where(q => q.IS_DELETED == false && q.IS_SENT == false).ToList();
+                var mailList = context.MAIL_TO_SEND.Where(q => q.IS_DELETED == false && q.IS_SENT == false).ToList();
                 return mailList;
             }
         }
@@ -66,7 +66,6 @@ namespace MES.Data.Functions
                         m.PARAMETER_TYPE_ID = mail.PARAMETER_TYPE_ID;
                         m.TO_ADDRESS = mail.TO_ADDRESS;
                         m.UPDATED_DATE = DateTime.Now;
-                        m.UPDATED_USER_ID = mail.UPDATED_USER_ID;
                     }
                     context.Entry(m).State = EntityState.Modified;
                     context.SaveChanges();

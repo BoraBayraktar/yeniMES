@@ -15,7 +15,7 @@ namespace MES.Data.Functions
         {
             using (MesContext context = new MesContext())
             {
-                var areaList = context.SLA_AREA.Include(q => q.CREATED_USER)
+                var areaList = context.SLA_AREA
                                                                  .Where(q => q.IS_DELETED == false)
                                                                  .ToList();
                 return areaList;
@@ -96,7 +96,7 @@ namespace MES.Data.Functions
         {
             using (MesContext context = new MesContext())
             {
-                var areaList = context.SLA_AREA.Include(q => q.CREATED_USER)
+                var areaList = context.SLA_AREA
                                                   .Where(q => q.SLA_ID == slaId)
                                                   .Where(q => q.IS_DELETED == false)
                                                   .ToList();

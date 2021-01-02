@@ -9,6 +9,7 @@ namespace MES.DB
     {
         public virtual DbSet<MENU> MENU { get; set; }
 
+        public virtual DbSet<AD_CUSTOMERS> AD_CUSTOMERS { get; set; }
         public virtual DbSet<HOLDING> HOLDING { get; set; }
         public virtual DbSet<COMPANY> COMPANY { get; set; }
         public virtual DbSet<DEPARTMENT> DEPARTMENT { get; set; }

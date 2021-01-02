@@ -15,7 +15,7 @@ namespace MES.Data.Functions
         {
             using (MesContext context = new MesContext())
             {
-                var mailServerList = context.MAIL_SERVER_SETUP.Include(q => q.CREATED_USER).Where(q => q.IS_DELETED == false).ToList();
+                var mailServerList = context.MAIL_SERVER_SETUP.Where(q => q.IS_DELETED == false).ToList();
                 return mailServerList;
             }
         }
@@ -66,7 +66,6 @@ namespace MES.Data.Functions
                         mailServer.DEFAULT_NAME = mss.DEFAULT_NAME;
                         mailServer.TRY_COUNT = mss.TRY_COUNT;
 
-                        mailServer.UPDATED_USER_ID = mss.CREATED_USER_ID;
                         mailServer.UPDATED_DATE = DateTime.Now;
 
                     }

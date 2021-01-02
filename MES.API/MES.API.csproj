@@ -24,8 +24,4 @@
     <ProjectReference Include="..\MES.DB\MES.DB.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
 </Project>

@@ -15,7 +15,7 @@ namespace MES.Data.Functions
         {
             using (MesContext context = new MesContext())
             {
-                var serviceCatalogList = context.SERVICECATALOG.Include(q => q.CREATED_USER)
+                var serviceCatalogList = context.SERVICECATALOG
                                                                .Include(q => q.PARAMETERMODEL)
                                                                .Include(q => q.PARAMETER_OPSTATUSMODEL)
                                                                .Include(q => q.USER_MANAGERBUSINESSMODEL)

@@ -15,7 +15,7 @@ namespace MES.Data.Functions
         {
             using (MesContext context = new MesContext())
             {
-                var leaveList = context.LEAVE.Include(q => q.CREATED_USER)
+                var leaveList = context.LEAVE
                                              .Include(q => q.LEAVE_TYPE)
                                              .Include(q => q.USER)
                                              .Where(q => q.IS_DELETED == false)
@@ -63,7 +63,6 @@ namespace MES.Data.Functions
                     if (leave != null)
                     {
                         leave.UPDATED_DATE = DateTime.Now;
-                        leave.UPDATED_USER_ID = _leave.UPDATED_USER_ID;
 
                         leave.DESCRIPTION = _leave.DESCRIPTION;
                         leave.START_DATE = _leave.START_DATE;

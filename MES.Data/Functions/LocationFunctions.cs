@@ -15,7 +15,7 @@ namespace MES.Data.Functions
         {
             using (MesContext context = new MesContext())
             {
-                var locationList = context.LOCATION.Include(q => q.CREATED_USER)
+                var locationList = context.LOCATION
                                                    .Include(q => q.CITY)
                                                    .Where(q => q.IS_DELETED == false)
                                                    .ToList();
@@ -85,7 +85,6 @@ namespace MES.Data.Functions
                         loc.CITY_ID = location.CITY_ID;
 
                         loc.UPDATED_DATE = DateTime.Now;
-                        loc.UPDATED_USER_ID = location.UPDATED_USER_ID;
                     }
                     context.Entry(loc).State = EntityState.Modified;
                     context.SaveChanges();

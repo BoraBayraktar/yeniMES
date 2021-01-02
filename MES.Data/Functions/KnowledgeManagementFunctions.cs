@@ -18,12 +18,11 @@ namespace MES.Data.Functions
             {
                 var statusID = context.KNOWLEDGE_SETTINGS.FirstOrDefault(q => q.WHICH_STATUS_IN_VISIBLE > 0 && q.IS_DELETED == false).WHICH_STATUS_IN_VISIBLE;
 
-                    var knowledgeList = context.KNOWLEDGE_MANAGEMENT.Include(q => q.CREATED_USER)
+                    var knowledgeList = context.KNOWLEDGE_MANAGEMENT
                                                                          .Include(q => q.CATEGORY_MODEL)
                                                                          .Include(q => q.SERVICE_MODEL)
                                                                          .Include(q => q.STATUS_MODEL)
                                                                          .Where(q => q.IS_DELETED == false)
-                                                                         .Where(q => q.CREATED_USER_ID == userID || q.KNOWLEDGE_STATUS_ID == statusID)
                                                                          .ToList();
 
                     return knowledgeList;
@@ -225,7 +224,7 @@ namespace MES.Data.Functions
         {
             using (MesContext context = new MesContext())
             {
-                var fileList = context.KNOWLEDGE_FILES.Include(q => q.CREATED_USER) 
+                var fileList = context.KNOWLEDGE_FILES
                                                       .Where(q => q.KNOWLEDGE_ID == knowledgeId)
                                                       .Where(q => q.IS_DELETED == false)
                                                       .ToList();

@@ -15,7 +15,7 @@ namespace MES.Data.Functions
         {
             using (MesContext context = new MesContext())
             {
-                var offDaysList = context.TIME_MANAGEMENT_OFFDAYS.Include(q => q.CREATED_USER)
+                var offDaysList = context.TIME_MANAGEMENT_OFFDAYS
                                                                  .Where(q => q.IS_DELETED == false)
                                                                  .ToList();
                 return offDaysList;
@@ -66,7 +66,6 @@ namespace MES.Data.Functions
                         day.END_DATE = offDays.END_DATE;
                         day.OFF_DAY = offDays.OFF_DAY;
                         day.UPDATED_DATE = DateTime.Now;
-                        day.UPDATED_USER_ID = offDays.UPDATED_USER_ID;
                     }
                     context.Entry(day).State = EntityState.Modified;
                     context.SaveChanges();
@@ -122,7 +121,7 @@ namespace MES.Data.Functions
         {
             using (MesContext context = new MesContext())
             {
-                var offDaysList = context.TIME_MANAGEMENT_OFFDAYS.Include(q => q.CREATED_USER)
+                var offDaysList = context.TIME_MANAGEMENT_OFFDAYS
                                                                  .Where(q => q.TIME_MANAGEMENT_ID == timeManagementId && q.IS_DELETED == false)
                                                                  .ToList();
                 return offDaysList;

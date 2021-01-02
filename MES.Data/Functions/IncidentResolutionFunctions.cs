@@ -15,7 +15,7 @@ namespace MES.Data.Functions
         {
             using (MesContext context = new MesContext())
             {
-                var resolutionList = context.INCIDENT_RESOLUTION.Include(q => q.CREATED_USER)
+                var resolutionList = context.INCIDENT_RESOLUTION
                                                            .Where(q => q.IS_DELETED == false)
                                                            .ToList();
                 return resolutionList;
@@ -26,7 +26,7 @@ namespace MES.Data.Functions
         {
             using (MesContext context = new MesContext())
             {
-                var resolutionList = context.INCIDENT_RESOLUTION.Include(q => q.CREATED_USER)
+                var resolutionList = context.INCIDENT_RESOLUTION
                                                            .Where(q => q.IS_DELETED == false && q.INCIDENT_ID == incidentId)
                                                            .ToList();
                 return resolutionList;
@@ -38,7 +38,7 @@ namespace MES.Data.Functions
         {
             using (MesContext context = new MesContext())
             {
-                var resolution = context.INCIDENT_RESOLUTION.Include(q => q.CREATED_USER)
+                var resolution = context.INCIDENT_RESOLUTION
                                                             .FirstOrDefault(q => q.IS_DELETED == false && q.INCIDENT_ID == incidentId);
                 return resolution;
             }
@@ -77,7 +77,6 @@ namespace MES.Data.Functions
                         resolution.RESOLVED_CODE = incidentResolution.RESOLVED_CODE;
                         resolution.RESOLVED_DATE = incidentResolution.RESOLVED_DATE;
                         resolution.RESOLVED_DESCRIPTION = incidentResolution.RESOLVED_DESCRIPTION;
-                        resolution.UPDATED_USER_ID = incidentResolution.UPDATED_USER_ID;
                         resolution.UPDATED_DATE = DateTime.Now;
                     }
                     context.Entry(resolution).State = EntityState.Modified;

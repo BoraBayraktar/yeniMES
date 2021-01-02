@@ -15,7 +15,7 @@ namespace MES.Data.Functions
         {
             using (MesContext context = new MesContext())
             {
-                var mainProcessList = context.MAIN_PROCESS.Include(q => q.CREATED_USER).Where(q => q.IS_DELETED == false).ToList();
+                var mainProcessList = context.MAIN_PROCESS.Where(q => q.IS_DELETED == false).ToList();
                 return mainProcessList;
             }
         }

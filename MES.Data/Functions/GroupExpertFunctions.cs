@@ -15,8 +15,7 @@ namespace MES.Data.Functions
         {
             using (MesContext context = new MesContext())
             {
-                var expertList = context.GROUP_EXPERT.Include(q => q.CREATED_USER)
-                                                                 .Where(q => q.IS_DELETED == false)
+                var expertList = context.GROUP_EXPERT .Where(q => q.IS_DELETED == false)
                                                                  .ToList();
                 return expertList;
             }
@@ -99,7 +98,7 @@ namespace MES.Data.Functions
         {
             using (MesContext context = new MesContext())
             {
-                var expertList = context.GROUP_EXPERT.Include(q => q.CREATED_USER)
+                var expertList = context.GROUP_EXPERT
                                                                  .Where(q => q.GROUP_ID == groupId)
                                                                  .Where(q => q.IS_DELETED == false)
                                                                  .ToList();

@@ -15,7 +15,7 @@ namespace MES.Data.Functions
         {
             using (MesContext context = new MesContext())
             {
-                var timeMngList = context.TIME_MANAGEMENT.Include(q => q.CREATED_USER)
+                var timeMngList = context.TIME_MANAGEMENT
                                                          .Include(q => q.TIMEZONE)
                                                          .Where(q => q.IS_DELETED == false)
                                                          .ToList();
@@ -67,7 +67,6 @@ namespace MES.Data.Functions
                         tm.ISACTIVE = timeMng.ISACTIVE;
                         tm.TIMEZONE_ID = timeMng.TIMEZONE_ID;
                         tm.UPDATED_DATE = DateTime.Now;
-                        tm.UPDATED_USER_ID = timeMng.UPDATED_USER_ID;
                     }
                     context.Entry(tm).State = EntityState.Modified;
                     context.SaveChanges();

@@ -88,7 +88,6 @@ namespace MES.Data.Functions
                         tmp.MAIN_PROCESS_ID = template.MAIN_PROCESS_ID;
 
 
-                        tmp.UPDATED_USER_ID = template.UPDATED_USER_ID;
                         tmp.UPDATED_DATE = DateTime.Now;
                     }
                     context.Entry(tmp).State = EntityState.Modified;

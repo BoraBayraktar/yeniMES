@@ -15,7 +15,7 @@ namespace MES.Data.Functions
         {
             using (MesContext context = new MesContext())
             {
-                var wsList = context.WORKING_SCHEDULE.Include(q => q.CREATED_USER)
+                var wsList = context.WORKING_SCHEDULE
                                                      .Where(q => q.IS_DELETED == false)
                                                      .Where(q => q.ISACTIVE == true)
                                                      .ToList();
@@ -67,7 +67,6 @@ namespace MES.Data.Functions
                         ws.ISACTIVE = workingSchedule.ISACTIVE;
 
                         ws.UPDATED_DATE = DateTime.Now;
-                        ws.UPDATED_USER_ID = workingSchedule.UPDATED_USER_ID;
                     }
                     context.Entry(ws).State = EntityState.Modified;
                     context.SaveChanges();

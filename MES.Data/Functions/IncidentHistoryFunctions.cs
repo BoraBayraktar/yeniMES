@@ -110,7 +110,6 @@ namespace MES.Data.Functions
             using (MesContext context = new MesContext())
             {
                 var incidentHistoryList = context.INCIDENT_HISTORY.Where(q => q.IS_DELETED == false && q.INCIDENT_ID == incidentId)
-                                                                  .Include(q => q.CREATED_USER)
                                                                   .Include(q => q.INCIDENT_STATUS)
                                                                   .Include(q => q.ASSIGNED_GROUP)
                                                                   .Include(q => q.ASSIGNED_USER)
@@ -124,7 +123,6 @@ namespace MES.Data.Functions
             using (MesContext context = new MesContext())
             {
                 var incidentHistoryList = context.INCIDENT_HISTORY.Where(q => q.IS_DELETED == false && q.INCIDENT_ID == incidentId && q.VISIBLE_TO_USER == true)
-                                                                  .Include(q => q.CREATED_USER)
                                                                   .Include(q => q.INCIDENT_STATUS)
                                                                   .Include(q => q.ASSIGNED_GROUP)
                                                                   .Include(q => q.ASSIGNED_USER)

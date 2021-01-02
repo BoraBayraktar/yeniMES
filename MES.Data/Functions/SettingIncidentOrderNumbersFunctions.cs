@@ -15,7 +15,7 @@ namespace MES.Data.Functions
         {
             using (MesContext context = new MesContext())
             {
-                var orderNumbers = context.ORDER_NUMBERS.Include(q => q.CREATED_USER)
+                var orderNumbers = context.ORDER_NUMBERS
                                                         .Include(q => q.MAINPROCESS_MODEL)
                                                         .Where(q => q.IS_DELETED == false)
                                                         .Where(q => q.SYSTEM_CODE == "INCIDENT")

@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MES.DB.Migrations
 {
     [DbContext(typeof(MesContext))]
-    [Migration("20201228224326_InitialModels")]
-    partial class InitialModels
+    [Migration("20210102130112_MES1")]
+    partial class MES1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,6 +20,30 @@ namespace MES.DB.Migrations
                 .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.1");
+
+            modelBuilder.Entity("MES.DB.Model.AD_CUSTOMERS", b =>
+                {
+                    b.Property<int>("CUSTOMER_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("CODE")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("DESCRIPTION")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("NAME")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("CUSTOMER_ID");
+
+                    b.ToTable("AD_CUSTOMERS");
+                });
 
             modelBuilder.Entity("MES.DB.Model.CITY", b =>
                 {
@@ -487,6 +511,9 @@ namespace MES.DB.Migrations
                     b.Property<int?>("CREATED_USER_ID")
                         .HasColumnType("int");
 
+                    b.Property<int?>("CUSTOMER_ID")
+                        .HasColumnType("int");
+
                     b.Property<string>("DESCRIPTION")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
@@ -507,6 +534,8 @@ namespace MES.DB.Migrations
                     b.HasKey("HOLDING_ID");
 
                     b.HasIndex("CREATED_USER_ID");
+
+                    b.HasIndex("CUSTOMER_ID");
 
                     b.ToTable("HOLDING");
                 });
@@ -2771,6 +2800,12 @@ namespace MES.DB.Migrations
                     b.HasOne("MES.DB.Model.USER", "CREATED_USER")
                         .WithMany()
                         .HasForeignKey("CREATED_USER_ID");
+
+                    b.HasOne("MES.DB.Model.AD_CUSTOMERS", "AD_CUSTOMERS")
+                        .WithMany()
+                        .HasForeignKey("CUSTOMER_ID");
+
+                    b.Navigation("AD_CUSTOMERS");
 
                     b.Navigation("CREATED_USER");
                 });

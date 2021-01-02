@@ -15,7 +15,7 @@ namespace MES.Data.Functions
         {
             using (MesContext context = new MesContext())
             {
-                var surveyList = context.SURVEY.Include(q => q.CREATED_USER).Where(q => q.IS_DELETED == false).ToList();
+                var surveyList = context.SURVEY.Where(q => q.IS_DELETED == false).ToList();
                 return surveyList;
             }
         }
