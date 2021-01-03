@@ -1,0 +1,236 @@
+﻿@model LdapViewModel
+@{
+    ViewData["Title"] = "LDAP Ayarları";
+}
+
+@section Styles
+{
+    <link href="/Content/assets/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
+}
+
+<div class="card card-custom">
+    <div class="card-header">
+        <div class="card-title">
+            <span class="card-icon">
+                <i class="flaticon2-list-2 text-primary"></i>
+            </span>
+            <h3 class="card-label">LDAP Ayarları</h3>
+        </div>
+    </div>
+    <div class="card-body">
+        <h5 class="card-label">LDAP Tanımlama Bilgileri:</h5>
+        <!--begin: Datatable-->
+        <div id="tableArea1">
+            <table class="table table-bordered table-hover table-checkable" id="table1" style="margin-top: 13px !important;">
+                <thead>
+                    <tr>
+                        <th>Sunucu/IP Adresi</th>
+                        <th>Port Numarası</th>
+                        <th>Arama Dizini</th>
+                        <th>Kullanıcı adı</th>
+                        <th>Şifre</th>
+                        <th>#</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td> @(Model?.ServerAddress)</td>
+                        <td> @(Model?.PortNumber)</td>
+                        <td> @(Model?.SearchBase)</td>
+                        <td> @(Model?.Username)</td>
+                        <td>******</td>
+                        <td>
+                            <a href="#" class="btn btn-sm btn-clean btn-icon" onclick="OpenEdit()" title="Güncelle" data-id="@Model?.Id">
+                                <span class="svg-icon svg-icon-primary svg-icon-2x">
+                                    <!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2020-07-07-181510/theme/html/demo1/dist/../src/media/svg/icons/Design/Edit.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                            <rect x="0" y="0" width="24" height="24" />
+                                            <path d="M8,17.9148182 L8,5.96685884 C8,5.56391781 8.16211443,5.17792052 8.44982609,4.89581508 L10.965708,2.42895648 C11.5426798,1.86322723 12.4640974,1.85620921 13.0496196,2.41308426 L15.5337377,4.77566479 C15.8314604,5.0588212 16,5.45170806 16,5.86258077 L16,17.9148182 C16,18.7432453 15.3284271,19.4148182 14.5,19.4148182 L9.5,19.4148182 C8.67157288,19.4148182 8,18.7432453 8,17.9148182 Z" fill="#000000" fill-rule="nonzero" transform="translate(12.000000, 10.707409) rotate(-135.000000) translate(-12.000000, -10.707409) " />
+                                            <rect fill="#000000" opacity="0.3" x="5" y="20" width="15" height="2" rx="1" />
+                                        </g>
+                                    </svg><!--end::Svg Icon-->
+                                </span>
+                            </a>
+                            
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div style="display: none" id="tableArea2">
+            <form role="form" id="formLdapInfo">
+                <table class="table table-bordered table-hover table-checkable" id="table2" style="margin-top: 13px !important;">
+                    <thead>
+                        <tr>
+                            <th>Sunucu/IP Adresi</th>
+                            <th>Port Numarası</th>
+                            <th>Kullanıcı adı</th>
+                            <th>Şifre</th>
+                            <th>#</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="form-group">
+                                    @Html.TextBoxFor(m => m.ServerAddress, new { @class = "form-control", @placeholder = "Sunucu/IP", @required = true, @id = "serverName" })
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    @Html.TextBoxFor(m => m.PortNumber, new { @class = "form-control", @placeholder = "Port", @id = "port" })
+                                </div>
+                            </td>  
+                            <td>
+                                <div class="form-group">
+                                    @Html.TextBoxFor(m => m.SearchBase, new { @class = "form-control", @placeholder = "DC=example,DC=com", @id = "searchBase" })
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    @Html.TextBoxFor(m => m.Username, new { @class = "form-control", @placeholder = "Kullanıcı Adı", @id = "username" })
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    @Html.TextBoxFor(m => m.Password, new { @class = "form-control", @placeholder = "Şifre", @id = "password", @type = "password" })
+                                </div>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-primary btn-sm" onclick="TestLdap()">Test Et</button>
+                                <button type="button" class="btn btn-default pull-left btn-sm" onclick="CloseEdit()">Vazgeç</button>
+                                <button type="submit" class="btn btn-primary btn-sm">Kaydet</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </form>
+        </div>
+        <!--end: Datatable-->
+
+        <div class="separator separator-dashed my-8"></div>
+        <h5 class="card-label">LDAP Görüntüleme Bilgileri:</h5>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <a class="nav-item nav-link" onclick="NavbarNavigation(1)">LDAP OU</a>
+                    <a class="nav-item nav-link" onclick="NavbarNavigation(2)">LDAP Zamanlama</a>
+                </div>
+            </div>
+        </nav>
+        <br />
+        <div id="ldapou" style="display:block">
+            <button type="button" onclick="GetAllOu()" class="btn btn-primary">OU'ları Getir</button>
+        </div>
+
+        <div id="ldapzaman" style="display:none">
+            Zamanlanmış Görevler
+        </div>
+
+    </div>
+</div>
+
+
+
+
+@section Scripts
+{
+    <script type="text/javascript">
+
+        $('#formLdapInfo').submit(function (e) {
+            e.preventDefault();
+            var form = $("#formLdapInfo");
+                var formData = new FormData(form[0]);
+                $.ajax({
+                    url: '@Url.Action("SaveLdapConfig", "Ldap")',
+                    type: "POST",
+                    data: formData,
+                    contentType: false,
+                    cache: false,
+                    dataType: "json",
+                    processData: false,
+                    success: function (data) {
+                        toastr['success']('Başarılı bir şekilde kaydedildi.' +data);
+                        location.reload();
+
+                    },
+                    error: function (data) {
+                        toastr['error']('Hata oluştu. Lütfen daha sonra tekrar deneyiniz.');
+                        location.reload();
+                    },
+                    complete: function (data) {
+                    }
+                });
+        });
+
+        function TestLdap() {
+                var form = $("#formLdapInfo");
+                    var formData = new FormData(form[0]);
+                    $.ajax({
+                        url: '@Url.Action("CheckLdapConnection", "Ldap")',
+                        type: "POST",
+                        data: formData,
+                        contentType: false,
+                        cache: false,
+                        dataType: "json",
+                        processData: false,
+                        success: function (data) {
+                            toastr['success'](data.responseText);
+                            toastr.success(data.responseText, "Title");
+                        },
+                        error: function (data) {
+                            toastr['error'](data.responseText);
+                        },
+                        complete: function (data) {
+                        }
+                    });
+        }
+
+        function GetAllOu() {
+            $("#ldapou").load("/Ldap/ReturnLdapOu").on({
+                ajaxStart: function () {
+                    $("body").addClass("loading");
+                },
+                ajaxStop: function () {
+                    $("body").removeClass("loading");
+                }
+            });
+        }
+
+        function OpenEdit() {
+            document.getElementById('tableArea1').style.display = 'none';
+            document.getElementById('tableArea2').style.display = 'block';
+        }
+        function CloseEdit() {
+            document.getElementById('tableArea1').style.display = 'block';
+            document.getElementById('tableArea2').style.display = 'none';
+        }
+
+        function NavbarNavigation(number) {
+            if (number === 1) {
+                document.getElementById("ldapou").style.display = "block";
+                document.getElementById("ldapzaman").style.display = "none";
+            }
+            else {
+                document.getElementById("ldapou").style.display = "none";
+                document.getElementById("ldapzaman").style.display = "block";
+                $("#ldapzaman").load("/Ldap/ReturnLdapSchedule");
+            }
+        }
+
+        function DisplayToggle(item) {
+            if (item.style.display === "none") {
+                item.style.display = "block";
+            } else {
+                item.style.display = "none";
+            }
+        }
+    </script>
+}
+
+

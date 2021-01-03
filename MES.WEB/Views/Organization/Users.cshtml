@@ -1,0 +1,419 @@
+﻿@model UserViewModel
+@{
+    ViewData["Title"] = "Kullanıcılar";
+}
+
+@section Styles
+{
+    <link href="/Content/assets/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
+}
+
+
+<div class="card card-custom">
+    <div class="card-header">
+        <div class="card-title">
+            <span class="card-icon">
+                <i class="flaticon2-list-2 text-primary"></i>
+            </span>
+            <h3 class="card-label">Kullanıcılar</h3>
+        </div>
+        <div class="card-toolbar">
+            <div class="form-group-sm">
+                <div class="row" style="justify-content:right;">
+                    <!--begin::Button-->
+                    <a href="#" name="btnAdd" id="btnAdd" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#createOrEditModal">
+                        <i class="la la-plus"></i>Yeni Kayıt
+                    </a>
+                    <!--end::Button-->
+                </div>
+                <!--<div class="row">-->
+                    <!--begin::Button-->
+                    <!--<a href="#" name="btnExcell" id="btnExcell" class="btn btn-primary btn-sm" onclick="location.href='@Url.Action("CreateUserExcell", "Excell")'">
+                        Excell Oluştur
+                    </a>-->
+                    <!--end::Button-->
+                    <!--begin::Button-->
+                    <!--<a href="#" name="btnExcellTemplate" id="btnExcellTemplate" class="btn btn-primary btn-sm" onclick="location.href='@Url.Action("DownloadExcellTemplate", "Excell",new { parameter ="user"})'">
+                        Excel Şablon
+                    </a>-->
+                    <!--end::Button-->
+                    <!--begin::Button-->
+                    <!--<div class="col-md-3">
+                        <input type="file" id="fileupload" name="files" class="form-control" />
+                    </div>
+                    <div class="col-md-2">
+                        <input type="button" name="Upload" value="Upload" id="btnupload" class="btn btn-primary btn-sm" />
+                    </div>-->
+                    <!--end::Button-->
+                <!--</div>-->
+
+            </div>
+
+
+
+        </div>
+    </div>
+    <div class="card-body">
+        <!--begin: Datatable-->
+        <table class="table table-bordered table-hover table-checkable" id="example1" style="margin-top: 13px !important;">
+            <thead>
+                <tr>
+                    <th>Adı</th>
+                    <th>Soyadı</th>
+                    <th>Kullanıcı Adı</th>
+                    @*<th>Açıklama</th>*@
+                    <th>Email</th>
+                    <th>Şube</th>
+                    <th>Departman</th>
+                    <th>Ünvan</th>
+                    <th>Durumu</th>
+                    <th>Kullanıcı Tipi</th>
+                    @*<th>Kullanıcı Grubu</th>*@
+                    <th>#</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.UserList)
+                {
+                <tr>
+                    <td>@item.NAME</td>
+                    <td>@item.SURNAME</td>
+                    <td>@item.USERNAME</td>
+                    @*<td>@item.DESCRIPTION</td>*@
+                    <td>@item.EMAIL</td>
+                    <td>@(item.LOCATION == null ? "-" : (item.LOCATION.NAME))</td>
+                    <td>@(item.DEPARTMENT == null ? "-" : (item.DEPARTMENT.NAME))</td>
+                    <td>@(item.TITLE == null ? "-" : (item.TITLE.NAME))</td>
+                    <td>@(item.USER_ISACTIVE ? "Aktif" : "Pasif")</td>
+                    <td>@(item.USER_TYPE == null ? "-" : (item.USER_TYPE.NAME))</td>
+                    @*<td>@(item.USER_GROUP == null ? "-" : (item.USER_GROUP.NAME))</td>*@
+                    <td>
+                        <a href="#" class="btn btn-sm btn-clean btn-icon" title="Güncelle" data-toggle="modal" data-target="#createOrEditModal" data-id="@item.USER_ID">
+                            <i class="la la-edit"></i>
+                        </a>
+                        <a href="#" class="btn btn-sm btn-clean btn-icon" title="Sil" data-toggle="modal" data-target="#deleteModal" data-id="@item.USER_ID">
+                            <i class="la la-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+        <!--end: Datatable-->
+    </div>
+</div>
+
+<form role="form" id="frmUser">
+    <div class="modal fade modal-xl" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);" id="createOrEditModal">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Kullanıcı</h4>
+                    <button id="closeButton" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i aria-hidden="true" class="ki ki-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <label class="col-lg-2 col-form-label text-left">Adı:</label>
+                        <div class="col-lg-3">
+                            @Html.TextBoxFor(m => m.user.NAME, new { @class = "form-control", @required = true, @id = "name" })
+                        </div>
+                        <label class="col-lg-2 col-form-label text-left">Soyadı:</label>
+                        <div class="col-lg-3">
+                            @Html.TextBoxFor(m => m.user.SURNAME, new { @class = "form-control", @required = true, @id = "surname" })
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-lg-2 col-form-label text-left">Kullanıcı Adı:</label>
+                        <div class="col-lg-3">
+                            @Html.TextBoxFor(m => m.user.USERNAME, new { @class = "form-control", @required = true, @id = "username" })
+                        </div>
+                        <label class="col-lg-2 col-form-label text-left">Şifre:</label>
+                        <div class="col-lg-3">
+                            @Html.PasswordFor(m => m.user.PASSWORD, new { @class = "form-control", autocomplete = "off", @required = true, @id = "password" })
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-lg-2 col-form-label text-left">Şube:</label>
+                        <div class="col-lg-3">
+                            @Html.DropDownListFor(m => m.user.LOCATION_ID, Model.LocationSelectList, "Seçiniz", new { @class = "form-control selectpicker", id = "drpLocation" })
+                        </div>
+                        <label class="col-lg-2 col-form-label text-left">Departman:</label>
+                        <div class="col-lg-3">
+                            @Html.DropDownListFor(m => m.user.DEPARTMENT_ID, Model.DepartmentSelectList, "Seçiniz", new { @class = "form-control selectpicker", id = "drpDepartment" })
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-lg-2 col-form-label text-left">Ünvan:</label>
+                        <div class="col-lg-3">
+                            @Html.DropDownListFor(m => m.user.TITLE_ID, Model.TitleSelectList, "Seçiniz", new { @class = "form-control selectpicker", id = "drpTitle" })
+                        </div>
+                        <label class="col-lg-2 col-form-label text-left">Kullanıcı Tipi:</label>
+                        <div class="col-lg-3">
+                            @Html.DropDownListFor(m => m.user.USER_TYPE_ID, Model.UserTypeSelectList, "Seçiniz", new { @class = "form-control selectpicker", id = "drpUserType" })
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-lg-2 col-form-label text-left">Email:</label>
+                        <div class="col-lg-3">
+                            @Html.TextBoxFor(m => m.user.EMAIL, new { @class = "form-control", @id = "email" })
+                        </div>
+                        <label class="col-lg-2 col-form-label text-left">Durumu:</label>
+                        <div class="col-lg-3">
+                            <span class="switch switch-sm switch-icon" style="margin-left:10px;">
+                                <label>
+                                    @Html.CheckBoxFor(m => m.user.USER_ISACTIVE, new { id = "aktif" })
+                                    <span></span>
+                                </label>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-lg-2 col-form-label text-left">Açıklama:</label>
+                        <div class="col-lg-8">
+                            @Html.TextBoxFor(m => m.user.DESCRIPTION, new { @class = "form-control", @id = "description" })
+                        </div>
+                    </div>
+                    @*<div class="form-group">
+                            <label>Kullanıcı Grubu</label>
+                            @Html.DropDownListFor(m => m.user.USER_GROUP_ID, Model.UserGroupSelectList, "Seçiniz", new { @class = "form-control selectpicker", id = "drpUserGroup" })
+                        </div>*@
+                    <div class="form-group row">
+                        <label class="col-lg-2 col-form-label text-left">Resim</label>
+                        <div class="col-lg-8">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="imageFile" name="imageFile" style="width:100%" />
+                                <label class="custom-file-label" for="customFile">Dosya</label>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
+                    <input type="hidden" id="id" name="id" />
+                </div>
+                <div class="modal-footer">
+                    <button id="closeButton2" type="button" class="btn btn-default pull-left" data-dismiss="modal">Kapat</button>
+                    <button type="submit" class="btn btn-primary" id="btnSubmit">Kaydet</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+    </div>
+    <!-- /.modal-dialog -->
+    <!-- /.modal -->
+</form>
+
+
+<form role="form" id="frmDeleteUser">
+    <div class="modal fade" id="deleteModal">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Kullanıcı Sil</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i aria-hidden="true" class="ki ki-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="box-body">
+                        <input type="hidden" id="deleteId" name="deleteId" />
+                        Silmek istediğinizden emin misiniz?
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Vazgeç</button>
+                    <button type="submit" class="btn btn-primary" id="btnSubmit">Sil</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+</form>
+
+
+@section Scripts
+{
+    <script src="/Content/assets/plugins/custom/datatables/datatables.bundle.js"></script>
+    <script src="/Content/assets/js/pages/crud/datatables/extensions/select.js"></script>
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#example1').DataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Turkish.json"
+                }
+            });
+        });
+
+        $(function () {
+            $('#example1').DataTable();
+        });
+
+        $('#frmUser').submit(function (e) {
+            e.preventDefault();
+            var form = $("#frmUser");
+                var formData = new FormData(form[0]);
+                $.ajax({
+                    url: '@Url.Action("CreateOrEditUser","Organization")',
+                    type: "POST",
+                    data: formData,
+                    contentType: false,
+                    cache: false,
+                    dataType: "json",
+                    processData: false,
+                    success: function (data) {
+                        if (data.success === true) {
+                            location.reload();
+                        }
+                    },
+                    error: function (data) {
+                        toastr['error']('Hata oluştu. Lütfen daha sonra tekrar deneyiniz.');
+                    },
+                    complete: function (data) {
+                    }
+                });
+        });
+
+        $('#frmDeleteUser').submit(function (e) {
+            e.preventDefault();
+            var form = $("#frmDeleteUser");
+                var formData = new FormData(form[0]);
+                $.ajax({
+                    url: '@Url.Action("DeleteUser","Organization")',
+                    type: "POST",
+                    data: formData,
+                    contentType: false,
+                    cache: false,
+                    dataType: "json",
+                    processData: false,
+                    success: function (data) {
+                        if (data.success === true) {
+                            location.reload();
+                        }
+                    },
+                    error: function (data) {
+                        toastr['error']('Hata oluştu. Lütfen daha sonra tekrar deneyiniz.');
+                    },
+                    complete: function (data) {
+                    }
+                });
+        });
+
+        $('#createOrEditModal').on('shown.bs.modal', function (e) {
+            var userId = $(e.relatedTarget).attr('data-id');
+            if (userId != null) {
+                clearForm();
+                $.ajax({
+                    url: '/Organization/GetUser?id=' + userId,
+                    type: "GET",
+                    dataType: "json",
+                    success: function (data) {
+                        $("#id").val(userId);
+                        $("#name").val(data.NAME);
+                        $("#surname").val(data.SURNAME);
+                        $("#username").val(data.USERNAME);
+                        $("#password").val(data.PASSWORD);
+                        $("#description").val(data.DESCRIPTION);
+                        $("#email").val(data.EMAIL);
+                        $("#drpLocation").val(data.LOCATION_ID);
+                        $("#drpDepartment").val(data.DEPARTMENT_ID);
+                        $("#drpTitle").val(data.TITLE_ID);
+                        $("#drpUserType").val(data.USER_TYPE_ID);
+                        //$("#drpUserGroup").val(data.USER_GROUP_ID);
+
+                        $("#drpLocation").trigger('change');
+                        $("#drpDepartment").trigger('change');
+                        $("#drpTitle").trigger('change');
+                        $("#drpUserType").trigger('change');
+                        $("#drpUserGroup").trigger('change');
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                    },
+                    complete: function (data) {
+                    }
+                });
+            }
+        });
+        $('#deleteModal').on('shown.bs.modal', function (e) {
+            var userId = $(e.relatedTarget).attr('data-id');
+            $('#deleteId').val(userId);
+        });
+        $(document).ready(function () {
+            
+        });
+
+        function clearForm() {
+            $("#id").val('');
+            $("#code").val('');
+            $("#name").val('');
+            $("#surname").val('');
+            $("#username").val('');
+            $("#password").val('');
+            $("#description").val('');
+            $("#email").val('');
+            $("#drpLocation").val('');
+            $("#drpDepartment").val('');
+            $("#drpTitle").val('');
+            $("#drpUserType").val('');
+            //$("#drpUserGroup").val('');
+
+            $("#drpLocation").trigger('change');
+            $("#drpDepartment").trigger('change');
+            $("#drpTitle").trigger('change');
+            $("#drpUserType").trigger('change');
+            $("#drpUserGroup").trigger('change');
+        }
+        $('#btnAdd').click(function () {
+            clearForm();
+        });
+
+        $(function () {
+            $('#btnupload').on('click', function () {
+                var fileExtension = ['xls', 'xlsx'];
+                var filename = $('#fileupload').val();
+                if (filename.length == 0) {
+                    alert("Lütfen, yükleyeceğiniz dosyayı seçiniz!");
+                    return false;
+                }
+                else {
+                    var extension = filename.replace(/^.*\./, '');
+                    if ($.inArray(extension, fileExtension) == -1) {
+                        alert("Lütfen, excell dosyası seçiniz.");
+                        return false;
+                    }
+                }
+                var fdata = new FormData();
+                var fileUpload = $("#fileupload").get(0);
+                var files = fileUpload.files;
+                fdata.append(files[0].name, files[0]);
+                $.ajax({
+                    type: "POST",
+                    url: "/Excell/UploadUserExcell",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("XSRF-TOKEN",
+                            $('input:hidden[name="__RequestVerificationToken"]').val());
+                    },
+                    data: fdata,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        if (response.length == 0)
+                            alert('Yüklenirken bir hata oluştu');
+                        else {
+                            alert(response);
+                            location.reload();
+                        }
+                    },
+                    error: function (e) {
+                        alert(e.responseText);
+                        location.reload();
+                    }
+                });
+            })
+        });
+    </script>
+}

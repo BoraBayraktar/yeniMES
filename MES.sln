@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MES.API", "MES.API\MES.API.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MES.DB", "MES.DB\MES.DB.csproj", "{C2C556EF-5411-4436-82F5-4F7E2CF1461E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MES.Data", "MES.Data\MES.Data.csproj", "{7ADDAB74-CF03-4C45-95F2-821E4D427CF9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MES.Data", "MES.Data\MES.Data.csproj", "{7ADDAB74-CF03-4C45-95F2-821E4D427CF9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MES.Web", "MES.WEB\MES.Web.csproj", "{B6FEC0C4-86B8-453F-8C67-08B442683583}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{7ADDAB74-CF03-4C45-95F2-821E4D427CF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7ADDAB74-CF03-4C45-95F2-821E4D427CF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7ADDAB74-CF03-4C45-95F2-821E4D427CF9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6FEC0C4-86B8-453F-8C67-08B442683583}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6FEC0C4-86B8-453F-8C67-08B442683583}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6FEC0C4-86B8-453F-8C67-08B442683583}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6FEC0C4-86B8-453F-8C67-08B442683583}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,435 @@
+﻿@model MES.Web.Models.IncidentViewModel
+@{
+    ViewData["Title"] = "Arıza Listesi";
+    var user = Context.Session.GetObject<MES.Entities.Model.USER>("User");
+    var sumUnrelesed = Model.SumUnRelased.ToString();
+    //var sumOverdue = Model.SumOverdue.ToString();
+    var sumOverdue = 0;
+    //var sumDuetoday = Model.SumDuetoday.ToString();
+    var sumDuetoday = 0;
+    var sumOpen = Model.SumOpen.ToString();
+    //var sumOnhold = Model.SumOnhold.ToString();
+    var sumOnhold = 0;
+    var sumUnassigned = Model.SumUnassigned.ToString();
+
+}
+
+@section Styles
+{
+    <link href="/Content/assets/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
+}
+
+@*<div class="row">
+        <div class="col-xl-2">
+            <!--begin::Card-->
+            <div class="card card-custom bg-danger gutter-b card-stretch">
+                <!--begin::Body-->
+                <div class="card-body">
+                    <span class="card-title font-weight-bolder text-dark-75 font-size-h2 mb-0 mt-6 d-block" style="color:white;">@sumUnrelesed.ToString()</span>
+                    <span class="font-weight-bold" style="color:white;">Çözülmemiş</span>
+                </div>
+                <!--end::Body-->
+            </div>
+            <!--end:: Card-->
+        </div>
+        <div class="col-xl-2">
+            <!--begin::Card-->
+            <div class="card card-custom bg-danger gutter-b card-stretch">
+                <!--begin::Body-->
+                <div class="card-body">
+                    <span class="card-title font-weight-bolder text-dark-75 font-size-h2 mb-0 mt-6 d-block" style="color:white;">@sumOverdue.ToString()</span>
+                    <span class="font-weight-bold" style="color:white;">Gecikmiş</span>
+                </div>
+                <!--end::Body-->
+            </div>
+            <!--end:: Card-->
+        </div>
+        <div class="col-xl-2">
+            <!--begin::Card-->
+            <div class="card card-custom bg-danger gutter-b card-stretch">
+                <!--begin::Body-->
+                <div class="card-body">
+                    <span class="card-title font-weight-bolder text-dark-75 font-size-h2 mb-0 mt-6 d-block" style="color:white;">@sumDuetoday.ToString()</span>
+                    <span class="font-weight-bold" style="color:white;">Bugün Gecikenler</span>
+                </div>
+                <!--end::Body-->
+            </div>
+            <!--end:: Card-->
+        </div>
+        <div class="col-xl-2">
+            <!--begin::Card-->
+            <div class="card card-custom bg-danger gutter-b card-stretch">
+                <!--begin::Body-->
+                <div class="card-body">
+                    <span class="card-title font-weight-bolder text-dark-75 font-size-h2 mb-0 mt-6 d-block" style="color:white;">@sumOpen.ToString()</span>
+                    <span class="font-weight-bold" style="color:white;">Açık</span>
+                </div>
+                <!--end::Body-->
+            </div>
+            <!--end:: Card-->
+        </div>
+        <div class="col-xl-2">
+            <!--begin::Card-->
+            <div class="card card-custom bg-danger gutter-b card-stretch">
+                <!--begin::Body-->
+                <div class="card-body">
+                    <span class="card-title font-weight-bolder text-dark-75 font-size-h2 mb-0 mt-6 d-block" style="color:white;">@sumOnhold.ToString()</span>
+                    <span class="font-weight-bold" style="color:white;">Beklemede</span>
+                </div>
+                <!--end::Body-->
+            </div>
+            <!--end:: Card-->
+        </div>
+        <div class="col-xl-2">
+            <!--begin::Card-->
+            <div class="card card-custom bg-danger gutter-b card-stretch">
+                <!--begin::Body-->
+                <div class="card-body">
+                    <span class="card-title font-weight-bolder text-dark-75 font-size-h2 mb-0 mt-6 d-block" style="color:white;">@sumUnassigned.ToString()</span>
+                    <span class="font-weight-bold" style="color:white;">Atanmamış</span>
+                </div>
+                <!--end::Body-->
+            </div>
+            <!--end:: Card-->
+        </div>
+    </div>*@
+
+
+<div class="card card-custom">
+    <div class="card-header">
+        <div class="card-title">
+            @*<span class="card-icon">
+                    <i class="flaticon2-list-2 text-primary"></i>
+                </span>*@
+            <h3 class="card-label">Arıza Listesi</h3>
+        </div>
+        <div class="card-toolbar">
+            <!--begin::Button-->
+            <a href="/Support/CreateIncident" name="btnAdd" id="btnAdd" class="btn btn-primary font-weight-bolder">
+                <i class="la la-plus"></i>Yeni Kayıt
+            </a>
+            <!--end::Button-->
+        </div>
+    </div>
+    <div class="card-body">
+        @*<div class="col-lg-2" style="position:absolute;margin-left:80%;margin-top:-21px;">
+            @Html.DropDownList("drpStatus", Model.IncidentStatusList, "Durum Filtrele", new { @class = "form-control selectpicker", id = "drpStatus" })
+        </div>*@
+        <!--begin: Datatable-->
+        <table class="table table-bordered table-hover table-checkable" id="example1" style="margin-top: 13px !important;">
+            <thead>
+                <tr>
+                    <th style="width:10px">#</th>
+                    <th>Başlangıç Tarihi</th>
+                    <th>Durumu</th>
+                    <th>Kod</th>
+                    <th>Konu</th>
+                    <th>Açıklama</th>
+                    <th>Açan Kişi</th>
+                    <th>Bildiren Kişi</th>
+                    <th>Aciliyet</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.IncidentList)
+                {
+                <tr>
+                    <td>
+                        <div class="dropdown dropdown-inline">
+                            <a href="javascript:;" class="btn btn-sm btn-clean btn-icon mr-2" data-toggle="dropdown">
+                                <span class="svg-icon svg-icon-md">
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                            <rect x="0" y="0" width="24" height="24" />
+                                            <path d="M5,8.6862915 L5,5 L8.6862915,5 L11.5857864,2.10050506 L14.4852814,5 L19,5 L19,9.51471863 L21.4852814,12 L19,14.4852814 L19,19 L14.4852814,19 L11.5857864,21.8994949 L8.6862915,19 L5,19 L5,15.3137085 L1.6862915,12 L5,8.6862915 Z M12,15 C13.6568542,15 15,13.6568542 15,12 C15,10.3431458 13.6568542,9 12,9 C10.3431458,9 9,10.3431458 9,12 C9,13.6568542 10.3431458,15 12,15 Z" fill="#000000" />
+                                        </g>
+                                    </svg>
+                                </span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
+                                <ul class="navi flex-column navi-hover py-2">
+                                    <li class="navi-header font-weight-bolder text-uppercase font-size-xs text-primary pb-2">
+                                        İşlemler:
+                                    </li>
+                                    <li class="navi-item">
+                                        <a href="#" class="navi-link" data-toggle="modal" data-target="#notCevapModal">
+                                            <span class="navi-icon"><i class="la la-print"></i></span>
+                                            <span class="navi-text">Not Ekle</span>
+                                        </a>
+                                    </li>
+                                    <li class="navi-item">
+                                        <a href="#" class="navi-link" data-toggle="modal" data-target="#notCevapModal">
+                                            <span class="navi-icon"><i class="la la-copy"></i></span>
+                                            <span class="navi-text">Cevapla</span>
+                                        </a>
+                                    </li>
+                                    <li class="navi-item">
+                                        <a href="#" class="navi-link" data-toggle="modal" data-target="#cozumOnayModal">
+                                            <span class="navi-icon"><i class="la la-file-excel-o"></i></span>
+                                            <span class="navi-text">Çözüldü Onay</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </td>
+                    <td>@item.CREATED_DATE</td>
+                    <td>@(item.INCIDENT_STATUS == null ? "-" : item.INCIDENT_STATUS.MAIN_DATA_NAME)</td>
+                    <td><a target="_blank" href="/Support/IncidentDetail?incidentId=@item.ID">@item.CODE</a></td>
+                    <td>@item.SUBJECT</td>
+                    <td>@item.DESCRIPTION</td>
+                    <td>@(item.CREATED_USER == null ? "-" : (item.CREATED_USER.NAME + " "+item.CREATED_USER.SURNAME))</td>
+                    <td>@(item.REPORTING_USER == null ? "-" : (item.REPORTING_USER.NAME + " "+item.REPORTING_USER.SURNAME))</td>
+                    <td>@(item.INCIDENT_PRIORITY == null ? "-" : item.INCIDENT_PRIORITY.DESCRIPTION)</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+        <!--end: Datatable-->
+    </div>
+</div>
+
+
+<form role="form" id="frmNotCevap">
+    <div class="modal fade" id="notCevapModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Not/Cevap Ekle</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i aria-hidden="true" class="ki ki-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label for="">Ekleyen</label>
+                            @Html.TextBox("notCevapKullanici", (user.NAME + " " + user.SURNAME), new { @class = "form-control", @placeholder = "Ekleyen Kullanıcı", @id = "notCevapKullanici", @readonly = true })
+                        </div>
+                        <div class="form-group">
+                            <label for="">Tarih</label>
+                            @Html.TextBox("notCevapTarih", DateTime.Now, new { @class = "form-control", @placeholder = "Tarih", @id = "notCevapTarih", @readonly = true })
+                        </div>
+                        <div class="form-group">
+                            <label for="">Açıklama</label>
+                            @Html.TextAreaFor(m => m.incident.DESCRIPTION, new { @class = "form-control", @placeholder = "Açıklama", @required = true, @id = "description", @rows = 5 })
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
+                    <input type="hidden" id="id" name="id" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Kapat</button>
+                    <button type="submit" class="btn btn-primary" id="btnSubmit">Kaydet</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+</form>
+
+
+<form role="form" id="frmCozumOnay">
+    <div class="modal fade" id="cozumOnayModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Çözüm Onay</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i aria-hidden="true" class="ki ki-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label for="">Ekleyen</label>
+                            @Html.TextBox("cozumOnayKullanici", (user.NAME + " " + user.SURNAME), new { @class = "form-control", @placeholder = "Ekleyen Kullanıcı", @id = "cozumOnayKullanici", @readonly = true })
+                        </div>
+                        <div class="form-group">
+                            <label for="">Tarih</label>
+                            @Html.TextBox("cozumOnayTarih", DateTime.Now, new { @class = "form-control", @placeholder = "Tarih", @id = "cozumOnayTarih", @readonly = true })
+                        </div>
+                        <div class="form-group">
+                            <label for="">Çözüm Bilgileri</label>
+                            @Html.TextAreaFor(m => m.incident.DESCRIPTION, new { @class = "form-control", @placeholder = "Çözüm Bilgileri", @required = true, @id = "description", @rows = 5 })
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
+                    <input type="hidden" id="id" name="id" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Kapat</button>
+                    <button type="submit" class="btn btn-primary" id="btnSubmit">Kaydet</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+</form>
+
+
+
+<form role="form" id="frmDeleteDepartment">
+    <div class="modal fade" id="deleteModal">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Departman Sil</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i aria-hidden="true" class="ki ki-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="box-body">
+                        <input type="hidden" id="deleteId" name="deleteId" />
+                        Silmek istediğinizden emin misiniz?
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Vazgeç</button>
+                    <button type="submit" class="btn btn-primary">Sil</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+</form>
+
+
+@section Scripts
+{
+    <script src="/Content/assets/plugins/custom/datatables/datatables.bundle.js"></script>
+    <script src="/Content/assets/js/pages/crud/datatables/extensions/select.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $('#example1').DataTable();
+        });
+
+        $('#frmDepartment').submit(function (e) {
+            e.preventDefault();
+            var form = $("#frmDepartment");
+                var formData = new FormData(form[0]);
+                $.ajax({
+                    url: '@Url.Action("CreateOrEditDepartment","Organization")',
+                    type: "POST",
+                    data: formData,
+                    contentType: false,
+                    cache: false,
+                    dataType: "json",
+                    processData: false,
+                    success: function (data) {
+                        if (data.success === true) {
+                            location.reload();
+                        }
+                    },
+                    error: function (data) {
+                        toastr['error']('Hata oluştu. Lütfen daha sonra tekrar deneyiniz.');
+                    },
+                    complete: function (data) {
+                    }
+                });
+        });
+
+        $('#frmDeleteDepartment').submit(function (e) {
+            e.preventDefault();
+            var form = $("#frmDeleteDepartment");
+                var formData = new FormData(form[0]);
+                $.ajax({
+                    url: '@Url.Action("DeleteDepartment","Organization")',
+                    type: "POST",
+                    data: formData,
+                    contentType: false,
+                    cache: false,
+                    dataType: "json",
+                    processData: false,
+                    success: function (data) {
+                        if (data.success === true) {
+                            location.reload();
+                        }
+                    },
+                    error: function (data) {
+                        toastr['error']('Hata oluştu. Lütfen daha sonra tekrar deneyiniz.');
+                    },
+                    complete: function (data) {
+                    }
+                });
+        });
+
+        $('#createOrEditModal').on('shown.bs.modal', function (e) {
+            var departmentId = $(e.relatedTarget).attr('data-id');
+            if (departmentId != null) {
+                clearForm();
+                $.ajax({
+                    url: '/Organization/GetDepartment?id=' + departmentId,
+                    type: "GET",
+                    dataType: "json",
+                    success: function (data) {
+                        $("#id").val(departmentId);
+                        $("#code").val(data.CODE);
+                        $("#name").val(data.NAME);
+                        $("#description").val(data.DESCRIPTION);
+                        $("#drpCompany").val(data.COMPANY_ID);
+                        $("#drpCompany").trigger('change');
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                    },
+                    complete: function (data) {
+                    }
+                });
+            }
+        });
+        $('#deleteModal').on('shown.bs.modal', function (e) {
+            var departmentId = $(e.relatedTarget).attr('data-id');
+            $('#deleteId').val(departmentId);
+        });
+        $(document).ready(function () {
+        });
+
+        function clearForm() {
+            $("#id").val('');
+            $("#code").val('');
+            $("#name").val('');
+            $("#description").val('');
+            $("#drpCompany").val('');
+            $("#drpCompany").trigger('change');
+        }
+        $('#btnAdd').click(function () {
+            clearForm();
+        });
+        $("#select1").change(function () {
+            var table = $('#example').DataTable();
+
+            $(table.table().container()).on('keyup', 'tfoot input', function () {
+                table
+                    .column($(this).data('index'))
+                    .search('test')
+                    .draw();
+            });
+        });
+
+        $("#drpStatus").change(function () {
+            table.draw();
+        });
+
+        table = $('#example1').DataTable({
+        });
+
+        $.fn.dataTable.ext.search.push(
+            function (settings, data, dataIndex) {
+                var selectedStatus = $("#drpStatus option:selected").text();
+                if (selectedStatus == data[2] || selectedStatus == "Seçiniz") {
+                    return true;
+                }
+                return false;
+            }
+        );
+    </script>
+}

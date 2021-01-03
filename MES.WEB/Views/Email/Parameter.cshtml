@@ -1,0 +1,396 @@
+﻿@model ParameterViewModel
+@{
+    ViewData["Title"] = "Parametreler";
+}
+
+@section Styles
+{
+    <link href="/Content/assets/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
+}
+
+<div class="card card-custom">
+    <div class="card-header">
+        <div class="card-title">
+            <span class="card-icon">
+                <i class="flaticon2-list-2 text-primary"></i>
+            </span>
+            <h3 class="card-label">Parametreler</h3>
+        </div>
+        <div class="card-toolbar">
+            <!--begin::Button-->
+            <a href="#" name="btnAdd" id="btnAdd" class="btn btn-primary font-weight-bolder" data-toggle="modal" data-target="#createOrEditModal">
+                <i class="la la-plus"></i>Yeni Kayıt
+            </a>
+            <!--end::Button-->
+        </div>
+    </div>
+    <div class="card-body">
+        <!--begin: Datatable-->
+        <table class="table table-bordered table-hover table-checkable" id="example1" style="margin-top: 13px !important;">
+            <thead>
+                <tr>
+                    <th>Parametre Tipi</th>
+                    <th>Ad</th>
+                    <th>Açıklama</th>
+                    <th>Üst Parametre</th>
+                    <th>İlgili Süreçler</th>
+                    <th>#</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.ParameterList)
+                {
+                    <tr>
+                        <td>@(item.PARAMETER_TYPE == null ? "-" : (item.PARAMETER_TYPE.TYPE_NAME))</td>
+                        <td>@item.MAIN_DATA_NAME</td>
+                        <td>@item.DESCRIPTION</td>
+                        <td>@(item.PARENT_PARAMETER == null ? "-" : (item.PARENT_PARAMETER.MAIN_DATA_NAME))</td>
+                        <td>@(item.MAIN_PROCESS == null ? "-" : (item.MAIN_PROCESS.NAME))</td>
+                        <td>
+                            <a href="#" class="btn btn-sm btn-clean btn-icon" title="Güncelle" data-toggle="modal" data-target="#createOrEditModal" data-id="@item.ID">
+                                <i class="la la-edit"></i>
+                            </a>
+                            <a href="#" class="btn btn-sm btn-clean btn-icon" title="Sil" data-toggle="modal" data-target="#deleteModal" data-id="@item.ID">
+                                <i class="la la-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <!--end: Datatable-->
+    </div>
+</div>
+
+
+<form role="form" id="frmParameter">
+    <div class="modal fade" id="createOrEditModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Parametre</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i aria-hidden="true" class="ki ki-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label>Süreç</label>
+                            @Html.DropDownListFor(m => m.parameter.MAIN_PROCESS_ID, Model.MainProcessSelectList, "Seçiniz", new { @class = "form-control selectpicker", id = "drpMainProcess", @required = true })
+                        </div>
+                        <div class="form-group">
+                            <label>Parametre Tipi</label>
+                            @Html.DropDownListFor(m => m.parameter.PARAMETER_TYPE_ID, new List<SelectListItem>(), "Seçiniz", new { @class = "form-control selectpicker", id = "drpParameterType", @required = true })
+                        </div>
+                        <div class="form-group">
+                            <label>Adı</label>
+                            @Html.TextBoxFor(m => m.parameter.MAIN_DATA_NAME, new { @class = "form-control", @placeholder = "Adı", @id = "name", @required = true })
+                        </div>
+                        <div class="form-group">
+                            <label>Açıklama</label>
+                            @Html.TextAreaFor(m => m.parameter.DESCRIPTION, new { @class = "form-control", @placeholder = "Açıklama", @id = "description" })
+                        </div>
+                        <div class="form-group">
+                            <label>Görünüm Sırası</label>
+                            @Html.TextBoxFor(m => m.parameter.PRIORITY_ORDER, new { @class = "form-control", @placeholder = "Görünüm Sırası", @id = "priority" })
+                        </div>
+                        <div class="form-group">
+                            <label>Durumu</label>
+                            <div class="radio-inline">
+                                <label class="radio">
+                                    @Html.RadioButtonFor(m => m.parameter.IS_ACTIVE, true, new { id = "aktif" })
+                                    Aktif
+                                    <span></span>
+                                </label>
+                                <label class="radio">
+                                    @Html.RadioButtonFor(m => m.parameter.IS_ACTIVE, false, new { id = "pasif" })
+                                    Pasif
+                                    <span></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Üst Parametre</label>
+                            @Html.DropDownListFor(m => m.parameter.PARENT_PARAMETER_ID, Model.ParameterSelectList, "Seçiniz", new { @class = "form-control selectpicker", id = "drpParentParameter" })
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
+                    <input type="hidden" id="id" name="id" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Kapat</button>
+                    <button type="submit" class="btn btn-primary" id="btnSubmit">Kaydet</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+</form>
+
+
+<form role="form" id="frmDeleteParameter">
+    <div class="modal fade" id="deleteModal">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Parametre Sil</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i aria-hidden="true" class="ki ki-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="box-body">
+                        <input type="hidden" id="deleteId" name="deleteId" />
+                        Silmek istediğinizden emin misiniz?
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Vazgeç</button>
+                    <button type="submit" class="btn btn-primary">Sil</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+</form>
+
+
+@section Scripts
+{
+    <script src="/Content/assets/plugins/custom/datatables/datatables.bundle.js"></script>
+    <script src="/Content/assets/js/pages/crud/datatables/extensions/select.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $('#example1').DataTable();
+        });
+
+        $('#frmParameter').submit(function (e) {
+            e.preventDefault();
+            var form = $("#frmParameter");
+                var formData = new FormData(form[0]);
+                $.ajax({
+                    url: '@Url.Action("CreateOrEditParameter","Email")',
+                    type: "POST",
+                    data: formData,
+                    contentType: false,
+                    cache: false,
+                    dataType: "json",
+                    processData: false,
+                    success: function (data) {
+                        if (data.success === true) {
+                            location.reload();
+                        }
+                    },
+                    error: function (data) {
+                        toastr['error']('Hata oluştu. Lütfen daha sonra tekrar deneyiniz.');
+                    },
+                    complete: function (data) {
+                    }
+                });
+        });
+
+        $('#frmDeleteParameter').submit(function (e) {
+            e.preventDefault();
+            var form = $("#frmDeleteParameter");
+                var formData = new FormData(form[0]);
+                $.ajax({
+                    url: '@Url.Action("DeleteParameter","Email")',
+                    type: "POST",
+                    data: formData,
+                    contentType: false,
+                    cache: false,
+                    dataType: "json",
+                    processData: false,
+                    success: function (data) {
+                        if (data.success === true) {
+                            location.reload();
+                        }
+                    },
+                    error: function (data) {
+                        toastr['error']('Hata oluştu. Lütfen daha sonra tekrar deneyiniz.');
+                    },
+                    complete: function (data) {
+                    }
+                });
+        });
+
+        $('#createOrEditModal').on('shown.bs.modal', function (e) {
+            var parameterId = $(e.relatedTarget).attr('data-id');
+            if (parameterId != null) {
+                clearForm();
+                $.ajax({
+                    url: '/Email/GetParameter?id=' + parameterId,
+                    type: "GET",
+                    dataType: "json",
+                    success: function (data) {
+                        $("#id").val(parameterId);
+                        $("#drpMainProcess").val(data.MAIN_PROCESS_ID);
+                        $("#drpMainProcess").trigger('change');
+                        $.ajax({
+                            url: "/Email/GetParameterTypeByMainProcessId/?mainProcessId=" +
+                                $("#drpMainProcess").find(":selected").val(),
+                            type: "GET",
+                            dataType: "json",
+                            success: function (data2) {
+                                $('#drpParameterType').empty();
+                                $("#drpParameterType").append(new Option("Seçiniz", ""));
+                                $.each(data2, function (key, value) {
+                                    if (data.PARAMETER_TYPE_ID == value.PARAMETER_TYPE_ID) {
+                                        $('#drpParameterType').append("<option value='"+value.PARAMETER_TYPE_ID+"' selected>" + value.TYPE_NAME + "</option>");
+                                    }
+                                    else {
+                                        $('#drpParameterType')
+                                            .append($("<option></option>")
+                                                .attr("value", value.PARAMETER_TYPE_ID)
+                                                .text(value.TYPE_NAME));
+                                    }
+                                    $('.selectpicker').selectpicker('refresh');
+                                });
+                                $.ajax({
+                                    url: "/Email/GetParameterByMainProcessId/?mainProcessId=" +
+                                        $("#drpMainProcess").find(":selected").val()+"&parameterTypeId="+$("#drpParameterType").find(":selected").val(),
+                                    type: "GET",
+                                    dataType: "json",
+                                    success: function (data3) {
+                                        $('#drpParentParameter').empty();
+                                        $("#drpParentParameter").append(new Option("Seçiniz", ""));
+                                        $.each(data3, function (key, value) {
+                                            if (data.PARENT_PARAMETER_ID == value.ID) {
+                                                $('#drpParentParameter').append("<option value='" + value.ID + "' selected>" + value.MAIN_DATA_NAME + "</option>");
+                                            }
+                                            else {
+                                                $('#drpParentParameter')
+                                                    .append($("<option></option>")
+                                                        .attr("value", value.ID)
+                                                        .text(value.MAIN_DATA_NAME));
+                                            }
+                                            $('.selectpicker').selectpicker('refresh');
+                                        });
+                                    },
+                                    error: function (xhr, ajaxOptions, thrownError) {
+
+                                    },
+                                    complete: function (data) {
+
+                                    }
+                                });
+
+                            },
+                            error: function (xhr, ajaxOptions, thrownError) {
+
+                            },
+                            complete: function (data) {
+
+                            }
+                        });
+                        //$("#drpParameterType").val(data.PARAMETER_TYPE_ID);
+                        $("#name").val(data.MAIN_DATA_NAME);
+                        $("#priority").val(data.PRIORITY_ORDER);
+                        $("#description").val(data.DESCRIPTION);
+                        $("#drpParentParameter").val(data.PARENT_PARAMETER_ID);
+                        $("#drpParentParameter").trigger('change');
+                        if (data.IS_ACTIVE) {
+                            $("#aktif").prop("checked", true);
+                        }
+                        else {
+                            $("#pasif").prop("checked", true);
+                        }
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                    },
+                    complete: function (data) {
+                    }
+                });
+            }
+        });
+        $('#deleteModal').on('shown.bs.modal', function (e) {
+            var parameterId = $(e.relatedTarget).attr('data-id');
+            $('#deleteId').val(parameterId);
+        });
+        $(document).ready(function () {
+        });
+
+        function clearForm() {
+            $("#id").val('');
+            $("#drpMainProcess").val('');
+            $("#drpParameterType").val('');
+            $("#name").val('');
+            $("#priority").val('');
+            $("#aktif").prop("checked", true);
+            $("#drpParentParameter").val('');
+            $("#description").val('');
+
+            $("#drpMainProcess").trigger('change');
+            $("#drpParameterType").trigger('change');
+            $("#drpParentParameter").trigger('change');
+
+
+        }
+        $('#btnAdd').click(function () {
+            clearForm();
+        });
+
+        $("#drpMainProcess").change(function () {
+            $.ajax({
+                url: "/Email/GetParameterTypeByMainProcessId/?mainProcessId=" +
+                    $("#drpMainProcess").find(":selected").val(),
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    $('#drpParameterType').empty();
+                    $("#drpParameterType").append(new Option("Seçiniz", ""));
+                    $.each(data, function (key, value) {
+                        $('#drpParameterType')
+                            .append($("<option></option>")
+                                .attr("value", value.PARAMETER_TYPE_ID)
+                                .text(value.TYPE_NAME));
+                        $('.selectpicker').selectpicker('refresh');
+                        $("#drpParameterType").trigger('change');
+                    });
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+
+                },
+                complete: function (data) {
+
+                }
+            });
+        });
+
+
+        $("#drpParameterType").change(function () {
+            $.ajax({
+                url: "/Email/GetParameterByMainProcessId/?mainProcessId=" +
+                    $("#drpMainProcess").find(":selected").val()+"&parameterTypeId="+$("#drpParameterType").find(":selected").val(),
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    $('#drpParentParameter').empty();
+                    $("#drpParentParameter").append(new Option("Seçiniz", ""));
+                    $.each(data, function (key, value) {
+                        $('#drpParentParameter')
+                            .append($("<option></option>")
+                                .attr("value", value.ID)
+                                .text(value.MAIN_DATA_NAME));
+                    });
+                    //$("#drpParentParameter").trigger('change');
+                    $('.selectpicker').selectpicker('refresh');
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+
+                },
+                complete: function (data) {
+
+                }
+            });
+        });
+
+    </script>
+}

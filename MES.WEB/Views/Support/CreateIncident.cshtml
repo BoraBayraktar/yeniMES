@@ -1,0 +1,152 @@
+﻿@model MES.Web.Models.IncidentViewModel
+@{
+    var user = Context.Session.GetObject<MES.Entities.Model.USER>("User");
+}
+
+<!--begin::Card-->
+<div class="card card-custom gutter-b">
+    <div class="card-header">
+        <div class="card-title">
+            @*<span class="card-icon">
+                <i class="flaticon2-list-2 text-primary"></i>
+            </span>*@
+            <h3 class="card-label">Arıza Bildirimi</h3>
+        </div>
+    </div>
+    <!--begin::Form-->
+    <form class="form" role="form" id="frmIncident" method="post" action="/Support/CreateIncident" enctype="multipart/form-data">
+        <div class="card-body">
+            <div class="form-group row">
+                <div class="col-lg-7">
+                    <div class="form-group row">
+                        <label class="col-lg-2 col-form-label text-left">Aciliyet:</label>
+                        <div class="col-lg-9">
+                            @Html.DropDownListFor(m => m.incident.INCIDENT_PRIORITY_ID, Model.IncidentPriorityList, "Seçiniz", new { @class = "form-control selectpicker", id = "drpPriority", @required = true })
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-lg-2 col-form-label text-left">Konu:</label>
+                        <div class="col-lg-9">
+                            @Html.TextBoxFor(m => m.incident.SUBJECT, new { @class = "form-control", @required = true, @id = "subject" })
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-lg-2 col-form-label text-left">Açıklama:</label>
+                        <div class="col-lg-9">
+                            @Html.TextAreaFor(m => m.incident.DESCRIPTION, new { @class = "form-control", @required = true, @id = "description", @rows = 5 })
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-lg-2 col-form-label text-left">Resim:</label>
+                        <div class="col-lg-9">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="imageFile" name="imageFile" style="width:100%" />
+                                <label class="custom-file-label" for="imageFile">Dosya</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5">
+                    <div class="form-group row">
+                        <label class="col-lg-3 col-form-label text-left">Açan Kişi:</label>
+                        <div class="col-lg-8">
+                            <div class="input-group">
+                                <div class="input-group-prepend"><span class="input-group-text"><i class="la la-user"></i></span></div>
+                                @Html.DropDownListFor(m => m.incident.CREATED_USER_ID, new SelectList(Model.UserList, "Value", "Text", user.USER_ID.ToString()), "Seçiniz", new { @class = "form-control selectpicker", id = "drpCreatedUser", @required = true, @disabled = true })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-lg-3 col-form-label text-left">Departman:</label>
+                        <div class="col-lg-8">
+                            <div class="input-group">
+                                <div class="input-group-prepend"><span class="input-group-text"><i class="la flaticon-map"></i></span></div>
+                                @Html.DropDownListFor(m => m.incident.CREATED_USER_ID, new SelectList(Model.DepartmentList, "Value", "Text", user.DEPARTMENT_ID.ToString()), "Seçiniz", new { @class = "form-control selectpicker", id = "drpCreatedDepartment", @required = true, @disabled = true })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-lg-3 col-form-label text-left">Ünvan:</label>
+                        <div class="col-lg-8">
+                            <div class="input-group">
+                                <div class="input-group-prepend"><span class="input-group-text"><i class="la flaticon-medal"></i></span></div>
+                                @Html.DropDownListFor(m => m.incident.CREATED_USER_ID, new SelectList(Model.TitleList, "Value", "Text", user.TITLE_ID.ToString()), "Seçiniz", new { @class = "form-control selectpicker", id = "drpCreatedTitle", @required = true, @disabled = true })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-lg-3 col-form-label text-left">Bildiren:</label>
+                        <div class="col-lg-8">
+                            @Html.DropDownListFor(m => m.incident.REPORTING_USER_ID, Model.UserList, "Seçiniz", new { @class = "form-control selectpicker", id = "drpReportingUser" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--begin::Actions-->
+        <div class="card-footer">
+            <div class="row">
+                <div class="col-xl-1"></div>
+                <div class="col-xl-8">
+                    <button type="submit" class="btn btn-primary font-weight-bold mr-2">Kaydet</button>
+                    @*<button type="reset" class="btn btn-clean font-weight-bold">Cancel</button>*@
+                </div>
+                <div class="col-xl-3"></div>
+            </div>
+        </div>
+        <!--end::Actions-->
+    </form>
+    <!--end::Form-->
+</div>
+<!--end::Card-->
+<!--begin::Row-->
+@*<div class="row">
+    <div class="col-lg-6">
+        <!--begin::Callout-->
+        <div class="card card-custom mb-2 bg-diagonal bg-diagonal-light-primary">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between p-4">
+                    <!--begin::Content-->
+                    <div class="d-flex flex-column mr-5">
+                        <a href="#" class="h4 text-dark text-hover-primary mb-5">Or Reach Us by Live Chat</a>
+                        <p class="text-dark-50">
+                            Windows 10 automatically installs updates
+                            <br />to make for sure
+                        </p>
+                    </div>
+                    <!--end::Content-->
+                    <!--begin::Button-->
+                    <div class="ml-6 flex-shrink-0">
+                        <a href="#" data-toggle="modal" data-target="#kt_chat_modal" class="btn font-weight-bolder text-uppercase font-size-lg btn-primary py-3 px-6">Contact Us</a>
+                    </div>
+                    <!--end::Button-->
+                </div>
+            </div>
+        </div>
+        <!--end::Callout-->
+    </div>
+    <div class="col-lg-6">
+                <!--begin::Callout-->
+                <div class="card card-custom mb-2 bg-diagonal bg-diagonal-light-success">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-between p-4">
+                            <!--begin::Content-->
+                            <div class="d-flex flex-column mr-5">
+                                <a href="#" class="h4 text-dark text-hover-primary mb-5">Phone Call</a>
+                                <p class="text-dark-50">
+                                    Windows 10 automatically installs updates
+                                    <br />to make for sure
+                                </p>
+                            </div>
+                            <!--end::Content-->
+                            <!--begin::Button-->
+                            <div class="ml-6 flex-shrink-0">
+                                <a href="#" data-toggle="modal" data-target="#kt_chat_modal" class="btn font-weight-bolder text-uppercase font-size-lg btn-success py-3 px-6">Submit a Request</a>
+                            </div>
+                            <!--end::Button-->
+                        </div>
+                    </div>
+                </div>
+                <!--end::Callout-->
+            </div>
+        </div>*@

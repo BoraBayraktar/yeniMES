@@ -1,0 +1,265 @@
+﻿@model MES.Web.Models.IncidentDetailViewModel
+@{
+    var user = Context.Session.GetObject<MES.Entities.Model.USER>("User");
+}
+
+<!--begin::Card-->
+<div class="card card-custom gutter-b">
+    @*<div class="card-header">
+            <div class="card-title">
+                <h5 class="card-label">Arıza Detay</h5>
+            </div>
+        </div>*@
+    <!--begin::Form-->
+
+    <form class="form" role="form" id="frmIncidentDetail" method="post" action="/Support/IncidentDetail" enctype="multipart/form-data">
+        <div class="card-body small">
+            <div class="form-group-sm row">
+
+                <label class="col-lg-1 col-form-label-sm text-right">Bildiren:</label>
+                <div class="col-lg-3">
+                    @Html.DropDownListFor(m => m.incident.REPORTING_USER_ID, Model.UserList, "Seçiniz", new { @class = "form-control selectpicker", id = "drpReportingUser" })
+                </div>
+                <label class="col-lg-1 col-form-label-sm text-right">Aciliyet:</label>
+                <div class="col-lg-3">
+                    @Html.DropDownListFor(m => m.incident.INCIDENT_PRIORITY_ID, Model.IncidentPriorityList, "Seçiniz", new { @class = "form-control selectpicker", id = "drpIncidentPriority" })
+                </div>
+                <label class="col-lg-1 col-form-label text-right">Ad Soyad:</label>
+                <div class="col-lg-3">
+                    <label class="col-form-label"><strong>@Model.incident.CREATED_USER.NAME @Model.incident.CREATED_USER.SURNAME</strong></label>
+                </div>
+            </div>
+            <div class="form-group-sm row">
+                <label class="col-lg-1 col-form-label-sm text-right">Konu:</label>
+                <div class="col-lg-7">
+                    <input id="incident.ID" name="incident.ID" type="hidden" value="@Context.Request.Query["incidentId"].ToString()" />
+                    @Html.TextBoxFor(m => m.incident.SUBJECT, new { @class = "form-control", @placeholder = "Konu", @id = "konu" })
+                </div>
+                <label class="col-lg-1 col-form-label text-right">Departman:</label>
+                <div class="col-lg-3">
+                    <label class="col-form-label"><strong>@(Model.incident.CREATED_USER.DEPARTMENT==null ? "" : Model.incident.CREATED_USER.DEPARTMENT.NAME)</strong></label>
+                </div>
+            </div>
+            <div class="form-group-sm row">
+                <label class="col-lg-1 col-form-label-sm text-right">Açıklama:</label>
+                <div class="col-lg-7">
+                    @Html.TextAreaFor(m => m.incident.DESCRIPTION, new { @class = "form-control", @placeholder = "Açıklama", @id = "aciklama", @rows = 5 })
+                </div>
+            </div>
+            <div class="form-group-sm row">
+                <label class="col-lg-1 col-form-label-sm text-right">Açılış Tarihi:</label>
+                <div class="col-lg-3">
+                    @Html.TextBoxFor(m => m.incident.CREATED_DATE, new { @class = "form-control", @placeholder = "Açılış Tarihi", @id = "acilisTarihi" })
+                </div>
+                <label class="col-lg-2 col-form-label-sm text-right">Hedef Kapama Tarihi:</label>
+                <div class="col-lg-2">
+                    @Html.TextBoxFor(m => m.incident.CREATED_DATE, new { @class = "form-control", @placeholder = "Hedef Kapama Tarihi", @id = "hedefKapamaTarihi" })
+                </div>
+
+                <div class="col-lg-4">
+                    <button class="btn btn-success" type="button" id="btnOnayla" name="btnOnayla">Onayla ve Kapat</button>
+                    <button class="btn btn-primary" type="button" id="btnReddet" name="btnReddet">Reddet</button>
+                </div>
+            </div>
+            <div class="form-group-sm row">
+                <label class="col-lg-1 col-form-label text-right">Not Ekle</label>
+                <div class="col-lg-7">
+                    @Html.TextAreaFor(m => m.incidentHistory.DESCRIPTION, new { @class = "form-control", @required = true, @id = "description", @rows = 5 })
+                </div>
+                <label class="col-lg-1 col-form-label text-right">Durum:</label>
+                <div class="col-lg-3">
+                    @Html.DropDownListFor(m => m.incident.INCIDENT_STATUS_ID, Model.IncidentStatusList, "Seçiniz", new { @class = "form-control selectpicker", id = "drpIncidentStatus", @disabled = "disabled" })
+                </div>
+            </div>
+            <br />
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="detailInfo-tab" data-toggle="tab" href="#detailInfo" aria-controls="detailInfo">
+                        <span class="nav-icon">
+                            <i class="flaticon2-chat-1"></i>
+                        </span>
+                        <span class="nav-text">Çözüm Bilgileri</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="log-tab" data-toggle="tab" href="#processHistory" aria-controls="processHistory">
+                        <span class="nav-icon">
+                            <i class="flaticon2-layers-1"></i>
+                        </span>
+                        <span class="nav-text">İşlem Geçmişi</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-content mt-5" id="myTabContent">
+                <div class="tab-pane fade show active" id="detailInfo" role="tabpanel" aria-labelledby="detailInfo-tab">
+                    <div class="form-group-sm row">
+                        <label class="col-lg-2 col-form-label-sm text-right">Çözülme Zamanı:</label>
+                        <div class="col-lg-3">
+                            @Html.TextBoxFor(m => m.incidentResolution.RESOLVED_DATE, new { @class = "form-control", @placeholder = "Çözülme Zamanı", @id = "cozulmeTarihi", @type = "datetime-local" })
+                        </div>
+                        <label class="col-lg-2 col-form-label-sm text-right">Çözüm Kodu:</label>
+                        <div class="col-lg-3">
+                            @*<input class="form-control" type="datetime-local" value="2011-08-19T13:45:00" id="example-datetime-local-input" />*@
+                            @Html.DropDownListFor(m => m.incidentResolution.RESOLVED_CODE, Model.ResolutionCodeList, "Seçiniz", new { @class = "form-control selectpicker", id = "drpResolutionCode" })
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-lg-2 col-form-label text-right">Çözüm Açıklaması:</label>
+                        <div class="col-lg-8">
+                            @Html.TextAreaFor(m => m.incidentResolution.RESOLVED_DESCRIPTION, new { @class = "form-control", @placeholder = "Çözüm Açıklaması", @id = "description", @rows = 5 })
+                            @*@Html.DropDownListFor(m => m.incident.REPORTING_USER_ID, Model.UserList, "Seçiniz", new { @class = "form-control selectpicker", id = "drpReportingUser", @required = true })*@
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="processHistory" role="tabpanel" aria-labelledby="log-tab">
+                    <div class="form-group row">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Tarih</th>
+                                    <th scope="col">Kullanıcı</th>
+                                    <th scope="col">Açıklama</th>
+                                    <th scope="col">Durum</th>
+                                    <th scope="col">Atanan Grup</th>
+                                    <th scope="col">Atanan Kişi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.IncidentHistoryList)
+                                {
+                                    <tr>
+                                        <td>@item.CREATED_DATE</td>
+                                        <td>@item.CREATED_USER.NAME @item.CREATED_USER.SURNAME</td>
+                                        <td>@item.DESCRIPTION</td>
+                                        <td>@(item.INCIDENT_STATUS==null ? "" : item.INCIDENT_STATUS.MAIN_DATA_NAME)</td>
+                                        <td>@(item.ASSIGNED_GROUP==null ? "" : item.ASSIGNED_GROUP.GROUP_NAME)</td>
+                                        <td>@(item.ASSIGNED_USER==null ? "" : (item.ASSIGNED_USER.NAME + " " + item.ASSIGNED_USER.SURNAME))</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!--begin::Actions-->
+        <div class="card-footer">
+            <div class="row">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-9">
+                    <button type="submit" class="btn btn-primary font-weight-bold mr-1">Kaydet</button>
+                    @*<button type="reset" class="btn btn-clean font-weight-bold">Cancel</button>*@
+                </div>
+            </div>
+        </div>
+        <!--end::Actions-->
+    </form>
+    <!--end::Form-->
+</div>
+<!--end::Card-->
+
+@section Scripts
+{
+    <script src="/Content/assets/plugins/bootstrap-input-spinner.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("input[type='number']").inputSpinner();
+            //$('#example1').DataTable();
+            var dateControl = document.querySelector('input[type="datetime-local"]');
+            //dateControl.value = '2017-06-01T08:30';
+            dateControl.value = '@(Model.incidentResolution!=null ? Model.incidentResolution.RESOLVED_DATE.Value.ToString("yyyy-MM-ddTHH:mm:ss") : "")';
+        });
+
+        $("#drpAssignedGroup").change(function () {
+            var grupVal = $("#drpAssignedGroup option:selected").val();
+            $.ajax({
+                url: '/Support/GetExpertListByGroupId?groupId=' + grupVal,
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    $('#drpAssignedUser').empty();
+                    $("#drpAssignedUser").append('<option value="0">Seçiniz</option>');
+                    $.each(data, function (key, value) {
+                        $("#drpAssignedUser").append('<option value=' + value.EXPERT_NAME_ID + '>' + value.EXPERT_NAME + '</option>');
+                    });
+                    $('#drpAssignedUser').selectpicker("refresh");
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                },
+                complete: function (data) {
+                }
+            });
+        });
+
+        $("#drpCategory").change(function () {
+            var categoryVal = $("#drpCategory option:selected").val();
+            $.ajax({
+                url: '/Support/GetSubCategoryByCategoryId?categoryId=' + categoryVal,
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    $('#drpSubCategory').empty();
+                    $("#drpSubCategory").append('<option value="0">Seçiniz</option>');
+                    $.each(data, function (key, value) {
+                        $("#drpSubCategory").append('<option value=' + value.ID + '>' + value.MAIN_DATA_NAME + '</option>');
+                    });
+                    $('#drpSubCategory').selectpicker("refresh");
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                },
+                complete: function (data) {
+                }
+            });
+        });
+
+
+        $('#btnOnayla').click(function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const incidentId = urlParams.get('incidentId');
+            $.ajax({
+                url: '/Support/IncidentConfirmAndClose?incidentId=' + incidentId,
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    if (data.success === true) {
+                        location.reload();
+                    }
+                    else {
+                        toastr['error'](data.message);
+                    }
+                },
+                error: function (data) {
+                    toastr['error']('Hata oluştu. Lütfen daha sonra tekrar deneyiniz.');
+                },
+                complete: function (data) {
+                }
+            });
+        });
+
+        $('#btnReddet').click(function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const incidentId = urlParams.get('incidentId');
+            $.ajax({
+                url: '/Support/IncidentReject?incidentId=' + incidentId,
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    if (data.success === true) {
+                        location.reload();
+                    }
+                    else {
+                        toastr['error'](data.message);
+                    }
+                },
+                error: function (data) {
+                    toastr['error']('Hata oluştu. Lütfen daha sonra tekrar deneyiniz.');
+                },
+                complete: function (data) {
+                }
+            });
+        });
+
+    </script>
+}

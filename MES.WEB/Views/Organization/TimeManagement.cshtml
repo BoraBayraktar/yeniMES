@@ -1,0 +1,531 @@
+﻿@model TimeManagementViewModel
+@{
+    ViewData["Title"] = "Zaman Listesi";
+    var yearList = new List<SelectListItem>();
+    for (int i = DateTime.Now.Year; i > (DateTime.Now.Year - 20); i--)
+    {
+        yearList.Add(new SelectListItem()
+        {
+            Text = i.ToString(),
+            Value = i.ToString()
+        });
+    }
+}
+
+@section Styles
+{
+    <link href="/Content/assets/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
+}
+
+<div class="card card-custom">
+    <div class="card-header">
+        <div class="card-title">
+            <span class="card-icon">
+                <i class="flaticon2-list-2 text-primary"></i>
+            </span>
+            <h3 class="card-label">Zaman Listesi</h3>
+        </div>
+        <div class="card-toolbar">
+            <!--begin::Button-->
+            <a href="/Organization/AddTimeManagement" name="btnAdd" id="btnAdd" class="btn btn-primary font-weight-bolder" >
+                <i class="la la-plus"></i>Yeni Kayıt
+            </a>
+            <!--end::Button-->
+        </div>
+    </div>
+    <div class="card-body">
+        <!--begin: Datatable-->
+        <table class="table table-bordered table-hover table-checkable" id="example1" style="margin-top: 13px !important;">
+            <thead>
+                <tr>
+                    <th>Takvim Adı</th>
+                    <th>Çalışma Günleri</th>
+                    <th>Çalışma Vardiyaları</th>
+                    <th>Time Zone</th>
+                    <th>Durum</th>
+                    <th>#</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.TimeManagementList)
+                {
+                    <tr>
+                        <td>@item.CALENDAR_NAME</td>
+                        <td>@item.CALENDAR_DAYS</td>
+                        <td>@item.BUSINESS_HOURS</td>
+                        <td>@(item.TIMEZONE == null ? "-" : (item.TIMEZONE.NAME))</td>
+                        <td>@(item.ISACTIVE ? "Aktif" : "Pasif")</td>
+                        <td>
+                            <a href="/Organization/AddTimeManagement?id=@item.ID" class="btn btn-sm btn-clean btn-icon" title="Güncelle">
+                                <i class="la la-edit"></i>
+                            </a>
+                            <a href="#" class="btn btn-sm btn-clean btn-icon" title="Sil" data-toggle="modal" data-target="#deleteModal" data-id="@item.ID">
+                                <i class="la la-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <!--end: Datatable-->
+    </div>
+</div>
+
+
+<form role="form" id="frmTimeManagement">
+    <div class="modal fade" id="createOrEditModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">Zaman Tanımlama</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label>Takvim Adı</label>
+                            @Html.TextBoxFor(m => m.CALENDAR_NAME, new { @class = "form-control", @placeholder = "Takvim Adı", @required = true, @id = "calendarName" })
+                        </div>
+                        <div class="form-group">
+                            <label>Çalışma Günleri</label>
+                            @Html.ListBoxFor(m => m.SelectedWorkDays, Model.WorkDaysList, new { @class = "form-control", size = 7, @id = "workDays" })
+                        </div>
+                        <div class="form-group">
+                            <label>Çalışma Saatleri</label>
+                            @Html.ListBoxFor(m => m.SelectedBusinessHours, Model.BusinessHoursList, new { @class = "form-control", size = 4, @id = "businessHours" })
+                        </div>
+                        <div class="form-group">
+                            <label>Time Zone</label>
+                            @Html.DropDownListFor(m => m.TIMEZONE_ID, Model.TimezoneList, "Seçiniz", new { @class = "form-control", id = "drpTimezone" })
+                        </div>
+                        <div class="form-group">
+                            <label>Durumu</label>
+                            <br />
+                            @Html.RadioButtonFor(m => m.ISACTIVE, true, new { id = "aktif" })
+                            Aktif
+                            &nbsp;&nbsp;&nbsp;
+                            @Html.RadioButtonFor(m => m.ISACTIVE, false, new { id = "pasif" })
+                            Pasif
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
+                    <input type="hidden" id="id" name="id" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Kapat</button>
+                    <button type="submit" class="btn btn-primary" id="btnSubmit">Kaydet</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+</form>
+
+
+<form role="form" id="frmDeleteTimeManagement">
+    <div class="modal fade" id="deleteModal">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Zaman Tanımı Sil</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i aria-hidden="true" class="ki ki-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="box-body">
+                        <input type="hidden" id="deleteId" name="deleteId" />
+                        Silmek istediğinizden emin misiniz?
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Vazgeç</button>
+                    <button type="submit" class="btn btn-primary" id="btnSubmit">Sil</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+</form>
+
+
+<div class="modal fade" id="offDayListModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Tatil Listesi</h4>
+            </div>
+            <div class="modal-body">
+                <div class="box-body">
+                    <button name="btnAddOffDay" id="btnAddOffDay" type="button" class="btn btn-block btn-primary" data-toggle="modal" data-target="#createOrEditModalOffDays">Yeni Kayıt Ekle</button>
+                    <br />
+                    <br />
+
+                    <table id="offDaysTable" class="table table-bordered table-striped" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Yıl</th>
+                                <th>Açıklama</th>
+                                <th>Başlangıç</th>
+                                <th>Bitiş</th>
+                                <th>Güncelle</th>
+                                <th>Sil</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyOffDay">
+                        </tbody>
+                    </table>
+
+
+
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Kapat</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+
+<form role="form" id="frmOffDays">
+    <div class="modal fade" id="createOrEditModalOffDays">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">Tatil Zamanı Tanımlama</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Yıl</label>
+                            @Html.DropDownListFor(m => m.OffDays.YEAR, yearList, "Seçiniz", new { @class = "form-control", id = "drpYear", @required = true })
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Açıklama</label>
+                            @Html.TextBoxFor(m => m.OffDays.DESCRIPTION, new { @class = "form-control", @placeholder = "Açıklama", @required = true, @id = "description" })
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Başlangıç Tarihi</label>
+                            @Html.TextBoxFor(m => m.OffDays.START_DATE, new { @class = "form-control", @placeholder = "Başlangıç Tarihi", @id = "startDate", @required = true })
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Bitiş Tarihi</label>
+                            @Html.TextBoxFor(m => m.OffDays.END_DATE, new { @class = "form-control", @placeholder = "Bitiş Tarihi", @id = "endDate", @required = true })
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
+                    <input type="hidden" id="offDayId" name="offDayId" />
+                    <input type="hidden" id="tmId" name="tmId" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Kapat</button>
+                    <button type="submit" class="btn btn-primary">Kaydet</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+</form>
+
+<form role="form" id="frmDeleteOffDays">
+    <div class="modal fade" id="deleteModalOffDays" data-backdrop="static">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">Tatil Sil</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="box-body">
+                        <input type="hidden" id="offDayDeleteId" name="offDayDeleteId" />
+                        Silmek istediğinizden emin misiniz?
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Vazgeç</button>
+                    <button type="submit" class="btn btn-primary">Sil</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+</form>
+
+
+@section Scripts
+        {
+    <script src="/Content/assets/plugins/custom/datatables/datatables.bundle.js"></script>
+    <script src="/Content/assets/js/pages/crud/datatables/extensions/select.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#example1').DataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Turkish.json"
+                }
+            });
+        });
+
+                $(function () {
+                    $('#example1').DataTable({
+                        "scrollX": true
+                    });
+
+                    $('#startDate').datepicker({
+                        autoclose: true,
+                        format: 'dd.mm.yyyy'
+                    });
+                    $('#endDate').datepicker({
+                        autoclose: true,
+                        format: 'dd.mm.yyyy'
+                    });
+                });
+
+                $('#frmTimeManagement').submit(function (e) {
+                    e.preventDefault();
+                    var form = $("#frmTimeManagement");
+                        var formData = new FormData(form[0]);
+                        $.ajax({
+                            url: '@Url.Action("CreateOrEditTimeManagement","Organization")',
+                            type: "POST",
+                            data: formData,
+                            contentType: false,
+                            cache: false,
+                            dataType: "json",
+                            processData: false,
+                            success: function (data) {
+                                if (data.success === true) {
+                                    location.reload();
+                                }
+                            },
+                            error: function (data) {
+                                toastr['error']('Hata oluştu. Lütfen daha sonra tekrar deneyiniz.');
+                            },
+                            complete: function (data) {
+                            }
+                        });
+                });
+
+                $('#frmOffDays').submit(function (e) {
+                    e.preventDefault();
+                    var form = $("#frmOffDays");
+                        var formData = new FormData(form[0]);
+                        $.ajax({
+                            url: '@Url.Action("CreateOrEditOffDays","Organization")',
+                            type: "POST",
+                            data: formData,
+                            contentType: false,
+                            cache: false,
+                            dataType: "json",
+                            processData: false,
+                            success: function (data) {
+                                if (data.success === true) {
+                                    location.reload();
+                                }
+                            },
+                            error: function (data) {
+                                toastr['error']('Hata oluştu. Lütfen daha sonra tekrar deneyiniz.');
+                            },
+                            complete: function (data) {
+                            }
+                        });
+                });
+
+                $('#frmDeleteTimeManagement').submit(function (e) {
+                    e.preventDefault();
+                    var form = $("#frmDeleteTimeManagement");
+                        var formData = new FormData(form[0]);
+                        $.ajax({
+                            url: '@Url.Action("DeleteTimeManagement","Organization")',
+                            type: "POST",
+                            data: formData,
+                            contentType: false,
+                            cache: false,
+                            dataType: "json",
+                            processData: false,
+                            success: function (data) {
+                                if (data.success === true) {
+                                    location.reload();
+                                }
+                            },
+                            error: function (data) {
+                                toastr['error']('Hata oluştu. Lütfen daha sonra tekrar deneyiniz.');
+                            },
+                            complete: function (data) {
+                            }
+                        });
+                });
+
+                $('#frmDeleteOffDays').submit(function (e) {
+                    e.preventDefault();
+                    var form = $("#frmDeleteOffDays");
+                        var formData = new FormData(form[0]);
+                        $.ajax({
+                            url: '@Url.Action("DeleteOffDays","Organization")',
+                            type: "POST",
+                            data: formData,
+                            contentType: false,
+                            cache: false,
+                            dataType: "json",
+                            processData: false,
+                            success: function (data) {
+                                if (data.success === true) {
+                                    location.reload();
+                                }
+                            },
+                            error: function (data) {
+                                toastr['error']('Hata oluştu. Lütfen daha sonra tekrar deneyiniz.');
+                            },
+                            complete: function (data) {
+                            }
+                        });
+                });
+
+                $('#createOrEditModal').on('shown.bs.modal', function (e) {
+                    var tmId = $(e.relatedTarget).attr('data-id');
+                    if (tmId != null) {
+                        clearForm();
+
+                        $.ajax({
+                            url: '/Organization/GetTimeManagement?id=' + tmId,
+                            type: "GET",
+                            dataType: "json",
+                            success: function (data) {
+                                $("#id").val(tmId);
+                                $("#calendarName").val(data.CALENDAR_NAME);
+                                $("#drpTimezone").val(data.TIMEZONE_ID);
+                                if (data.ISACTIVE) {
+                                    $("#aktif").prop("checked", true);
+                                }
+                                else {
+                                    $("#pasif").prop("checked", true);
+                                }
+
+                                var values=data.CALENDAR_DAYS;
+                                $.each(values.split(","), function(i,e){
+                                    $("#workDays option[value='" + e + "']").prop("selected", true);
+                                });
+
+                                var values=data.BUSINESS_HOURS;
+                                $.each(values.split(","), function(i,e){
+                                    $("#businessHours option[value='" + e + "']").prop("selected", true);
+                                });
+
+                            },
+                            error: function (xhr, ajaxOptions, thrownError) {
+                            },
+                            complete: function (data) {
+                            }
+                        });
+                    }
+                });
+
+                $('#createOrEditModalOffDays').on('shown.bs.modal', function (e) {
+                    var offDayId = $(e.relatedTarget).attr('data-id');
+                    if (offDayId != null) {
+                        clearFormOffDays();
+
+                        $.ajax({
+                            url: '/Organization/GetOffDays?id=' + offDayId,
+                            type: "GET",
+                            dataType: "json",
+                            success: function (data) {
+                                $("#offDayId").val(offDayId);
+                                $("#drpYear").val(data.YEAR);
+                                $("#description").val(data.DESCRIPTION);
+                                var startDate = new Date(data.START_DATE);
+                                var endDate = new Date(data.END_DATE);
+                                $("#startDate").val(startDate.toLocaleDateString());
+                                $("#endDate").val(endDate.toLocaleDateString());
+                            },
+                            error: function (xhr, ajaxOptions, thrownError) {
+                            },
+                            complete: function (data) {
+                            }
+                        });
+                    }
+                });
+
+                $('#offDayListModal').on('shown.bs.modal', function (e) {
+                    var tmId = $(e.relatedTarget).attr('data-id');
+                    $("#tmId").val(tmId);
+                    if (tmId != null) {
+                        $("#tbodyOffDay").empty();
+                        $.ajax({
+                            url: '/Organization/GetTimeManagementOffDays?timeManagementId=' + tmId,
+                            type: "GET",
+                            dataType: "json",
+                            success: function (data) {
+                                $.each(data, function (index, item) {
+                                    var startDate = new Date(item.START_DATE);
+                                    var endDate = new Date(item.END_DATE);
+                                    $("#offDaysTable tbody").append("<tr><td>"+item.YEAR+"</td><td>"+item.DESCRIPTION+"</td><td>"+startDate.toLocaleDateString()+"</td><td>"+endDate.toLocaleDateString()+"</td><td><a href='#' data-toggle='modal' data-target='#createOrEditModalOffDays' data-id='"+item.ID+"'>Güncelle</a></td><td><a href='#' data-toggle='modal' data-target='#deleteModalOffDays' data-id='"+item.ID+"'>Sil</a></td></tr>");
+                                });
+                            },
+                            error: function (xhr, ajaxOptions, thrownError) {
+                            },
+                            complete: function (data) {
+                            }
+                        });
+                    }
+                });
+
+
+                $('#deleteModal').on('shown.bs.modal', function (e) {
+                    var tmId = $(e.relatedTarget).attr('data-id');
+                    $('#deleteId').val(tmId);
+                });
+                $('#deleteModalOffDays').on('shown.bs.modal', function (e) {
+                    var offDayId = $(e.relatedTarget).attr('data-id');
+                    $('#offDayDeleteId').val(offDayId);
+                });
+                
+                function clearForm() {
+                    $("#id").val('');
+                    $("#calendarName").val('');
+                    $("#drpTimezone").val('');
+                    $("#aktif").prop("checked", true);
+                    $("#workDays option:selected").prop("selected", false);
+                    $("#businessHours option:selected").prop("selected", false);
+                }
+
+                function clearFormOffDays() {
+                    $("#offDayId").val('');
+                    $("#drpYear").val('');
+                    $("#description").val('');
+                    $("#startDate").val('');
+                    $("#endDate").val('');
+                }
+                $('#btnAdd').click(function () {
+                    clearForm();
+                });
+                $('#btnAddOffDay').click(function () {
+                    clearFormOffDays();
+                });
+    </script>
+}

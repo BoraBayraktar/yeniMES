@@ -1,0 +1,61 @@
+﻿@model EmailSettingsViewModel
+@{
+    ViewData["Title"] = "E-Posta Gönderme Ayarları";
+}
+
+@section Styles
+{
+}
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-custom gutter-b example example-compact">
+            <div class="card-header">
+                <h3 class="card-title">SMTP Ayarları</h3>
+            </div>
+            <!-- form start -->
+            <form role="form" id="formEmailSettings" method="post" action="/Organization/EmailSettings">
+                @Html.AntiForgeryToken()
+                <div class="card-body">
+                    <div class="form-group">
+                        <label>SMTP Host</label>
+                        @Html.TextBoxFor(m => m.MailServerSetup.SMTP_HOST, new { @class = "form-control", @placeholder = "SMTP Host", @required = true, @id = "smtpHost" })
+                    </div>
+                    <div class="form-group">
+                        <label>SMTP Port</label>
+                        @Html.TextBoxFor(m => m.MailServerSetup.SMTP_PORT, new { @class = "form-control", @placeholder = "SMTP Port", @required = true, @id = "smtpPort" })
+                    </div>
+                    <div class="form-group">
+                        <label>Username</label>
+                        @Html.TextBoxFor(m => m.MailServerSetup.USERNAME, new { @class = "form-control", @placeholder = "Username", @required = true, @id = "username" })
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        @Html.TextBoxFor(m => m.MailServerSetup.PASSWORD, new { @class = "form-control", @placeholder = "Password", @required = true, @id = "password" })
+                    </div>
+                    <div class="form-group">
+                        <label>Default Address</label>
+                        @Html.TextBoxFor(m => m.MailServerSetup.DEFAULT_ADDRESS, new { @class = "form-control", @placeholder = "Default Address", @required = true, @id = "defaultAddress" })
+                    </div>
+                    <div class="form-group">
+                        <label>Default Name</label>
+                        @Html.TextBoxFor(m => m.MailServerSetup.DEFAULT_NAME, new { @class = "form-control", @placeholder = "Default Name", @id = "defaultName" })
+                    </div>
+                </div>
+                <!-- /.box-body -->
+
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script type="text/javascript">
+    </script>
+}

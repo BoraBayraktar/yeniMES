@@ -1,0 +1,346 @@
+﻿@model GroupViewModel
+@{
+    ViewData["Title"] = "BT Grup Tanımlama/Güncelleme";
+    int k = 0;
+
+
+}
+
+@section Styles
+{
+    <link href="/Content/assets/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <!-- general form elements -->
+        <div class="card card-custom gutter-b example example-compact">
+            <div class="card-header">
+                <h3 class="card-title">BT Grup Tanımlama/Güncelleme</h3>
+            </div>
+            <!-- form start -->
+            <form class="form" id="formGroup" method="post" action="/Group/Group">
+                @Html.AntiForgeryToken()
+                <div class="card-body">
+                    <div class="form-group-sm row" style="margin-bottom:4px;">
+                        <label class="col-lg-2 col-form-label text-left">BT Grup Adı:</label>
+                        <div class="col-lg-4">
+                            @Html.TextBoxFor(m => m.group.GROUP_NAME, new { @class = "form-control", @required = true, @id = "serviceName" })
+                            <input type="hidden" id="id" name="id" value="@(Context.Request.Query["id"])" />
+                        </div>
+                        <label class="col-lg-2 col-form-label text-left">Durumu:</label>
+                        <span class="switch switch-sm switch-icon" style="margin-left:10px;">
+                            <label>
+                                @Html.CheckBoxFor(m => m.group.GROUP_ISACTIVE, new { id = "aktif" })
+                                <span></span>
+                            </label>
+                        </span>
+                    </div>
+                    <div class="form-group-sm row" style="margin-bottom:4px;">
+                        <label class="col-lg-2 col-form-label text-left">Grup Yöneticisi:</label>
+                        <div class="col-lg-4">
+                            @Html.DropDownListFor(m => m.group.GROUP_MANAGER_ID, Model.groupManagerList, "Seçiniz", new { @class = "form-control select2", @required = true, id = "drpGroupManager", @style = "width:100%" })
+                        </div>
+                        <label class="col-lg-2 col-form-label text-left">Grup Tipi:</label>
+                        <div class="col-lg-4">
+                            @Html.DropDownListFor(m => m.group.GROUP_TYPE_ID, Model.groupTypeList, "Seçiniz", new { @class = "form-control select2", @required = true, id = "drpGroupType", @style = "width:100%" })
+                        </div>
+                    </div>
+                    <div class="form-group-sm row" style="margin-bottom:4px;">
+                        <label class="col-lg-2 col-form-label text-left">Atama Tipi:</label>
+                        <div class="col-lg-4">
+                            <div class="radio-inline">
+                                <label class="radio">
+                                    @Html.RadioButtonFor(m => m.group.GROUP_ASSIGNTYPE_ID, 1, new { id = "siraliAtama" })
+                                    Sıralı Atama
+                                    <span></span>
+                                </label>
+                                <label class="radio">
+                                    @Html.RadioButtonFor(m => m.group.GROUP_ASSIGNTYPE_ID, 2, new { id = "isYukuneGoreAtama" })
+                                    İş Yüküne Göre Atama
+                                    <span></span>
+                                </label>
+                                <label class="radio">
+                                    @Html.RadioButtonFor(m => m.group.GROUP_ASSIGNTYPE_ID, 3, new { id = "atamaYok" })
+                                    Atama Yok
+                                    <span></span>
+                                </label>
+                            </div>
+                        </div>
+                        <label class="col-lg-2 col-form-label text-left">Çalışma Saatleri:</label>
+                        <div class="col-lg-4">
+                            @Html.ListBoxFor(m => m.SelectedBusinessHour, Model.BusinessHourList, new { @class = "form-control", size = 4, @id = "businessHour" })
+                            <span id="spnCSEmptyError" class="form-text text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group-sm row" style="margin-bottom:4px;">
+                        <label class="col-lg-2 col-form-label text-left">Açıklama:</label>
+                        <div class="col-lg-10">
+                            @Html.TextAreaFor(m => m.group.GROUP_DESCRIPTION, new { @style = "height:150px", @class = "form-control", @placeholder = "Açıklama giriniz", @id = "groupDescription" })
+                        </div>
+                    </div>
+                    <div class="form-group-sm row" style="margin-bottom:4px;">
+                        <label class="col-lg-2 col-form-label text-left">BT Grubu uzmanı:</label>
+                        <div class="col-lg-3">
+                            @Html.DropDownListFor(m => m.group.ID, Model.groupExpertList,"Seçiniz",
+                           new { @class = "form-control select2", id = "drpExpertName", @style = "width:100%" })
+                        </div>
+                        <div class="col-lg-1">
+                            <button type="button" class="btn btn-primary" id="btnAddExpert" name="btnAddExpert">Ekle</button>
+                        </div>    
+                    </div>
+                    <div class="form-group-sm row" style="margin-bottom:4px;">
+                        <label class="col-lg-2 col-form-label text-left"></label>
+                        <div class="col-lg-10">
+                            <table id="expertTable" class="table table-bordered table-striped" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>Uzman Adı</th>
+                                        <th>#</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyExpert">
+                                    @if (Model.ExpertList != null)
+                                    {
+                                        foreach (var item in Model.ExpertList)
+                                        {
+                                            <tr id="@("row"+k)">
+                                                <td>@item.EXPERT_NAME</td>
+                                                <td>
+                                                    <a href="#" class="btn btn-sm btn-clean btn-icon" title="Sil" onclick="expertRemove(@("row"+k),@k)">
+                                                        <i class="la la-trash"></i>
+                                                    </a>
+                                                    <input type="hidden" value="@item.ID" name="PostExpert[@k].ID" />
+                                                    <input type="hidden" value="@item.EXPERT_NAME" name="PostExpert[@k].EXPERT_NAME" />
+                                                </td>
+                                            </tr>
+                                            k++;
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="row">
+                            <div class="col-lg-2"></div>
+                            <div class="col-lg-12">
+                                <button id="btnSubmit" type="submit" class="btn btn-primary">Kaydet</button>
+                            </div>
+                        </div>
+                    </div>  
+                </div>
+            </form>
+        </div>
+        <!-- /.box-body -->
+        <!-- /.box -->
+    </div>
+</div>
+@section Scripts
+{
+    <script src="/Content/assets/plugins/custom/datatables/datatables.bundle.js"></script>
+    <script src="/Content/assets/js/pages/crud/datatables/extensions/select.js"></script>
+    <script src="/Content/assets/js/pages/crud/forms/widgets/select2.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            if ($('#serviceName').val() == "") {
+                $("#aktif").prop("checked", true);
+            }
+
+            var selectedOpts = $('#businessHour option');
+            str = "";
+            $.each(selectedOpts, function (index, value) {
+                str += value + " ";
+            });
+            if (str =='' ) {
+                $('#spnCSEmptyError').html("Çalışma Saati zorunlu alandır.Lütfen Organizasyon altındaki çalışma saatleri menüsünden tanımlama yapınız.");
+            }
+
+            $('#drpGroupManager').select2();
+            $('#drpGroupType').select2();
+            $('#drpExpertName').select2();
+        });
+
+        $('#first-dropdown').change(function () {
+            $("#expertName")
+        }).change();
+
+        $('#formGroup').submit(function () {
+
+                var sirali = $('#siraliAtama').is(':checked');
+                var isYuku = $('#isYukuneGoreAtama').is(':checked');
+                var atamaYok = $('#atamaYok').is(':checked');
+                var stateArray = [sirali, isYuku, atamaYok];
+                var state = true;
+                var index = $.inArray(state, stateArray);
+
+                var servName = $('#serviceName').val();
+                var grpman = $('#drpGroupManager').val();
+                var grpType = $('#drpGroupType').val();
+
+                if (servName != '' && grpman != '' && grpType != '') {
+                    if (index == -1) {
+                        toastr['error']('Lütfen Atama Tipi seçiniz.');
+                        return false;
+                    }
+                }
+
+                if (servName != '' && grpman != '' && grpType != '') {
+                    if ($('#businessHour').val() == '') {
+                        toastr['error']('Lütfen Çalışma Saatleri seçiniz.');
+                        return false;
+                    }
+                }
+
+                var situated = 0
+                $('.table tbody tr').each(function (e) {
+                    var table = $(this)
+                    if (table.text().includes(expertName)) {
+                        situated += 1
+                    }
+                });
+                if (situated == 0) {
+                    toastr['error']('En az bir BT grubu uzmanı eklemelisiniz.');
+                    return false;
+                }
+        });
+
+        var expertRow =@k;
+
+        function expertRemove(rowId,rowNum) {
+            $(rowId).remove();
+            $("#tbodyExpert").append("<input type='hidden' value='-1' name='PostExpert["+rowNum+"].ID' />");
+        }
+
+        $("#btnAddExpert ").click(function () {
+            var expertName = $("#drpExpertName option:selected").html();
+            var expertNameID = $("#drpExpertName").val();
+            var expertMail = '';
+
+            $("#drpExpertName option:selected").prop("selected", "Seçiniz");
+            //$('#drpExpertName option:[value="1"]').prop("selected", true);
+            var situated = 0
+            $('.table tbody tr').each(function (e) {
+                var table = $(this)
+                if (table.text().includes(expertName)) {
+                    situated += 1
+                    toastr['error']('Bu BT Grup uzmanı zaten eklenmişti');
+                }
+            });
+            if (expertNameID != '') {
+                if (situated == 0) {
+                    $("#expertTable tbody").append("<tr id='expertRow" + expertRow + "'><td>" + expertName + "</td><td><a href='#' class='btn btn - sm btn - clean btn - icon' title='Sil' onclick='expertRemove(expertRow" + expertRow + "," + expertRow + ")'><i class='la la-trash'></i></a><input type='hidden' value='0' name='PostExpert[" + expertRow + "].ID'/><input type='hidden' value='" + expertName + "' name='PostExpert[" + expertRow + "].EXPERT_NAME'/><input type='hidden' value='" + expertNameID + "' name='PostExpert[" + expertRow + "].EXPERT_NAME_ID'/></td></tr>");
+                    expertRow = expertRow + 1;
+                    clearForm();
+                }
+            }
+        });
+
+        function clearForm() {
+            expertName = '';
+            expertNameID = '';            
+        }
+
+        $('#frmGroup').submit(function (e) {
+            e.preventDefault();
+            var form = $("#frmGroup");
+                var formData = new FormData(form[0]);
+                $.ajax({
+                    url: '@Url.Action("CreateOrEditGroup","Group")',
+                    type: "POST",
+                    data: formData,
+                    contentType: false,
+                    cache: false,
+                    dataType: "json",
+                    processData: false,
+                    success: function (data) {
+                        if (data.success === true) {
+                            location.reload();
+                        }
+                    },
+                    error: function (data) {
+                        toastr['error']('Hata oluştu. Lütfen daha sonra tekrar deneyiniz.');
+                    },
+                    complete: function (data) {
+                    }
+                });
+        });
+
+        $('#frmExpert').submit(function (e) {
+            e.preventDefault();
+            var form = $("#frmExpert");
+                var formData = new FormData(form[0]);
+                $.ajax({
+                    url: '@Url.Action("CreateOrEditExpert","Group")',
+                    type: "POST",
+                    data: formData,
+                    contentType: false,
+                    cache: false,
+                    dataType: "json",
+                    processData: false,
+                    success: function (data) {
+                        if (data.success === true) {
+                            location.reload();
+                        }
+                    },
+                    error: function (data) {
+                        toastr['error']('Hata oluştu. Lütfen daha sonra tekrar deneyiniz.');
+                    },
+                    complete: function (data) {
+                    }
+                });
+        });
+
+        $('#frmDeleteGroup').submit(function (e) {
+            e.preventDefault();
+            var form = $("#frmDeleteGroup");
+                var formData = new FormData(form[0]);
+                $.ajax({
+                    url: '@Url.Action("DeleteGroup","Group")',
+                    type: "POST",
+                    data: formData,
+                    contentType: false,
+                    cache: false,
+                    dataType: "json",
+                    processData: false,
+                    success: function (data) {
+                        if (data.success === true) {
+                            location.reload();
+                        }
+                    },
+                    error: function (data) {
+                        toastr['error']('Hata oluştu. Lütfen daha sonra tekrar deneyiniz.');
+                    },
+                    complete: function (data) {
+                    }
+                });
+        });
+
+        $('#frmDeleteExpert').submit(function (e) {
+            e.preventDefault();
+            var form = $("#frmDeleteExpert");
+                var formData = new FormData(form[0]);
+                $.ajax({
+                    url: '@Url.Action("DeleteExpert","Group")',
+                    type: "POST",
+                    data: formData,
+                    contentType: false,
+                    cache: false,
+                    dataType: "json",
+                    processData: false,
+                    success: function (data) {
+                        if (data.success === true) {
+                            location.reload();
+                        }
+                    },
+                    error: function (data) {
+                        toastr['error']('Hata oluştu. Lütfen daha sonra tekrar deneyiniz.');
+                    },
+                    complete: function (data) {
+                    }
+                });
+        });
+
+    </script>
+}

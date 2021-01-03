@@ -1,0 +1,338 @@
+﻿@model LeaveViewModel
+@{
+    ViewData["Title"] = "İzinler";
+}
+
+@section Styles
+{
+    <link href="/Content/assets/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
+}
+
+<div class="card card-custom">
+    <div class="card-header">
+        <div class="card-title">
+            <span class="card-icon">
+                <i class="flaticon2-list-2 text-primary"></i>
+            </span>
+            <h3 class="card-label">İzinler</h3>
+        </div>
+        <div class="card-toolbar">
+            <!--begin::Button-->
+            <a href="#" name="btnAdd" id="btnAdd" class="btn btn-primary font-weight-bolder" data-toggle="modal" data-target="#createOrEditModal">
+                <i class="la la-plus"></i>Yeni Kayıt
+            </a>
+            <!--end::Button-->
+        </div>
+    </div>
+    <div class="card-body">
+        <!--begin: Datatable-->
+        <table class="table table-bordered table-hover table-checkable" id="example1" style="margin-top: 13px !important;">
+            <thead>
+                <tr>
+                    <th>Kişi</th>
+                    <th>İzin Türü</th>
+                    <th>Başlangıç Tarihi</th>
+                    <th>Bitiş Tarihi</th>
+                    <th>#</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.LeaveList)
+                {
+                    <tr>
+                        <td>@(item.USER == null ? "-" : (item.USER.NAME + " " + item.USER.SURNAME))</td>
+                        <td>@(item.LEAVE_TYPE == null ? "-" : (item.LEAVE_TYPE.NAME))</td>
+                        <td>@(item.START_DATE.ToString("dd.MM.yyyy HH:mm:ss"))</td>
+                        <td>@item.END_DATE.ToString("dd.MM.yyyy HH:mm:ss")</td>
+                        <td>
+                            <a href="#" class="btn btn-sm btn-clean btn-icon" title="Güncelle" data-toggle="modal" data-target="#createOrEditModal" data-id="@item.LEAVE_ID">
+                                <i class="la la-edit"></i>
+                            </a>
+                            <a href="#" class="btn btn-sm btn-clean btn-icon" title="Sil" data-toggle="modal" data-target="#deleteModal" data-id="@item.LEAVE_ID">
+                                <i class="la la-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <!--end: Datatable-->
+    </div>
+</div>
+
+
+<form role="form" id="frmLeave">
+    <div class="modal fade" id="createOrEditModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">İzin</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i aria-hidden="true" class="ki ki-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Kişi</label>
+                            @Html.DropDownListFor(m => m.leave.USER_ID, Model.UserList, "Seçiniz", new { @class = "form-control select2", id = "drpUser", @required = true, @style="width:100%" })
+                            @*@Html.TextBoxFor(m => m.leave.PERSON_NAME, new { @class = "form-control", @placeholder = "Kişi", @required = true, @id = "personName" })*@
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">İzin Türü</label>
+                            @Html.DropDownListFor(m => m.leave.LEAVE_TYPE_ID, Model.LeaveTypeList, "Seçiniz", new { @class = "form-control selectpicker", id = "drpLeaveType", @required = true })
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Toplam Gün</label>
+                            @Html.TextBoxFor(m => m.leave.TOTAL_DAY, new { @class = "form-control", @placeholder = "Gün", @required = true, @id = "totalDay" })
+                        </div>
+                        <div class="form-group">
+                            <label>Başlangıç Tarihi - Bitiş Tarihi</label>
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-clock-o"></i>
+                                </div>
+                                @Html.TextBox("startEndDate", "", new { @class = "form-control pull-right", @placeholder = "Başlangıç Tarihi - Bitiş Tarihi", @required = true, @id = "startEndDate", @autocomplete="off" })
+                                @*@Html.TextBox(m => m.leave.START_DATE, new { @class = "form-control pull-right", @placeholder = "Başlangıç Tarihi - Bitiş Tarihi", @required = true, @id = "startEndDate" })*@
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Açıklama</label>
+                            @Html.TextBoxFor(m => m.leave.DESCRIPTION, new { @class = "form-control", @placeholder = "Açıklama", @id = "description" })
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
+                    <input type="hidden" id="id" name="id" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Kapat</button>
+                    <button type="submit" class="btn btn-primary" id="btnSubmit">Kaydet</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+</form>
+
+
+<form role="form" id="frmDeleteLeave">
+    <div class="modal fade" id="deleteModal">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">İzin Sil</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i aria-hidden="true" class="ki ki-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="box-body">
+                        <input type="hidden" id="deleteId" name="deleteId" />
+                        Silmek istediğinizden emin misiniz?
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Vazgeç</button>
+                    <button type="submit" class="btn btn-primary" id="btnSubmit">Sil</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+</form>
+
+
+@section Scripts
+{
+    <script src="/Content/assets/plugins/custom/datatables/datatables.bundle.js"></script>
+    <script src="/Content/assets/js/pages/crud/datatables/extensions/select.js"></script>
+    <script src="/Content/assets/js/pages/crud/forms/widgets/select2.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#example1').DataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Turkish.json"
+                }
+            });
+        });
+
+        $(function () {
+            $('#example1').DataTable();
+            $('#drpUser').select2();
+        });
+
+        $('#frmLeave').submit(function (e) {
+            e.preventDefault();
+            var form = $("#frmLeave");
+            var formData = new FormData(form[0]);
+            var startEndDate = $("#startEndDate").val();
+            var startEndDateArray = startEndDate.split("-");
+
+            var startDateFormat = startEndDateArray[0].trim().split(' ');
+            var endDateFormat = startEndDateArray[1].trim().split(' ');
+
+            var startDateFormat2 = startDateFormat[0].split('.');
+            var endDateFormat2 = endDateFormat[0].split('.');
+
+            var startDateString = startDateFormat2[2] + '-' + startDateFormat2[1] + '-' + startDateFormat2[0] + ' ' + startDateFormat[1];
+            var endDateString = endDateFormat2[2] + '-' + endDateFormat2[1] + '-' + endDateFormat2[0] + ' ' + endDateFormat[1];
+            formData.append("leave.START_DATE",startDateString);
+            formData.append("leave.END_DATE",endDateString);
+                $.ajax({
+                    url: '@Url.Action("CreateOrEditLeave","Organization")',
+                    type: "POST",
+                    data: formData,
+                    contentType: false,
+                    cache: false,
+                    dataType: "json",
+                    processData: false,
+                    success: function (data) {
+                        if (data.success === true) {
+                            location.reload();
+                        }
+                    },
+                    error: function (data) {
+                        toastr['error']('Hata oluştu. Lütfen daha sonra tekrar deneyiniz.');
+                    },
+                    complete: function (data) {
+                    }
+                });
+        });
+
+        $('#frmDeleteLeave').submit(function (e) {
+            e.preventDefault();
+            var form = $("#frmDeleteLeave");
+                var formData = new FormData(form[0]);
+                $.ajax({
+                    url: '@Url.Action("DeleteLeave","Organization")',
+                    type: "POST",
+                    data: formData,
+                    contentType: false,
+                    cache: false,
+                    dataType: "json",
+                    processData: false,
+                    success: function (data) {
+                        if (data.success === true) {
+                            location.reload();
+                        }
+                    },
+                    error: function (data) {
+                        toastr['error']('Hata oluştu. Lütfen daha sonra tekrar deneyiniz.');
+                    },
+                    complete: function (data) {
+                    }
+                });
+        });
+
+        $('#createOrEditModal').on('shown.bs.modal', function (e) {
+            var leaveId = $(e.relatedTarget).attr('data-id');
+            if (leaveId != null) {
+                clearForm();
+                $.ajax({
+                    url: '/Organization/GetLeave?id=' + leaveId,
+                    type: "GET",
+                    dataType: "json",
+                    success: function (data) {
+                        $("#id").val(leaveId);
+                        $("#drpUser").val(data.USER_ID);
+                        $('#drpUser').trigger('change');
+                        $("#drpLeaveType").val(data.LEAVE_TYPE_ID);
+                        $("#totalDay").val(data.TOTAL_DAY);
+                        var startDate = new Date(data.START_DATE);
+                        var endDate = new Date(data.END_DATE);
+                        $("#startEndDate").val(startDate.toLocaleString("tr-TR") + " - " + endDate.toLocaleString("tr-TR"));
+                        $("#description").val(data.DESCRIPTION);
+
+                        $('#drpLeaveType').trigger('change');
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                    },
+                    complete: function (data) {
+                    }
+                });
+            }
+        });
+        $('#deleteModal').on('shown.bs.modal', function (e) {
+            var leaveId = $(e.relatedTarget).attr('data-id');
+            $('#deleteId').val(leaveId);
+        });
+
+
+        function clearForm() {
+            $("#id").val('');
+            $("#drpUser").val('');
+            $("#drpLeaveType").val('');
+            $("#totalDay").val('');
+            $("#startEndDate").val('');
+            $("#description").val('');
+
+            $('#drpUser').trigger('change');
+            $('#drpLeaveType').trigger('change');
+        }
+        $('#btnAdd').click(function () {
+            clearForm();
+        });
+
+        $(document).ready(function () {
+        });
+
+
+
+$(function() {
+
+    function cb(start, end) {
+        $('#startEndDate span').html(start.format('MMMM D') + ' - ' + end.format('MMMM D'));
+    }
+    cb(moment().subtract(29, 'days'), moment());
+
+    $('#startEndDate').daterangepicker({
+        "timePicker": true,
+        "timePicker24Hour": true,
+        "timePickerIncrement": 15,
+		"opens": "left",
+		"applyClass": "btn btn-xs btn-default",
+		"cancelClass": "btn btn-xs btn-link",
+		"locale": {
+        "format": "DD.MM.YYYY HH:mm",
+        "separator": " - ",
+        "applyLabel": "Uygula",
+        "cancelLabel": "Vazgeç",
+        "fromLabel": "Dan",
+        "toLabel": "a",
+        "customRangeLabel": "Seç",
+        "daysOfWeek": [
+            "Pt",
+            "Sl",
+            "Çr",
+            "Pr",
+            "Cm",
+            "Ct",
+            "Pz"
+        ],
+        "monthNames": [
+            "Ocak",
+            "Şubat",
+            "Mart",
+            "Nisan",
+            "Mayıs",
+            "Haziran",
+            "Temmuz",
+            "Ağustos",
+            "Eylül",
+            "Ekim",
+            "Kasım",
+            "Aralık"
+        ],
+        "firstDay": 1
+    }
+    }, cb);
+
+});
+    </script>
+}

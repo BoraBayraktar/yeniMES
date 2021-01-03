@@ -1,0 +1,103 @@
+﻿@model ServiceCatalogViewModel
+@{
+    ViewData["Title"] = "Hizmet Kataloğu Tanımlama/Güncelleme";
+}
+
+@section Styles
+{
+    @*<style type="text/css">
+        div.hideDiv {
+            display: none;
+        }
+    </style>*@
+}
+
+
+<div class="row">
+    <div class="col-md-12">
+        <!-- general form elements -->
+        <div class="card card-custom gutter-b example example-compact">
+            <div class="card-header">
+                <h3 class="card-title">Hizmet Kataloğu Tanımlama/Güncelleme</h3>
+            </div>
+            <!-- form start -->
+            <form role="form" id="formServiceCatalog" method="post" action="/ServiceCatalog/ServiceCatalog">
+                @Html.AntiForgeryToken()
+                <div class="card-body">
+                    <div class="form-group-sm row" style="margin-bottom:4px;">
+                        <label class="col-lg-2 col-form-label text-left">Hizmet Adı:</label>
+                        <div class="col-lg-4">
+                            @Html.TextBoxFor(m => m.servicecatalog.SERVICE_NAME, new { @class = "form-control", @placeholder = "Hizmet Adı", @required = true, @id = "serviceName" })
+                            <input type="hidden" id="id" name="id" value="@(Context.Request.Query["id"])" />
+                        </div>
+                        <label class="col-lg-2 col-form-label text-left">Operasyonel Durum:</label>
+                        <div class="col-lg-4">
+                            @Html.DropDownListFor(m => m.servicecatalog.OPERATIONAL_STATUS_ID, Model.ParameterOpStatusList, "Seçiniz", new { @class = "form-control selectpicker", id = "drpPrmOpStatus" })
+                           
+                        </div>
+                    </div>
+                    <div class="form-group-sm row" style="margin-bottom:4px;">
+                        <label class="col-lg-2 col-form-label text-left">Hizmet Tipi:</label>
+                        <div class="col-lg-4">
+                            @Html.DropDownListFor(m => m.servicecatalog.SERVICE_PARAMETER_ID, Model.ParameterSelectList, "Seçiniz", new { @class = "form-control selectpicker", @required = true, id = "drpParameter" })
+                        </div>
+                        <label class="col-lg-2 col-form-label text-left">Hizmet Seviyesi(Saat):</label>
+                        <div class="col-lg-4">
+                            @Html.TextBoxFor(m => m.servicecatalog.SERVICE_LEVEL, new { @class = "form-control digit", @maxlength = "4", @placeholder = "Hizmet Seviyesi", @required = true, @id = "serviceLevel" })
+                        </div>
+                    </div>
+                    <div class="form-group-sm row" style="margin-bottom:4px;">
+                        <label class="col-lg-2 col-form-label text-left">Hizmetin Sahibi Yönetici(İş Birimi):</label>
+                        <div class="col-lg-4">
+                            @Html.DropDownListFor(m => m.servicecatalog.SERVICE_MANAGER_BUSINESS_ID, Model.UserManagerBusinessList, "Seçiniz", new { @class = "form-control select2", id = "drpUserManagerBusiness" })                           
+                        </div>
+                        <label class="col-lg-2 col-form-label text-left">Hizmetin Sahibi Yönetici(BT Birimi):</label>
+                        <div class="col-lg-4">
+                            @Html.DropDownListFor(m => m.servicecatalog.SERVICE_MANAGER_IT_ID, Model.UserManagerITList, "Seçiniz", new { @class = "form-control select2", id = "drpUserManagerIT" })
+                        </div>
+                    </div>
+                    <div class="form-group-sm row" style="margin-bottom:4px;">
+                        <label class="col-lg-2 col-form-label text-left">Açıklama:</label>
+                        <div class="col-lg-10">
+                            @Html.TextAreaFor(m => m.servicecatalog.DESCRIPTION, new { @class = "form-control", @placeholder = "Açıklama", @required = true, @id = "description", @style = "height:100px;" })
+                        </div>
+                    </div>
+                </div>
+                <!-- /.box-body -->
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-lg-2"></div>
+                        <div class="col-lg-12">
+                            <button id="btnSubmit" type="submit" class="btn btn-primary">Kaydet</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- /.box -->
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script src="~/Content/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="~/Content/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    <script src="~/Content/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+    <script src="/Content/assets/js/pages/crud/forms/widgets/select2.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#drpUserManagerIT').select2();
+            $('#drpUserManagerBusiness').select2();
+
+            $(".digit").keypress(function (e) {
+
+                if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                    toastr['error']('Lütfen Hizmet Seviyesi alanına sadece sayı giriniz.');
+                    //return false;
+                }
+            });
+        });
+    </script>
+}

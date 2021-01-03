@@ -1,0 +1,307 @@
+﻿@model RuleViewModel
+@{
+    ViewData["Title"] = "Kural Tanımlama";
+    var kosulListesi = new List<SelectListItem>();
+    kosulListesi.Add(new SelectListItem() { Text = "Like", Value = "1" });
+    kosulListesi.Add(new SelectListItem() { Text = "Is", Value = "2" });
+    kosulListesi.Add(new SelectListItem() { Text = "Contains", Value = "3" });
+
+    var actionTypeList = new List<SelectListItem>();
+    actionTypeList.Add(new SelectListItem() { Text = "Form Oluşturulduğunda", Value = "1" });
+    actionTypeList.Add(new SelectListItem() { Text = "Form Güncellendiğinde", Value = "2" });
+
+    var andOrOptionList = new List<SelectListItem>();
+    andOrOptionList.Add(new SelectListItem() { Text = "Ve", Value = "1" });
+    andOrOptionList.Add(new SelectListItem() { Text = "Veya", Value = "2" });
+
+    int k = 0;
+}
+
+@section Styles
+{
+}
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card card-custom gutter-b example example-compact">
+            <div class="card-header">
+                <h3 class="card-title">Kural Tanımlama</h3>
+            </div>
+            <!-- form start -->
+            <form role="form" id="formRuleDefinition" method="post" action="/Rules/RuleDefinition">
+                @Html.AntiForgeryToken()
+                <input type="hidden" id="id" name="id" value="@(Context.Request.Query["id"])" />
+                <div class="card-body">
+                    <div class="form-group-sm row" style="margin-bottom:4px;">
+                        <label class="col-lg-1 col-form-label text-left">Kural Adı</label>
+                        <div class="col-lg-3">
+                            @Html.TextBoxFor(m => m.Rule.RULE_NAME, new { @class = "form-control", @placeholder = "Kural Adı", @required = true, @id = "ruleName" })
+                        </div>
+                        <label class="col-lg-2 col-form-label text-left">Çalışma Tipi</label>
+                        <div class="col-lg-3">
+                            @Html.DropDownListFor(m => m.Rule.RULE_ACTION_TYPE, actionTypeList, "Seçiniz", new { @class = "form-control selectpicker", id = "drpActionType" })
+                        </div>
+                    </div>
+                    <div class="form-group-sm row" style="margin-bottom:4px;">
+                        <label class="col-lg-1 col-form-label text-left">Açıklama</label>
+                        <div class="col-lg-11">
+                            @Html.TextBoxFor(m => m.Rule.RULE_DESCRIPTION, new { @class = "form-control", @placeholder = "Açıklama", @id = "ruleDescription", @style = "height:100px;" })
+                        </div>
+                    </div>
+                    <label class="col-lg-5 col-form-label text-left font-size-h1-lg Bold">Kural Belirle</label>
+                    <div class="form-group-sm row" style="margin-bottom:40px;">
+                        <label class="col-lg-1 col-form-label-sm text-left">Süreç</label>
+                        <div class="col-lg-2">
+                            @Html.DropDownListFor(m => m.Rule.MAIN_PROCESS_ID, Model.MainProcessList, "Seçiniz", new { @class = "form-control selectpicker", id = "drpMainProcess" })
+                        </div>
+                        <label class="col-lg-1 col-form-label-sm text-left">Kriter</label>
+                        <div class="col-lg-2">
+                            @Html.DropDownList("drpRuleCriteria", Model.RuleCriteriaList, "Seçiniz", new { @class = "form-control selectpicker", id = "drpRuleCriteria" })
+                            @*@Html.DropDownListFor(m => m, Model.RuleCriteriaList, "Seçiniz", new { @class = "form-control selectpicker", id = "drpRuleCriteria" })*@
+                        </div>
+                        <label class="col-lg-1 col-form-label-sm text-left" id="selectKriterAdi"></label>
+                        <div class="col-lg-2" id="divKriterSelect">
+                            @Html.DropDownList("drpKriterData", new List<SelectListItem>(), "Seçiniz", new { @class = "form-control selectpicker", id = "drpKriterData" })
+                            @*@Html.DropDownListFor(m => m.ConditionId, new List<SelectListItem>(), "Seçiniz", new { @class = "form-control selectpicker", @id = "drpKriterData" })*@
+                        </div>
+                        <label class="col-lg-1 col-form-label-sm text-left" id="textKriterAdi"></label>
+                        <div class="col-lg-3" id="divKriterText">
+                            @*@Html.TextBoxFor(m => m.RuleName, new { @class = "form-control", @id = "txtKriterData" })*@
+                            @Html.TextBox("txtKriterData", "", new { @class = "form-control", @id = "txtKriterData" })
+                        </div>
+                        @*<label class="col-lg-1 col-form-label-sm text-left">Koşul</label>*@
+                        <div class="col-lg-1">
+                            @Html.DropDownListFor(m => m.ConditionId, kosulListesi, "Seçiniz", new { @class = "form-control selectpicker", @id = "drpKosul" })
+                        </div>
+                        @*<label class="col-lg-1 col-form-label-sm text-left">Ve / Veya</label>*@
+                        <div class="col-lg-1">
+                            @Html.DropDownListFor(m => m.AndOrOption, andOrOptionList, "Seçiniz", new { @class = "form-control selectpicker", @id = "drpAndOrOption" })
+                        </div>
+                    </div>
+                    <label class="col-lg-5 col-form-label text-left font-size-h1-lg Bold">Aksiyon Belirle</label>
+                    <div class="form-group-sm row" style="margin-bottom:4px;">
+                        <label class="col-lg-1 col-form-label-sm text-left">Aksiyon</label>
+                        <div class="col-lg-2">
+                            @Html.DropDownListFor(m => m.Rule.RULE_ACTION, Model.RuleActionList, "Seçiniz", new { @class = "form-control selectpicker", id = "drpRuleActions" })
+                        </div>
+                        <label class="col-lg-1 col-form-label-sm text-left" id="LabelAksiyonVeri">Aksiyon Verisi</label>
+                        <div class="col-lg-2" id="divAksiyonVeri" style="margin-bottom:4px;">
+                            @Html.DropDownListFor(m => m.Rule.RULE_ACTION_DATA, new List<SelectListItem>(), "Seçiniz", new { @class = "form-control selectpicker", @id = "drpAksiyonVeri" })
+                        </div>
+                        <div class="col-lg-1">
+                            <button type="button" class="btn btn-primary" id="btnAddRule" name="btnAddRule">Ekle</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <table id="ruleTable" class="table table-bordered table-striped" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>Kriter</th>
+                                    <th>Değer</th>
+                                    <th>Koşul</th>
+                                    <th>Ve / Veya</th>
+                                    <th>Sil</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodyRuleList">
+                                @if (Model.RuleDetailList != null)
+                                {
+                                    foreach (var item in Model.RuleDetailList)
+                                    {
+                                        <tr id="@("row"+k)">
+                                            <td>@item.Kriter</td>
+                                            <td>@item.Deger</td>
+                                            <td>@item.Kosul</td>
+                                            <td>@item.AndOrOption</td>
+                                            <td>
+                                                <button type="button" class="btn btn-danger" onclick="RuleListRemove(@("row"+k),@k)">Sil</button>
+                                                <input type="hidden" value="@item.Id" name="PostRuleList[@k].RULE_DETAIL_ID" />
+                                                <input type="hidden" value="@item.Kriter" name="PostRuleList[@k].CRITERIA" />
+                                                <input type="hidden" value="@item.Deger" name="PostRuleList[@k].VALUE" />
+                                                <input type="hidden" value="@item.Kosul" name="PostRuleList[@k].REQUIREMENT" />
+                                                <input type="hidden" value="@item.AndOrOption" name="PostRuleList[@k].CONDITION" />
+                                            </td>
+                                        </tr>
+                                        k++;
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- /.box-body -->
+
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#selectKriterAdi").hide();
+            $("#divKriterSelect").hide();
+            $("#textKriterAdi").hide();
+            $("#divKriterText").hide();
+            $("#divAksiyonVeri").hide();
+            $("#LabelAksiyonVeri").hide();
+
+        });
+        //$("#drpMainProcess").change(function () {
+        //    var mainProcessVal = $("#drpMainProcess option:selected").val();
+        //    $.ajax({
+        //        url: '/Rules/GetParameterTypeByMainProcessId?mainProcessId=' + mainProcessVal,
+        //        type: "GET",
+        //        dataType: "json",
+        //        success: function (data) {
+        //            $('#drpParameterType').empty();
+        //            $("#drpParameterType").append('<option value="0">Seçiniz</option>');
+        //            $.each(data, function (key, value) {
+        //                $("#drpParameterType").append('<option value=' + value.PARAMETER_TYPE_ID + '>' + value.TYPE_NAME + '</option>');
+        //            });
+        //            $('#drpParameterType').selectpicker("refresh");
+        //        },
+        //        error: function (xhr, ajaxOptions, thrownError) {
+        //        },
+        //        complete: function (data) {
+        //        }
+        //    });
+        //});
+        $("#drpRuleCriteria").change(function () {
+            var selectedCriteria = $("#drpRuleCriteria option:selected").val();
+            var selectedCriteriaText = $("#drpRuleCriteria option:selected").text();
+            $.ajax({
+                url: '/Rules/GetCriteriaData?ruleCriteriaId=' + selectedCriteria,
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    if (data.IsForeign) {
+                        $("#selectKriterAdi").show();
+                        $("#divKriterSelect").show();
+                        $("#textKriterAdi").hide();
+                        $("#divKriterText").hide();
+
+                        $('#drpKriterData').empty();
+                        $("#drpKriterData").append('<option value="0">Seçiniz</option>');
+                        $.each(data.CriteriaData, function (key, value) {
+                            $("#drpKriterData").append('<option value=' + value.Key + '>' + value.Value + '</option>');
+                        });
+                        $('#drpKriterData').selectpicker("refresh");
+                        $('#selectKriterAdi').empty();
+                        $('#selectKriterAdi').text(selectedCriteriaText + " Listesi");
+
+                        $('#drpKosul').empty();
+                        $("#drpKosul").append('<option value="2">Is</option>');
+                        $('#drpKosul').selectpicker("refresh");
+                    }
+                    else {
+                        $('#textKriterAdi').empty();
+                        $('#textKriterAdi').text(selectedCriteriaText);
+
+                        $("#selectKriterAdi").hide();
+                        $("#divKriterSelect").hide();
+                        $("#textKriterAdi").show();
+                        $("#divKriterText").show();
+
+
+                        //drpKosul
+                        $('#drpKosul').empty();
+                        $("#drpKosul").append('<option value="1">Like</option>');
+                        $("#drpKosul").append('<option value="2">Is</option>');
+                        $("#drpKosul").append('<option value="3">Contains</option>');
+                        $('#drpKosul').selectpicker("refresh");
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                },
+                complete: function (data) {
+                }
+            });
+        });
+
+
+        $("#drpRuleActions").change(function () {
+            var selectedAction = $("#drpRuleActions option:selected").val();
+            $.ajax({
+                url: '/Rules/GetRuleActionData?ruleActionCode=' + selectedAction,
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    $('#divAksiyonVeri').show();
+                    $('#LabelAksiyonVeri').show();
+                    $('#drpAksiyonVeri').empty();
+                    $("#drpAksiyonVeri").append('<option value="0">Seçiniz</option>');
+                    $.each(data, function (key, value) {
+                        $("#drpAksiyonVeri").append('<option value=' + value.Value + '>' + value.Text + '</option>');
+                    });
+                    $('#drpAksiyonVeri').selectpicker("refresh");
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                },
+                complete: function (data) {
+                }
+            });
+        });
+
+
+
+        var ruleListRow =@k;
+        function RuleListRemove(rowId, rowNum) {
+            $(rowId).remove();
+            $("#tbodyRuleList").append("<input type='hidden' value='-1' name='PostRuleList[" + rowNum + "].Id' />");
+        }
+
+
+        $("#btnAddRule").click(function () {
+            if ($("#drpRuleCriteria").val() == "") {
+                toastr["warning"]("Lütfen kriter seçiniz.","Uyarı");
+                return;
+            }
+            if ($("#drpKosul").val() == "") {
+                toastr["warning"]("Lütfen koşul seçiniz.", "Uyarı");
+                return;
+            }
+
+            if (($("#drpKriterData").val() == "0" || $("#drpKriterData").val() == "") && $("#txtKriterData").val()=="") {
+                toastr["warning"]("Lütfen veri seçiniz veya veri girişi yapınız.", "Uyarı");
+                return;
+            }
+            //if ($("#endDate").val() == "") {
+            //    $("#endDate").focus();
+            //    return;
+            //}
+            //var year = $("#drpYear").val();
+            //var description = $("#description").val();
+            //var startDate = $("#startDate").val();
+            //var endDate = $("#endDate").val();
+            //drpRuleCriteria
+            var ruleCriteria = $("#drpRuleCriteria option:selected").text();
+            var drpDeger = "";
+            var txtDeger = $("#txtKriterData").val();
+            if (txtDeger == null || txtDeger === "") {
+                drpDeger = $("#drpKriterData option:selected").text();
+            }
+
+            var kosul = $("#drpKosul option:selected").text();
+
+            var andOrOption = $("#drpAndOrOption option:selected").text();
+
+            console.log("test");
+            //startDate.toLocaleDateString()
+            //var startDate = new Date($("#startDate").val());
+            //var endDate = new Date($("#endDate").val());
+            $("#ruleTable tbody").append("<tr id='ruleRow" + ruleListRow + "'><td>" + ruleCriteria + "</td><td>" + drpDeger + txtDeger + "</td><td>" + kosul + "</td><td>" + andOrOption + "</td><td><button type='button' class='btn btn-danger' onclick='RuleListRemove(ruleRow" + ruleListRow + "," + ruleListRow + ")'>Sil</button><input type='hidden' value='0' name='PostRuleList[" + ruleListRow + "].RULE_DETAIL_ID'/><input type='hidden' value='" + ruleCriteria + "' name='PostRuleList[" + ruleListRow + "].CRITERIA'/><input type='hidden' value='" + drpDeger + txtDeger + "' name='PostRuleList[" + ruleListRow + "].VALUE'/><input type='hidden' value='" + kosul + "' name='PostRuleList[" + ruleListRow + "].REQUIREMENT'/><input type='hidden' value='" + andOrOption + "' name='PostRuleList[" + ruleListRow + "].CONDITION'/></td></tr>");
+            ruleListRow = ruleListRow + 1;
+
+            $("#txtKriterData").val('');
+            $("#drpKriterData").val('');
+        });
+    </script>
+}

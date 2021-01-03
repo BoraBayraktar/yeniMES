@@ -1,0 +1,218 @@
+﻿@model KnowledgeViewModel
+@{
+    var user = Context.Session.GetObject<MES.Entities.Model.USER>("User");
+}
+
+
+
+@section Styles
+{
+        <link href="/Content/assets/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
+    }
+
+    @*<div class="row">
+        <div class="col-lg-10">*@
+    <!-- general form elements -->
+    <div class="card card-custom gutter-b example example-compact">
+        <div class="card-header">
+            <h3 class="card-title">Bilgi Yönetimi Tanımlama/Güncelleme</h3>
+        </div>
+        <!-- form start -->
+        <form class="form" id="formKnowledge" method="post" action="/Knowledge/Knowledge" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+            <div class="card-body">
+                <div class="form-group-sm row" style="margin-bottom:4px;">
+                    <label class="col-lg-2 col-form-label text-left">Bilgi Birikim No:</label>
+                    <div class="col-lg-4">
+                        @Html.TextBoxFor(m => m.knowledge.KNOWLEDGE_NO, new { @class = "form-control", id = "txtKnowledgeNo" })
+                        <input type="hidden" id="id" name="id" value="@(Context.Request.Query["id"])" />
+                    </div>
+                    <label class="col-lg-2 col-form-label text-left">Aktif / Pasif:</label>
+                    <span class="switch switch-sm switch-icon" style="margin-left:10px;">
+                        <label>
+                            @Html.CheckBoxFor(m => m.knowledge.KNOWLEDGE_ISACTIVE, new { id = "aktif" })
+                            <span></span>
+                        </label>
+                    </span>
+                </div>
+                <div class="form-group-sm row" style="margin-bottom:4px;">
+                    <label class="col-lg-2 col-form-label text-left">Oluşturan:</label>
+                    <div class="col-lg-4">
+                        @Html.DropDownListFor(m => m.knowledge.CREATED_USER_ID, new SelectList(Model.UserList, "Value", "Text", user.USER_ID.ToString()),
+                       new { @class = "form-control", id = "txtCreatedUser" })
+                    </div>
+                    <label class="col-lg-2 col-form-label text-left">Açılış Tarihi:</label>
+                    <div class="col-lg-4">
+                        @Html.TextBoxFor(m => m.knowledge.CREATED_DATE, new { @class = "form-control", @disabled = "disabled", id = "txtCreatedDate" })
+                    </div>
+                </div>
+                <div class="form-group-sm row" style="margin-bottom:4px;">
+                    <label class="col-lg-2 col-form-label text-left">Hizmet Adı:</label>
+                    <div class="col-lg-4">
+                        @Html.DropDownListFor(m => m.knowledge.KNOWLEDGE_SERVICE_ID, Model.ServiceCalalogList, "Seçiniz", new { @class = "form-control select2", id = "drpServiceCatalog", @required = true, @style = "width:100%" })
+                    </div>
+                    <label class="col-lg-2 col-form-label text-left">Durum:</label>
+                    <div class="col-lg-4">
+                        @Html.DropDownListFor(m => m.knowledge.KNOWLEDGE_STATUS_ID, Model.PrmKnowledgeStatusList, "Seçiniz", new { @class = "form-control select2", id = "drpStatus", @required = true, @style = "width:100%" })
+                    </div>
+                </div>
+                <div class="form-group-sm row" style="margin-bottom:4px;">
+                    <label class="col-lg-2 col-form-label text-left">Bilgi Kategorisi:</label>
+                    <div class="col-lg-4">
+                        @Html.DropDownListFor(m => m.knowledge.KNOWLEDGE_CATEGORY_ID, Model.PrmKnowledgeCategoryList, "Seçiniz", new { @class = "form-control select2", id = "drpKnowledgeCategory", @required = true, @style = "width:100%" })
+                    </div>
+                </div>
+                <div class="form-group-sm row" style="margin-bottom:4px;">
+                    <label class="col-lg-2 col-form-label text-left">Konu:</label>
+                    <div class="col-lg-10">
+                        @Html.TextBoxFor(m => m.knowledge.SUBJECT, new { @class = "form-control", @required = true, id = "txtSubject" })
+                    </div>
+                </div>
+                <div class="form-group-sm row">
+                    <label class="col-lg-2 col-form-label text-left">Açıklama:</label>
+                    <div class="col-lg-10">
+                        @Html.TextAreaFor(m => m.knowledge.KNOWLEDGE_DESCRIPTION, new
+                        {
+                            @class = "form-control",
+                            @required = true,
+                            @id = "editor1",
+                       @name = "editor1"
+                        })
+                    </div>
+                </div>
+                <div class="form-group-sm row" style="margin-bottom:4px;">
+                    <label class="col-lg-2 col-form-label text-left">Dosya Eki:</label>
+                    <div class="col-lg-8">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="knowledgeFiles" name="knowledgeFiles" />
+                            <label class="custom-file-label" for="knowledgeFiles">Dosya eklemek için lütfen tıklayınız.</label>
+                        </div>
+                        <div class="col-lg-10">
+                            <!--begin: Datatable-->
+                            <table id="fileTable" class="table table-bordered table-hover" style="align-items:flex-start" > 
+                                <tbody id="tbodyFile">
+                                    @foreach (var item in Model.FileList)
+                                    {
+                                        <tr>
+                                            <td><a title="Dosyayı İndir" download href="@(item.FILE_PATH)">@(item.FILE_NAME)</a></td>
+                                            <td>@(item.CREATED_USER == null ? "-" : (item.CREATED_USER.NAME + " "+item.CREATED_USER.SURNAME))</td>
+                                            <td>@(item.CREATED_DATE)</td>
+                                            <td>
+                                                <a href="#" class="btn btn-sm btn-clean btn-icon" title="Sil" data-toggle="modal" data-target="#deleteModal" data-id="@item.ID">
+                                                    <i class="la la-trash"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            <!--end: Datatable-->
+                        </div>
+                    </div>
+                    @*<div class="col-lg-2">
+                        <button id="btnAddFile" name="btnAddFile" type="button" class="btn btn-primary">Dosya Ekle</button>
+                    </div>*@
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="row">
+                    <div class="col-lg-2"></div>
+                    <div class="col-lg-12">
+                        <button id="btnSubmit" type="submit" class="btn btn-primary">Kaydet</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- /.box-body -->
+    <!-- /.box -->
+    @*</div>
+        </div>*@
+
+<form role="form" id="frmDeleteKnowledge">
+    <div class="modal fade" id="deleteModal">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Dosya Sil</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i aria-hidden="true" class="ki ki-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="box-body">
+                        <input type="hidden" id="deleteId" name="deleteId" />
+                        Silmek istediğinizden emin misiniz?
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Vazgeç</button>
+                    <button type="submit" class="btn btn-primary" id="btnSubmit">Sil</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+</form>
+
+    @section Scripts
+{
+        <script src="~/Content/bower_components/ckeditor/ckeditor.js"></script>
+        <script src="/Content/assets/js/pages/crud/forms/widgets/select2.js"></script>
+        <script src="/Content/assets/js/pages/crud/file-upload/image-input.js"></script>
+
+        <script type="text/javascript">
+        $(document).ready(function () {
+            $("#txtKnowledgeNo").prop("readonly", true);
+
+        });
+
+        $(document).ajaxStart(function () {
+            //$("#txtKnowledgeNo").attr("disabled", "");
+        });
+
+        $(function () {
+            CKEDITOR.replace('editor1');
+
+            $("#aktif").prop("checked", true);
+            $('#txtCreatedUser').select2();
+            $('#drpServiceCatalog').select2();
+            $('#drpStatus').select2();
+            $('#drpKnowledgeCategory').select2();
+        })       
+
+        $('#frmDeleteKnowledge').submit(function (e) {
+            e.preventDefault();
+                var form = $("#frmDeleteKnowledge");
+                var formData = new FormData(form[0]);
+                $.ajax({
+                    url: '@Url.Action("DeleteKnowledgeFiles", "Knowledge")',
+                    type: "POST",
+                    data: formData,
+                    contentType: false,
+                    cache: false,
+                    dataType: "json",
+                    processData: false,
+                    success: function (data) {
+                        if (data.success === true) {
+                            location.reload();
+                        }
+                    },
+                    error: function (data) {
+                        toastr['error']('Hata oluştu. Lütfen daha sonra tekrar deneyiniz.');
+                    },
+                    complete: function (data) {
+                    }
+                });
+        });
+
+        $('#deleteModal').on('shown.bs.modal', function (e) {
+                var Id = $(e.relatedTarget).attr('data-id');
+                $('#deleteId').val(Id);
+            });
+
+        </script>
+    }

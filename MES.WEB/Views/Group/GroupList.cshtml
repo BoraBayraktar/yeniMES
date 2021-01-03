@@ -1,0 +1,312 @@
+﻿@model GroupViewModel
+@{
+    ViewData["Title"] = "BT Grupları Listesi";
+}
+
+@section Styles
+{
+    <link href="/Content/assets/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
+}
+
+<form role="form" id="frmListGroup">
+    <div class="card card-custom">
+        <div class="card-header">
+            <div class="card-title">
+                <span class="card-icon">
+                    <i class="flaticon2-list-2 text-primary"></i>
+                </span>
+                <h3 class="card-label">BT Grupları Listesi</h3>
+            </div>
+            <div class="card-toolbar">
+                <!--begin::Button-->
+                <a href="/Group/Group" name="btnAdd" id="btnAdd" class="btn btn-primary font-weight-bolder">
+                    <i class="la la-plus"></i>Yeni Kayıt
+                </a>
+                <!--end::Button-->
+            </div>
+        </div>
+        <div class="card-body">
+            <!--begin: Datatable-->
+            <table class="table table-bordered table-hover table-checkable" id="example1" style="margin-top: 13px !important;">
+                <thead>
+                    <tr>
+                        <th>BT Grup Adı</th>
+                        <th>BT Grup Yöneticisi</th>
+                        <th>BT Grup Tipi</th>
+                        <th>Atama Tipi</th>
+                        <th>Durumu</th>
+                        <th>Açıklama</th>
+                        <th>Çalışma Zamanı</th>
+                        <th>#</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.groupList)
+                    {
+                        <tr>
+                            <td>@item.GROUP_NAME</td>
+                            <td>@(item.GROUP_USERMANAGERMODEL == null ? "-" : (@item.GROUP_USERMANAGERMODEL.NAME + " " + @item.GROUP_USERMANAGERMODEL.SURNAME))</td>
+                            <td>@(item.GROUP_GROUPTYPEMODEL == null ? "-" : (@item.GROUP_GROUPTYPEMODEL.TYPE_NAME))</td>
+                            <td>@(item.GROUP_ASSIGNTYPE_ID == 1 ? "Sıralı Atama" : item.GROUP_ASSIGNTYPE_ID == 2 ? "İş Yüküne Göre Atama" : "Atama Yok")</td>
+                            <td>@(item.GROUP_ISACTIVE ? "Aktif" : "Pasif")</td>
+                            <td>@(item.GROUP_DESCRIPTION)</td>
+                            <td>@(item.BUSINESS_HOURS)</td>
+                            <td>
+                                <a href="/Group/Group?id=@item.ID" class="btn btn-sm btn-clean btn-icon" title="Güncelle">
+                                    <i class="la la-edit"></i>
+                                </a>
+                                <a href="#" class="btn btn-sm btn-clean btn-icon" title="Sil" data-toggle="modal" data-target="#deleteModal" data-id="@item.ID">
+                                    <i class="la la-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <!--end: Datatable-->
+        </div>
+    </div>
+</form>
+
+
+    <form role="form" id="frmDeleteGroup">
+        <div class="modal fade" id="deleteModal">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">BT Grup Sil</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <i aria-hidden="true" class="ki ki-close"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="box-body">
+                            <input type="hidden" id="deleteId" name="deleteId" />
+                            Silmek istediğinizden emin misiniz?
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Vazgeç</button>
+                        <button type="submit" class="btn btn-primary" id="btnSubmit">Sil</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+    </form>
+
+
+    @section Scripts
+{
+        <script src="/Content/assets/plugins/custom/datatables/datatables.bundle.js"></script>
+        <script src="/Content/assets/js/pages/crud/datatables/extensions/select.js"></script>
+
+        <script type="text/javascript">
+
+        $('#frmGroup').submit(function (e) {
+                    e.preventDefault();
+                    var form = $("#frmGroup");
+                        var formData = new FormData(form[0]);
+                        $.ajax({
+                            url: '@Url.Action("CreateOrEditGroup","Group")',
+                            type: "POST",
+                            data: formData,
+                            contentType: false,
+                            cache: false,
+                            dataType: "json",
+                            processData: false,
+                            success: function (data) {
+                                if (data.success === true) {
+                                    location.reload();
+                                }
+                            },
+                            error: function (data) {
+                                toastr['error']('Hata oluştu. Lütfen daha sonra tekrar deneyiniz.');
+                            },
+                            complete: function (data) {
+                            }
+                        });
+        });
+
+        $('#frmExpert').submit(function (e) {
+                    e.preventDefault();
+                    var form = $("#frmExpert");
+                        var formData = new FormData(form[0]);
+                        $.ajax({
+                            url: '@Url.Action("CreateOrEditExpert","Group")',
+                            type: "POST",
+                            data: formData,
+                            contentType: false,
+                            cache: false,
+                            dataType: "json",
+                            processData: false,
+                            success: function (data) {
+                                if (data.success === true) {
+                                    location.reload();
+                                }
+                            },
+                            error: function (data) {
+                                toastr['error']('Hata oluştu. Lütfen daha sonra tekrar deneyiniz.');
+                            },
+                            complete: function (data) {
+                            }
+                        });
+        });
+
+        $('#frmDeleteGroup').submit(function (e) {
+            e.preventDefault();
+            var form = $("#frmDeleteGroup");
+                var formData = new FormData(form[0]);
+                $.ajax({
+                    url: '@Url.Action("DeleteGroup", "Group")',
+                    type: "POST",
+                    data: formData,
+                    contentType: false,
+                    cache: false,
+                    dataType: "json",
+                    processData: false,
+                    success: function (data) {
+                        if (data.success === true) {
+                            location.reload();
+                        }
+                    },
+                    error: function (data) {
+                        toastr['error']('Hata oluştu. Lütfen daha sonra tekrar deneyiniz.');
+                    },
+                    complete: function (data) {
+                    }
+                });
+        });
+
+        $('#frmDeleteExpert').submit(function (e) {
+                    e.preventDefault();
+                        var form = $("#frmDeleteExpert");
+                        var formData = new FormData(form[0]);
+                        $.ajax({
+                            url: '@Url.Action("DeleteExpert","Group")',
+                            type: "POST",
+                            data: formData,
+                            contentType: false,
+                            cache: false,
+                            dataType: "json",
+                            processData: false,
+                            success: function (data) {
+                                if (data.success === true) {
+                                    location.reload();
+                                }
+                            },
+                            error: function (data) {
+                                toastr['error']('Hata oluştu. Lütfen daha sonra tekrar deneyiniz.');
+                            },
+                            complete: function (data) {
+                            }
+                        });
+        });
+
+        $('#createOrEditModal').on('shown.bs.modal', function (e) {
+                var tmId = $(e.relatedTarget).attr('data-id');
+                if (tmId != null) {
+                    clearForm();
+
+                    $.ajax({
+                        url: '/Group/GetGroup?id=' + tmId,
+                        type: "GET",
+                        dataType: "json",
+                        success: function (data) {
+                            $("#id").val(tmId);
+                            if (data.ISACTIVE) {
+                                $("#aktif").prop("checked", true);
+                            }
+                            else {
+                                $("#pasif").prop("checked", true);
+                            }
+
+                            var values = data.BUSINESS_HOURS;
+                            $.each(values.split(","), function (i, e) {
+                                $("#businessHours option[value='" + e + "']").prop("selected", true);
+                            });
+
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                        },
+                        complete: function (data) {
+                        }
+                    });
+                }
+        });
+
+        $('#createOrEditModalExpert').on('shown.bs.modal', function (e) {
+                var expertId = $(e.relatedTarget).attr('data-id');
+                if (expertId != null) {
+                    clearFormExpert();
+
+                    $.ajax({
+                        url: '/Group/GetExpert?id=' + expertId,
+                        type: "GET",
+                        dataType: "json",
+                        success: function (data) {
+                            $("#expertId").val(expertId);
+                            $("#name").val(data.EXPERT_NAME);
+                            $("#surName").val(data.EXPERT_SURNAME);
+                            $("#mail").val(data.EXPERT_EMAIL);
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                        },
+                        complete: function (data) {
+                        }
+                    });
+                }
+        });
+
+        $('#expertListModal').on('shown.bs.modal', function (e) {
+                var tmId = $(e.relatedTarget).attr('data-id');
+                $("#tmId").val(tmId);
+                if (tmId != null) {
+                    $("#tbodyExpert").empty();
+                    $.ajax({
+                        url: '/Group/GetGroupExpert?groupId=' + tmId,
+                        type: "GET",
+                        dataType: "json",
+                        success: function (data) {
+                            $.each(data, function (index, item) {
+                                $("#expertTable tbody").append("<tr><td>" + item.GROUP_NAME + "</td><td>" + item.GROUP_SURNAME + "</td><td>" + item.GROUP_MAIL + "</td><td><a href='#' data-toggle='modal' data-target='#createOrEditModalExpert' data-id='" + item.ID + "'>Güncelle</a></td><td><a href='#' data-toggle='modal' data-target='#deleteModalExpert' data-id='" + item.ID + "'>Sil</a></td></tr>");
+                            });
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                        },
+                        complete: function (data) {
+                        }
+                    });
+                }
+            });
+
+        $('#deleteModal').on('shown.bs.modal', function (e) {
+            var grpId = $(e.relatedTarget).attr('data-id');
+            $('#deleteId').val(grpId);
+        });
+        $('#deleteModalExpert').on('shown.bs.modal', function (e) {
+                var expertId = $(e.relatedTarget).attr('data-id');
+            $('#expertDeleteId').val(expertId);
+        });
+
+        $(document).ready(function () {
+        });
+
+        function clearFormExpert() {
+                $("#expertId").val('');
+                $("#name").val('');
+                $("#surName").val('');
+                $("#mail").val('');
+            }
+
+        $('#btnAddExpert').click(function () {
+                clearFormExpert();
+        });
+
+        </script>
+    }
+
+

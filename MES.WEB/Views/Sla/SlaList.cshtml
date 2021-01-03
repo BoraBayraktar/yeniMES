@@ -1,0 +1,205 @@
+﻿@model SlaViewModel
+@{
+    ViewData["Title"] = "Hizmet Seviye Antlaşması Listesi";
+}
+
+@section Styles
+{
+    <link href="/Content/assets/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
+}
+
+    <div class="card card-custom">
+        <div class="card-header">
+            <div class="card-title">
+                <span class="card-icon">
+                    <i class="flaticon2-list-2 text-primary"></i>
+                </span>
+                <h3 class="card-label">Hizmet Seviye Antlaşması Listesi</h3>
+            </div>
+            <div class="card-toolbar">
+                <!--begin::Button-->
+                <a href="/Sla/Sla" name="btnAdd" id="btnAdd" class="btn btn-primary font-weight-bolder">
+                    <i class="la la-plus"></i>Yeni Kayıt
+                </a>
+                <!--end::Button-->
+            </div>
+        </div>
+        <div class="card-body">
+            <!--begin: Datatable-->
+            <div class='table-responsive'>
+                <table class="table table-bordered table-hover table-checkable table-sm" id="example1">
+                    <thead>
+                        <tr>
+                            <th>Hizmet Seviye Adı</th>
+                            <th>Tipi</th>
+                            <th>İlgili Süreç</th>
+                            <th>Önem Derecesi</th>
+                            <th>Çalışma Zamanı</th>
+                            <th>Çözüm Süresi</th>
+                            @*<th>Hizmet Seviye Ölçme Başlama</th>
+                        <th>Hizmet Seviye Ölçme Durdurma</th>
+                        <th>Hizmet Seviye Ölçme Bitirme</th>*@
+                            <th>#</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.slaList)
+                        {
+                            <tr>
+                                <td>@(item.NAME)</td>
+                                <td>@(item.TYPE)</td>
+                                <td>@(item.MAIN_PROCESS_MODEL == null ? "-" : (@item.MAIN_PROCESS_MODEL.NAME))</td>
+                                <td>@(item.IMPORTANCE_LEVEL_MODEL == null ? "-" : (@item.IMPORTANCE_LEVEL_MODEL.MAIN_DATA_NAME))</td>
+                                <td>@(item.WORKING_SCHEDULE_MODEL == null ? "-" : (@item.WORKING_SCHEDULE_MODEL.NAME))</td>
+                                <td>@((item.EFFORT_DAY) + " gün " + (@item.EFFORT_HOUR) + " saat " + (@item.EFFORT_MINUTE) + " dakika")</td>
+                                <td>
+                                    <a href="/Sla/Sla?id=@item.ID" class="btn btn-sm btn-clean btn-icon" title="Güncelle">
+                                        <i class="la la-edit"></i>
+                                    </a>
+                                    <a href="#" class="btn btn-sm btn-clean btn-icon" title="Sil" data-toggle="modal" data-target="#deleteModal" data-id="@item.ID">
+                                        <i class="la la-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <!--end: Datatable-->
+            </div>
+        </div>
+
+
+    <form role="form" id="frmDeleteSla">
+        <div class="modal fade" id="deleteModal">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Hizmet Seviye Antlaşması Sil</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <i aria-hidden="true" class="ki ki-close"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="box-body">
+                            <input type="hidden" id="deleteId" name="deleteId" />
+                            Silmek istediğinizden emin misiniz?
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Vazgeç</button>
+                        <button type="submit" class="btn btn-primary" id="btnSubmit">Sil</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+    </form>
+
+
+    @section Scripts
+{
+        <script src="/Content/assets/plugins/custom/datatables/datatables.bundle.js"></script>
+        <script src="/Content/assets/js/pages/crud/datatables/extensions/select.js"></script>
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#example1').DataTable({
+                    "language": {
+                        "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Turkish.json"
+                    }
+                });
+            });
+
+        $('#frmSla').submit(function (e) {
+                    e.preventDefault();
+                    var form = $("#frmSla");
+                        var formData = new FormData(form[0]);
+                        $.ajax({
+                            url: '@Url.Action("CreateOrEditSla","Sla")',
+                            type: "POST",
+                            data: formData,
+                            contentType: false,
+                            cache: false,
+                            dataType: "json",
+                            processData: false,
+                            success: function (data) {
+                                if (data.success === true) {
+                                    location.reload();
+                                }
+                            },
+                            error: function (data) {
+                                toastr['error']('Hata oluştu. Lütfen daha sonra tekrar deneyiniz.');
+                            },
+                            complete: function (data) {
+                            }
+                        });
+        });
+                    
+        $('#frmDeleteSla').submit(function (e) {
+            e.preventDefault();
+            var form = $("#frmDeleteSla");
+                var formData = new FormData(form[0]);
+                $.ajax({
+                    url: '@Url.Action("DeleteSla", "Sla")',
+                    type: "POST",
+                    data: formData,
+                    contentType: false,
+                    cache: false,
+                    dataType: "json",
+                    processData: false,
+                    success: function (data) {
+                        if (data.success === true) {
+                            location.reload();
+                        }
+                    },
+                    error: function (data) {
+                        toastr['error']('Hata oluştu. Lütfen daha sonra tekrar deneyiniz.');
+                    },
+                    complete: function (data) {
+                    }
+                });
+        });
+
+        $('#createOrEditModal').on('shown.bs.modal', function (e) {
+                var tmId = $(e.relatedTarget).attr('data-id');
+             if (tmId != null) {
+                  //clearForm();
+                  $.ajax({
+                       url: '/Sla/GetSla?id=' + tmId,
+                       type: "GET",
+                       dataType: "json",
+                       success: function (data) {
+                            $("#id").val(tmId);                            
+                       },
+                       error: function (xhr, ajaxOptions, thrownError) {
+                       },
+                       complete: function (data) {
+                       }
+                  });
+             }
+        });
+
+        $('#deleteModal').on('shown.bs.modal', function (e) {
+            var Id = $(e.relatedTarget).attr('data-id');
+            $('#deleteId').val(Id);
+        });       
+
+        //function clearFormExpert() {
+        //        $("#expertId").val('');
+        //        $("#name").val('');
+        //        $("#surName").val('');
+        //        $("#mail").val('');
+        //    }
+
+        $('#btnAddExpert').click(function () {
+                clearFormExpert();
+        });
+
+        </script>
+    }
+
+

@@ -1,0 +1,356 @@
+﻿@model SettingKnowledgeOrderNumbersViewModel
+@{
+    #region Sıra Numarası
+    ViewData["Title"] = "Sıra Numaraları";
+    var orderNumberFormats = new List<SelectListItem>();
+    orderNumberFormats.Add(new SelectListItem()
+    {
+        Text = "000",
+        Value = "000"
+    });
+    orderNumberFormats.Add(new SelectListItem()
+    {
+        Text = "0000",
+        Value = "0000"
+    });
+    orderNumberFormats.Add(new SelectListItem()
+    {
+        Text = "00000",
+        Value = "00000"
+    });
+    orderNumberFormats.Add(new SelectListItem()
+    {
+        Text = "000000",
+        Value = "000000"
+    });
+    orderNumberFormats.Add(new SelectListItem()
+    {
+        Text = "0000000",
+        Value = "0000000"
+    });
+    #endregion
+}
+
+@section Styles
+{
+    <link href="/Content/assets/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
+    .passive {
+    disabled="disabled";
+    }
+}
+
+<div class="card card-custom">
+   <div class="card-header">
+            <div class="card-title">
+                <span class="card-icon">
+                    <i class="flaticon2-list-2 text-primary"></i>
+                </span>
+                <h3 class="card-label">Bilgi Yönetimi Ayarları</h3>
+            </div>
+            <div class="card-toolbar">
+                <!--end::Button-->
+            </div>
+        </div>
+   <div class="card-body">
+            <h5 class="card-label">Sıra No Format Ayarı:</h5>
+            <!--begin: Datatable-->
+            <table class="table table-bordered table-hover table-checkable" id="example1" style="margin-top: 13px !important;">
+                <thead>
+                    <tr>
+                        <th>Süreç Adı</th>
+                        <th>Sıra No Kodu</th>
+                        <th>Sıra No Hane(Digit)</th>
+                        <th>En Son Sıra No</th>
+                        @*<th>Durum</th>*@
+                        <th>#</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.orderNumbersList)
+                    {
+                        <tr>
+                            <td>@(item.MAINPROCESS_MODEL.NAME)</td>
+                            <td>@item.CODE</td>
+                            <td>@item.ID_FORMAT_CODE</td>
+                            <td>@item.LAST_ORDER_NUMBER</td>
+                            <td>
+                                <a href="#" class="btn btn-sm btn-clean btn-icon" title="Güncelle" data-toggle="modal" data-target="#EditOrderNumbersModal" data-id="@item.ID">
+                                    <span class="svg-icon svg-icon-primary svg-icon-2x">
+                                        <!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2020-07-07-181510/theme/html/demo1/dist/../src/media/svg/icons/Design/Edit.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                <rect x="0" y="0" width="24" height="24" />
+                                                <path d="M8,17.9148182 L8,5.96685884 C8,5.56391781 8.16211443,5.17792052 8.44982609,4.89581508 L10.965708,2.42895648 C11.5426798,1.86322723 12.4640974,1.85620921 13.0496196,2.41308426 L15.5337377,4.77566479 C15.8314604,5.0588212 16,5.45170806 16,5.86258077 L16,17.9148182 C16,18.7432453 15.3284271,19.4148182 14.5,19.4148182 L9.5,19.4148182 C8.67157288,19.4148182 8,18.7432453 8,17.9148182 Z" fill="#000000" fill-rule="nonzero" transform="translate(12.000000, 10.707409) rotate(-135.000000) translate(-12.000000, -10.707409) " />
+                                                <rect fill="#000000" opacity="0.3" x="5" y="20" width="15" height="2" rx="1" />
+                                            </g>
+                                        </svg><!--end::Svg Icon-->
+                                    </span>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <!--end: Datatable-->
+            <div class="separator separator-dashed my-8"></div>
+            <h5 class="card-label">Görüntüleme Ayarı:</h5>
+            <div class="alert alert-custom alert-default" role="alert">
+                <div class="alert-icon"><i class="flaticon-warning text-primary"></i></div>
+                <div class="alert-text">
+                    Seçili durumun haricindeki durumlarda Bilgi kaydını sadece açan kişinin kendisi görür.
+                </div>
+            </div>            
+            <div class="form-group-sm row">
+                <label class="col-lg-2 col-form-label text-left">Yayınlanacak Durum:</label>
+                <div class="col-lg-4">
+                    @Html.DropDownListFor(m => m.status.WHICH_STATUS_IN_VISIBLE, Model.PrmKnowledgeStatusList, "Seçiniz", new { @class = "form-control", @required = true, id = "drpStatus", @disabled="disabled", @style = "width:100%" })
+                </div>
+                <div class="col-lg-2">
+                    <a href="#" class="btn btn-sm btn-clean btn-icon" title="Güncelle" data-toggle="modal" data-target="#EditStatusModal" data-id="4">
+                        <span class="svg-icon svg-icon-primary svg-icon-2x">
+                            <!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2020-07-07-181510/theme/html/demo1/dist/../src/media/svg/icons/Design/Edit.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <rect x="0" y="0" width="24" height="24" />
+                                    <path d="M8,17.9148182 L8,5.96685884 C8,5.56391781 8.16211443,5.17792052 8.44982609,4.89581508 L10.965708,2.42895648 C11.5426798,1.86322723 12.4640974,1.85620921 13.0496196,2.41308426 L15.5337377,4.77566479 C15.8314604,5.0588212 16,5.45170806 16,5.86258077 L16,17.9148182 C16,18.7432453 15.3284271,19.4148182 14.5,19.4148182 L9.5,19.4148182 C8.67157288,19.4148182 8,18.7432453 8,17.9148182 Z" fill="#000000" fill-rule="nonzero" transform="translate(12.000000, 10.707409) rotate(-135.000000) translate(-12.000000, -10.707409) " />
+                                    <rect fill="#000000" opacity="0.3" x="5" y="20" width="15" height="2" rx="1" />
+                                </g>
+                            </svg><!--end::Svg Icon-->
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+</div>
+
+<form role="form" id="frmOrderNumbers">
+   <div class="modal fade" id="EditOrderNumbersModal">
+       <div class="modal-dialog">
+           <div class="modal-content">
+               <div class="modal-header">
+                   <h4 class="modal-title">Sıra Numarası Tanımalama</h4>
+                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                       <i aria-hidden="true" class="ki ki-close"></i>
+                   </button>
+               </div>        
+               <div class="modal-body">
+                   <div class="box-body">
+                       <div class="form-group-sm row" style="margin-bottom:4px;">
+                           <label class="col-lg-2 col-form-label text-left">Süreç :</label>
+                           <div class="col-lg-10">
+                               @Html.DropDownListFor(m => m.orderNumbers.MAIN_PROCESS_ID, Model.mainProcessList, "Seçiniz", new { @class = "form-control select2", id = "drpMainProcess", @style = "width:100%" })
+                           </div>
+                       </div>
+                       <div class="form-group-sm row" style="margin-bottom:4px;">
+                           <label class="col-lg-2 col-form-label text-left">Kodu :</label>
+                           <div class="col-lg-10">
+                               @Html.TextBoxFor(m => m.orderNumbers.CODE, new { @class = "form-control", @maxlength = "4", @required = true, @id = "code" })
+                           </div>
+                       </div>
+                       <div class="form-group-sm row" style="margin-bottom:4px;">
+                           <label class="col-lg-2 col-form-label text-left">Digit :</label>
+                           <div class="col-lg-10">
+                               @Html.DropDownListFor(m => m.orderNumbers.ID_FORMAT_CODE, orderNumberFormats, "Seçiniz", new { @class = "form-control selectpicker", @required = true, id = "digit" })
+                           </div>
+                       </div>
+                       <div class="form-group-sm row" style="margin-bottom:4px;">
+                           <label class="col-lg-2 col-form-label text-left">En Son Sıra No :</label>
+                           <div class="col-lg-10">
+                               @Html.TextBoxFor(m => m.orderNumbers.LAST_ORDER_NUMBER, new { @class = "form-control", @maxlength = "4", @id = "last_order_number" })
+                           </div>
+                       </div>
+                       <!-- /.box-body -->
+                       <input type="hidden" id="id" name="id" />
+                   </div>
+                   <div class="modal-footer">
+                       <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Kapat</button>
+                       <button type="submit" class="btn btn-primary" id="btnSubmit1">Kaydet</button>
+                   </div>
+               </div>         
+                        <!-- /.modal-content -->
+           </div>
+                    <!-- /.modal-dialog -->
+       </div>
+                <!-- /.modal -->
+   </div>
+</form>
+
+<form role="form" id="frmStatus">
+    <div class="modal fade" id="EditStatusModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Yayınlanacak Durum Tanımalama</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i aria-hidden="true" class="ki ki-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="box-body">
+                        <div class="form-group-sm row" style="margin-bottom:4px;">
+                            <label class="col-lg-2 col-form-label text-left">Durum:</label>
+                            <div class="col-lg-10">
+                                @Html.DropDownListFor(m => m.status.WHICH_STATUS_IN_VISIBLE, Model.PrmKnowledgeStatusList, "Seçiniz", new { @class = "form-control", @required = true, id = "drpStatusModal", @style = "width:100%" })
+                                <input type="hidden" id="id" name="id" value="@(Context.Request.Query["id"])" />
+                            </div>
+                        </div>
+                        <!-- /.box-body -->
+                        <input type="hidden" id="id" name="id" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Kapat</button>
+                        <button type="submit" class="btn btn-primary" id="btnSubmit2">Kaydet</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+    </div>
+</form>
+
+    
+
+
+
+
+    @section Scripts
+    {
+        <script src="/Content/assets/plugins/custom/datatables/datatables.bundle.js"></script>
+        <script src="/Content/assets/js/pages/crud/datatables/extensions/select.js"></script>
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                var orderId = 5;
+                if (orderId != null) {
+                    $.ajax({
+                        url: '/Settings/GetKnowledgeStatus?id=' + orderId,
+                        type: "GET",
+                        dataType: "json",
+                        success: function (data) {
+                            $("#id").val(orderId);
+                            $("#drpStatus").val(data.WHICH_STATUS_IN_VISIBLE);
+                            $("#drpStatus").trigger('change');
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                        },
+                        complete: function (data) {
+                        }
+                    });
+                }
+            });
+
+            $(function () {    
+                $(document).ajaxStart(function () {
+                    $("#drpMainProcess").attr("disabled", "disabled");
+                    $("#last_order_number").attr("disabled", "disabled");
+                    $("#drpStatus").attr("disabled", "disabled");
+                })
+                $('#drpMainProcess').select2();
+            });
+
+            //insert OrderNumbers
+            $('#frmOrderNumbers').submit(function (e) {
+                e.preventDefault();
+                var form = $("#frmOrderNumbers");
+                    var formData = new FormData(form[0]);
+                    $.ajax({
+                        url: '@Url.Action("CreateOrEditKnowledgeOrderNumbers", "Settings")',
+                        type: "POST",
+                        data: formData,
+                        contentType: false,
+                        cache: false,
+                        dataType: "json",
+                        processData: false,
+                        success: function (data) {
+                            if (data.success === true) {
+                                location.reload();
+                            }
+                            else {
+                                toastr['error']('Bu süreç daha önce kayıt edilmişti. Bir süreç için sadece bir Sıra Numarası kaydı oluşturulabilir.');
+                            }
+                        },
+                        error: function (data) {
+                            toastr['error']('Sıra No güncellenirken hata oluştu. Lütfen daha sonra tekrar deneyiniz.');
+                        },
+                        complete: function (data) {
+                        }
+                    });
+            });
+
+            //ORDER NUMBERS FORMU DOLDUR
+            $('#EditOrderNumbersModal').on('shown.bs.modal', function (e) {
+                var orderId = $(e.relatedTarget).attr('data-id');
+                if (orderId != null) {
+                    $.ajax({
+                        url: '/Settings/GetKnowledgeOrderNumbers?id=' + orderId,
+                        type: "GET",
+                        dataType: "json",
+                        success: function (data) {
+                            $("#id").val(orderId);
+                            $("#drpMainProcess").val(data.MAIN_PROCESS_ID);
+                            $("#drpMainProcess").trigger('change');
+                            $("#code").val(data.CODE);
+                            $("#digit").val(data.ID_FORMAT_CODE);
+                            $("#digit").trigger('change');
+                            $("#last_order_number").val(data.LAST_ORDER_NUMBER);
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                        },
+                        complete: function (data) {
+                        }
+                    });
+                }
+            });
+
+            //insert Status
+            $('#frmStatus').submit(function (e) {
+                e.preventDefault();
+                var form = $("#frmStatus");
+                    var formData = new FormData(form[0]);
+                    $.ajax({
+                        url: '@Url.Action("EditKnowledgeStatus", "Settings")',
+                        type: "POST",
+                        data: formData,
+                        contentType: false,
+                        cache: false,
+                        dataType: "json",
+                        processData: false,
+                        success: function (data) {
+                            if (data.success === true) {
+                                location.reload();
+                            }
+                            else {
+                            }
+                        },
+                        error: function (data) {
+                            toastr['error']('Durum güncellerken hata oluştu. Lütfen daha sonra tekrar deneyiniz.');
+                        },
+                        complete: function (data) {
+                        }
+                    });
+            });
+
+            //STATUS FORMU DOLDUR
+            $('#EditStatusModal').on('shown.bs.modal', function (e) {
+                //var orderId = $(e.relatedTarget).attr('data-id');
+                var orderId = 4;
+                if (orderId != null) {
+                    $.ajax({
+                        url: '/Settings/GetKnowledgeStatus?id=' + orderId,
+                        type: "GET",
+                        dataType: "json",
+                        success: function (data) {
+                            $("#id").val(orderId);
+                            $("#drpStatusModal").val(data.WHICH_STATUS_IN_VISIBLE);
+                            $("#drpStatusModal").trigger('change');
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                        },
+                        complete: function (data) {
+                        }
+                    });
+                }
+            });
+
+        </script>
+    }

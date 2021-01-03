@@ -1,0 +1,309 @@
+﻿@model SurveyViewModel
+@{
+    ViewData["Title"] = "Anket Tanımlama/Güncelleme";
+    int k = 0;
+
+    var emailRecipients = new List<SelectListItem>();
+    emailRecipients.Add(new SelectListItem()
+    {
+        Text = "Created User",
+        Value = "1"
+    });
+    emailRecipients.Add(new SelectListItem()
+    {
+        Text = "Assigned User",
+        Value = "2"
+    });
+    emailRecipients.Add(new SelectListItem()
+    {
+        Text = "Assigned Group",
+        Value = "3"
+    });
+}
+
+@section Styles
+{
+    <!-- Bootstrap time Picker -->
+    <link rel="stylesheet" href="~/Content/plugins/timepicker/bootstrap-timepicker.min.css">
+
+    <style type="text/css">
+        div.hideDiv {
+            display: none;
+        }
+    </style>
+}
+
+
+<div class="row">
+    <div class="col-md-12">
+        <!-- general form elements -->
+        <div class="card card-custom gutter-b example example-compact">
+            <div class="card-header">
+                <h3 class="card-title">Anket Tanımlama/Güncelleme</h3>
+            </div>
+            <!-- form start -->
+            <form role="form" id="frmSurvey" method="post" action="/Survey/CreateOrEditSurvey">
+                @Html.AntiForgeryToken()
+                <div class="card-body">
+                    <div class="form-group">
+                        <label>Anket Gönderim Tipi</label>
+
+                        <div class="radio-inline">
+                            <label class="radio">
+                                @Html.RadioButtonFor(m => m.Survey.SURVEY_SEND_TYPE_ID, 1, new { id = "radioSurveySendType1" })
+                                Tek Seferlik
+                                <span></span>
+                            </label>
+                            <label class="radio">
+                                @Html.RadioButtonFor(m => m.Survey.SURVEY_SEND_TYPE_ID, 2, new { id = "radioSurveySendType2" })
+                                Sürekli
+                                <span></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div id="divSurekli">
+                        <div class="form-group">
+                            <label>Süreç</label>
+                            @Html.DropDownListFor(m => m.Survey.MAIN_PROCESS_ID, Model.MainProcessList, "Seçiniz", new { @class = "form-control selectpicker", @id = "drpMainProcess" })
+                        </div>
+                        <div class="form-group">
+                            <label>Durum</label>
+                            @Html.DropDownListFor(m => m.Survey.SURVEY_PARAMETER_ID, Model.MainProcessStatusList, "Seçiniz", new { @class = "form-control selectpicker", @id = "drpMainProcessStatus" })
+                        </div>
+                        <div class="form-group">
+                            <label>E-Posta Alıcıları</label>
+                            @Html.ListBoxFor(m => m.SelectedRecipients, emailRecipients, new { @class = "form-control", @size = 3, @id = "listRecipients", @placeholder = "E-Posta Alıcıları" })
+                        </div>
+                    </div>
+                    <div id="divTekSefer">
+                        <div class="form-group">
+                            <label>Gönderileceği Tarih</label>
+                            @Html.TextBoxFor(m => m.StartDate, "{0:dd.MM.yyyy}", new { @class = "form-control", @placeholder = "Gönderileceği Tarih", @id = "startDate", @autocomplete = "off" })
+                        </div>
+                        <div class="form-group">
+                            <label>Gönderileceği Saat</label>
+                            <div class="input-group">
+                                @Html.TextBoxFor(m => m.StartTime, new { @class = "form-control timepicker", @placeholder = "Gönderileceği Saat", @id = "startTime", @autocomplete = "off" })
+                                <div class="input-group-addon">
+                                    <i class="fa fa-clock-o"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="divKullanici">
+                        <div class="form-group" id="divUsers">
+                            <label>Kişiler</label>
+                            @Html.ListBoxFor(m => m.SelectedUsers, Model.UserList, new { @class = "form-control select2", @id = "listUsers", @placeholder = "Kişiler" })
+                        </div>
+                        <div class="form-group" id="divGroups">
+                            <label>Gruplar</label>
+                            @Html.ListBoxFor(m => m.SelectedGroups, Model.UserGroupList, new { @class = "form-control select2", @id = "listGroups", @placeholder = "Gruplar" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Anket Adı</label>
+                        @Html.TextBoxFor(m => m.Survey.SURVEY_NAME, new { @class = "form-control", @placeholder = "Anket Adı", @required = true, @id = "surveyName" })
+                        <input type="hidden" id="id" name="id" value="@(Context.Request.Query["id"])" />
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <button name="btnAddQuestion" id="btnAddQuestion" type="button" class="btn btn-block btn-primary">Soru Ekle</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="divQuestion">
+                        @foreach (var item in Model.QuestionList)
+                        {
+                            <div id="@("div"+k)">
+                                <div class="form-group">
+                                    <label>Soru</label>
+                                    <input type="text" class="form-control" id="QuestionList[@k].QUESTION_TEXT" name="QuestionList[@k].QUESTION_TEXT" value="@item.QUESTION_TEXT" required />
+                                    <input type='hidden' id='QuestionList[@k].ID' name='QuestionList[@k].ID' value='@item.ID' />
+                                </div>
+                                <div class="form-group">
+                                    <label>Cevap Tipleri</label>
+                                    <br />
+                                    <input type="radio" id="QuestionList[@k].SURVEY_ANSWER_TYPE_ID" name="QuestionList[@k].SURVEY_ANSWER_TYPE_ID" value="1" onchange="@("answerTypeChange(divEvaluation"+k+",divBinaryOption"+k+")")" required @(item.SURVEY_ANSWER_TYPE_ID == 1 ? "checked" : "") />
+                                    Değerlendirme
+                                    &nbsp;&nbsp;&nbsp;
+                                    <input type="radio" id="QuestionList[@k].SURVEY_ANSWER_TYPE_ID" name="QuestionList[@k].SURVEY_ANSWER_TYPE_ID" value="2" onchange="@("answerTypeChange(divBinaryOption"+k+", divEvaluation"+k+")")" required @(item.SURVEY_ANSWER_TYPE_ID == 2 ? "checked" : "") />
+                                    İkili Cevap
+                                </div>
+                                <div class="form-group @(item.SURVEY_ANSWER_TYPE_ID==1 ? "" : "hideDiv")" id="@("divEvaluation"+k)">
+                                    <label>Değerlendirme</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class='input-group-text'>1.</span></div>
+                                        <input type="text" class="form-control" id="QuestionList[@k].EVALUATION_1" name="QuestionList[@k].EVALUATION_1" value="@item.EVALUATION_1" />
+                                    </div>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class='input-group-text'>2.</span></div>
+                                        <input type="text" class="form-control" id="QuestionList[@k].EVALUATION_2" name="QuestionList[@k].EVALUATION_2" value="@item.EVALUATION_2" />
+                                    </div>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class='input-group-text'>3.</span></div>
+                                        <input type="text" class="form-control" id="QuestionList[@k].EVALUATION_3" name="QuestionList[@k].EVALUATION_3" value="@item.EVALUATION_3" />
+                                    </div>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class='input-group-text'>4.</span></div>
+                                        <input type="text" class="form-control" id="QuestionList[@k].EVALUATION_4" name="QuestionList[@k].EVALUATION_4" value="@item.EVALUATION_4" />
+                                    </div>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class='input-group-text'>5.</span></div>
+                                        <input type="text" class="form-control" id="QuestionList[@k].EVALUATION_5" name="QuestionList[@k].EVALUATION_5" value="@item.EVALUATION_5" />
+                                    </div>
+                                </div>
+                                <div class="form-group @(item.SURVEY_ANSWER_TYPE_ID==2 ? "" : "hideDiv")" id="@("divBinaryOption"+k)">
+                                    <label>İkili Cevap</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class='input-group-text'><i class='fa fa-circle'></i></span></div>
+                                        <input type="text" class="form-control" id="QuestionList[@k].BINARY_OPTION_1" name="QuestionList[@k].BINARY_OPTION_1" value="@item.BINARY_OPTION_1" />
+                                    </div>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class='input-group-text'><i class="fa fa-circle"></i></span></div>
+                                        <input type="text" class="form-control" id="QuestionList[@k].BINARY_OPTION_2" name="QuestionList[@k].BINARY_OPTION_2" value="@item.BINARY_OPTION_2" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <button type="button" class="btn btn-block btn-danger" onclick="removeQuestion(@("div"+k))">Soru Sil</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr />
+                            </div>
+                            k = k + 1;
+                        }
+                    </div>
+                </div>
+                <!-- /.box-body -->
+
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary">Kaydet</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.box -->
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <!-- bootstrap datepicker -->
+    <script src="~/Content/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"></script>
+
+    <script src="/Content/assets/js/pages/crud/forms/widgets/bootstrap-timepicker.js"></script>
+
+
+    <script type="text/javascript">
+        $(function () {
+            $('.select2').select2();
+
+            $('#divTekSefer').hide();
+            $('#divSurekli').hide();
+            $('#divKullanici').hide();
+
+
+            if (@(Model.Survey==null ? 0 : Model.Survey.SURVEY_SEND_TYPE_ID==null ? 0 : Model.Survey.SURVEY_SEND_TYPE_ID) == 1)
+            {
+                $('#divTekSefer').show();
+                $('#divKullanici').show();
+            }
+            else if (@(Model.Survey==null ? 0 : Model.Survey.SURVEY_SEND_TYPE_ID==null ? 0 : Model.Survey.SURVEY_SEND_TYPE_ID) == 2)
+            {
+                $('#divSurekli').show();
+                $('#divKullanici').show();
+
+            }
+
+            $('#startDate').datepicker({
+                autoclose: true,
+                format: 'dd.mm.yyyy'
+            });
+            //Timepicker
+            $('.timepicker').timepicker({
+                showInputs: false,
+                showMeridian: false,
+                timeFormat: 'HH:mm',
+                maxHour: 24,
+                interval: 15
+            });
+
+        });
+
+        var i = @k;
+        $('#btnAddQuestion').click(function () {
+            $("#divQuestion").append("<div id='div" + i + "'>"
+                + "<div class='form-group'><label>Soru</label><input type='text' class='form-control' id='QuestionList[" + i + "].QUESTION_TEXT' name='QuestionList[" + i + "].QUESTION_TEXT' required /></div>"
+                + "<div class='form-group'><label>Cevap Tipleri</label><div class='radio-inline'><label class='radio'><input type='radio' id='QuestionList[" + i + "].SURVEY_ANSWER_TYPE_ID' name='QuestionList[" + i + "].SURVEY_ANSWER_TYPE_ID' value='1' onchange='answerTypeChange(divEvaluation" + i + ",divBinaryOption" + i + ")' required />Değerlendirme <span></span></label><label class='radio'><input type='radio' id='QuestionList[" + i + "].SURVEY_ANSWER_TYPE_ID' name='QuestionList[" + i + "].SURVEY_ANSWER_TYPE_ID' value='2' onchange='answerTypeChange(divBinaryOption" + i + ",divEvaluation" + i + ")' required />İkili Cevap <span></span></label></div></div>"
+                + "<div class='form-group hideDiv' id='divEvaluation" + i + "'><label>Değerlendirme</label><div class='input-group'><div class='input-group-prepend'><span class='input-group-text'>1 .</span></div><input type='text' class='form-control' id='QuestionList[" + i + "].EVALUATION_1' name='QuestionList[" + i + "].EVALUATION_1' /></div><div class='input-group'><div class='input-group-prepend'><span class='input-group-text'>2.</span></div><input type='text' class='form-control' id='QuestionList[" + i + "].EVALUATION_2' name='QuestionList[" + i + "].EVALUATION_2' /></div><div class='input-group'><div class='input-group-prepend'><span class='input-group-text'>3.</span></div><input type='text' class='form-control' id='QuestionList[" + i + "].EVALUATION_3' name='QuestionList[" + i + "].EVALUATION_3' /></div><div class='input-group'><div class='input-group-prepend'><span class='input-group-text'>4.</span></div><input type='text' class='form-control' id='QuestionList[" + i + "].EVALUATION_4' name='QuestionList[" + i + "].EVALUATION_4' /></div><div class='input-group'><div class='input-group-prepend'><span class='input-group-text'>5.</span></div><input type='text' class='form-control' id='QuestionList[" + i + "].EVALUATION_5' name='QuestionList[" + i + "].EVALUATION_5' /></div></div>"
+                + "<div class='form-group hideDiv' id='divBinaryOption" + i + "'><label>İkili Cevap</label><div class='input-group'><div class='input-group-prepend'><span class='input-group-text'><i class='fa fa-circle'></i></span></div><input type='text' class='form-control' id='QuestionList[" + i + "].BINARY_OPTION_1' name='QuestionList[" + i + "].BINARY_OPTION_1' /></div><div class='input-group'><div class='input-group-prepend'><span class='input-group-text'><i class='fa fa-circle'></i></span></div><input type='text' class='form-control' id='QuestionList[" + i + "].BINARY_OPTION_2' name='QuestionList[" + i + "].BINARY_OPTION_2' /></div></div>"
+                + "<div class='form-group'><div class='row'><div class='col-md-2'><button type='button' class='btn btn-block btn-danger' onclick='removeQuestion(div" + i + ")'>Soru Sil</button></div></div></div>"
+                + "<hr />"
+                + "<input type='hidden' id='QuestionList[" + i +"].ID' name='QuestionList["+i+"].ID' value='0' />"
+                + "</div>");
+            //$("#divQuestion").append("<div id='div" + i + "'>");
+            //$("#divQuestion").append("<div class='form-group'><label>Soru</label><input type='text' class='form-control' id='QuestionList[" + i + "].QUESTION_TEXT' name='QuestionList[" + i + "].QUESTION_TEXT' required /></div>");
+            //$("#divQuestion").append("<div class='form-group'><label>Cevap Tipleri</label><br /><input type='radio' id='QuestionList[" + i + "].SURVEY_ANSWER_TYPE_ID' name='QuestionList[" + i + "].SURVEY_ANSWER_TYPE_ID' value='true' required />Değerlendirme &nbsp;&nbsp;&nbsp;<input type='radio' id='QuestionList[" + i + "].SURVEY_ANSWER_TYPE_ID' name='QuestionList[" + i + "].SURVEY_ANSWER_TYPE_ID' value='false' required />İkili Cevap</div>");
+            //$("#divQuestion").append("<div class='form-group'><label>Değerlendirme</label><div class='input-group'><div class='input-group-addon'>1.</div><input type='text' class='form-control' id='QuestionList[" + i + "].EVALUATION_1' name='QuestionList[" + i + "].EVALUATION_1' /></div><div class='input-group'><div class='input-group-addon'>2.</div><input type='text' class='form-control' id='QuestionList[" + i + "].EVALUATION_2' name='QuestionList[" + i + "].EVALUATION_2' /></div><div class='input-group'><div class='input-group-addon'>3.</div><input type='text' class='form-control' id='QuestionList[" + i + "].EVALUATION_3' name='QuestionList[" + i + "].EVALUATION_3' /></div><div class='input-group'><div class='input-group-addon'>4.</div><input type='text' class='form-control' id='QuestionList[" + i + "].EVALUATION_4' name='QuestionList[" + i + "].EVALUATION_4' /></div><div class='input-group'><div class='input-group-addon'>5.</div><input type='text' class='form-control' id='QuestionList[" + i + "].EVALUATION_5' name='QuestionList[" + i + "].EVALUATION_5' /></div></div></div>");
+            //$("#divQuestion").append("<div class='form-group'><label>İkili Cevap</label><div class='input-group'><div class='input-group-addon'><i class='fa fa-circle'></i></div><input type='text' class='form-control' id='QuestionList[" + i + "].BINARY_OPTION_1' name='QuestionList[" + i + "].BINARY_OPTION_1' /></div><div class='input-group'><div class='input-group-addon'><i class='fa fa-circle'></i></div><input type='text' class='form-control' id='QuestionList[" + i + "].BINARY_OPTION_2' name='QuestionList[" + i + "].BINARY_OPTION_2' /></div></div></div>");
+            //$("#divQuestion").append("<button type='button' class='btn btn-block btn-danger' onclick='removeQuestion(div" + i + ")'>Soru Sil</button>");
+            //$("#divQuestion").append("<hr />");
+            //$("#divQuestion").append("</div>");
+            i = i + 1;
+        });
+
+        function removeQuestion(divId) {
+            $(divId).remove();
+            i = i - 1;
+        }
+        function answerTypeChange(div1, div2) {
+            $(div1).show();
+            $(div2).hide();
+        }
+
+        $("#drpMainProcess").change(function () {
+            $.ajax({
+                url: "/Email/GetParameterStatusByMainProcessId/?mainProcessId=" +
+                    $("#drpMainProcess").find(":selected").val(),
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    $('#drpMainProcessStatus').empty();
+                    $.each(data, function (key, value) {
+                        $('#drpMainProcessStatus')
+                            .append($("<option></option>")
+                                .attr("value", value.ID)
+                                .text(value.MAIN_DATA_NAME));
+                    });
+                    $('#drpMainProcessStatus').selectpicker("refresh");
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+
+                },
+                complete: function (data) {
+
+                }
+            });
+        });
+
+        $('#radioSurveySendType1').change(function () {
+            $('#divTekSefer').show();
+            $('#divSurekli').hide();
+            $('#divKullanici').show();
+
+        });
+        $('#radioSurveySendType2').change(function () {
+            $('#divTekSefer').hide();
+            $('#divSurekli').show();
+            $('#divKullanici').show();
+
+        });
+
+
+    </script>
+}

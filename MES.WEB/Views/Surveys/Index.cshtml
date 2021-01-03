@@ -1,0 +1,63 @@
+﻿@model SurveyHistoryViewModel
+@{
+    Layout = null;
+    int i = 0;
+}
+
+<link rel="stylesheet" href="~/Content/bower_components/bootstrap/dist/css/bootstrap.min.css">
+
+@if (Model.QuestionList.Count <= 0)
+{
+    <div class="alert alert-success" role="alert">
+        Anketimize katıldığınız için teşekkür ederiz.
+    </div>
+}
+else
+{
+    <div class="col-lg-3">
+    </div>
+    <div class="col-lg-6 text-center">
+        <form role="form" id="frmSurvey" method="post" action="/Surveys/Index">
+            <input type="hidden" id="id" name="id" value="@(Context.Request.Query["id"])" />
+            @foreach (var item in Model.QuestionList)
+            {
+                <div class="form-group">
+                    <input type="text" class="form-control" readonly value="@(i+1). @(item.QUESTION_TEXT)" />
+                    <br />
+                    @if (item.SURVEY_ANSWER_TYPE_ID == (int)SurveyAnswerTypeEnum.Degerlendirme)
+                    {
+                        <input type="radio" class="radio-inline" id="AnswerList[@i].ANSWER" name="AnswerList[@i].ANSWER" value="@(item.ID+"_"+@item.EVALUATION_1)" />
+                        @item.EVALUATION_1
+                        <input type="radio" class="radio-inline" id="AnswerList[@i].ANSWER" name="AnswerList[@i].ANSWER" value="@(item.ID+"_"+@item.EVALUATION_2)" />
+                        @item.EVALUATION_2
+                        <input type="radio" class="radio-inline" id="AnswerList[@i].ANSWER" name="AnswerList[@i].ANSWER" value="@(item.ID+"_"+@item.EVALUATION_3)" />
+                        @item.EVALUATION_3
+                        <input type="radio" class="radio-inline" id="AnswerList[@i].ANSWER" name="AnswerList[@i].ANSWER" value="@(item.ID+"_"+@item.EVALUATION_4)" />
+                        @item.EVALUATION_4
+                        <input type="radio" class="radio-inline" id="AnswerList[@i].ANSWER" name="AnswerList[@i].ANSWER" value="@(item.ID+"_"+@item.EVALUATION_5)" />
+                        @item.EVALUATION_5
+                    }
+                    else
+                    {
+                        <input type="radio" class="radio-inline" id="AnswerList[@i].ANSWER" name="AnswerList[@i].ANSWER" value="@(item.ID+"_"+@item.BINARY_OPTION_1)" />
+                        @item.BINARY_OPTION_1
+                        <input type="radio" class="radio-inline" id="AnswerList[@i].ANSWER" name="AnswerList[@i].ANSWER" value="@(item.ID+"_"+@item.BINARY_OPTION_2)" />
+                        @item.BINARY_OPTION_2
+                    }
+                </div>
+                i += 1;
+            }
+            <hr />
+            <button type="submit" class="btn btn-primary">Gönder</button>
+        </form>
+    </div>
+    <div class="col-lg-3">
+    </div>
+
+}
+
+
+
+
+
+<script src="~/Content/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>

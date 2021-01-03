@@ -1,0 +1,423 @@
+﻿@model TimeManagementViewModel
+@{
+    ViewData["Title"] = "Zaman Tanımlama";
+    var yearList = new List<SelectListItem>();
+    for (int i = DateTime.Now.Year; i < (DateTime.Now.Year + 20); i++)
+    {
+        yearList.Add(new SelectListItem()
+        {
+            Text = i.ToString(),
+            Value = i.ToString()
+        });
+    }
+
+    int k = 0;
+}
+
+@section Styles
+{
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-custom gutter-b example example-compact">
+            <div class="card-header">
+                <h3 class="card-title">Zaman Listesi Tanımlama</h3>
+            </div>
+            <!--begin::Form-->
+            <form role="form" id="formTimeManagement" method="post" action="/Organization/AddTimeManagement">
+                @Html.AntiForgeryToken()
+                <input type="hidden" id="id" name="id" value="@(Context.Request.Query["id"])" />
+                <div class="card-body">
+                    <div class="form-group">
+                        <label>Takvim Adı</label>
+                        @Html.TextBoxFor(m => m.CALENDAR_NAME, new { @class = "form-control", @placeholder = "Takvim Adı", @required = true, @id = "calendarName" })
+                    </div>
+                    <div class="form-group">
+                        <label>Çalışma Günleri</label>
+                        @Html.ListBoxFor(m => m.SelectedWorkDays, Model.WorkDaysList, new { @class = "form-control", size = 7, @id = "workDays" })
+                    </div>
+                    <div class="form-group">
+                        <label>Çalışma Saatleri</label>
+                        @Html.ListBoxFor(m => m.SelectedBusinessHours, Model.BusinessHoursList, new { @class = "form-control", size = 4, @id = "businessHours" })
+                    </div>
+                    <div class="form-group">
+                        <label>Time Zone</label>
+                        @Html.DropDownListFor(m => m.TIMEZONE_ID, Model.TimezoneList, "Seçiniz", new { @class = "form-control selectpicker", id = "drpTimezone" })
+                    </div>
+
+                    <div class="form-group">
+                        <label>Durumu</label>
+                        <div class="radio-inline">
+                            <label class="radio">
+                                @Html.RadioButtonFor(m => m.ISACTIVE, true, new { @id = "aktif", @name = "aktif" })
+                                Aktif
+                                <span></span>
+                            </label>
+                            <label class="radio">
+                                @Html.RadioButtonFor(m => m.ISACTIVE, false, new { @id = "pasif", @name = "pasif" })
+                                Pasif
+                                <span></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <br />
+                    <div class="form-group">
+                        <label>Tatil Zamanı</label>
+                        <table class="table table-bordered table-striped" width="100%">
+                            <tr>
+                                <td>
+                                    @Html.DropDownListFor(m => m.OffDays.YEAR, yearList.OrderBy(q => q.Value), "Seçiniz", new { @class = "form-control selectpicker", id = "drpYear" })
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(m => m.OffDays.DESCRIPTION, new { @class = "form-control", @placeholder = "Açıklama", @id = "description" })
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(m => m.OffDays.START_DATE, new { @class = "form-control", @placeholder = "Başlangıç Tarihi", @id = "startDate", @autocomplete="off" })
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(m => m.OffDays.END_DATE, new { @class = "form-control", @placeholder = "Bitiş Tarihi", @id = "endDate", @autocomplete="off" })
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-primary" id="btnAddOffDay" name="btnAddOffDay">Ekle</button>
+                                </td>
+                                <td>
+                                </td>
+                            </tr>
+                        </table>
+                        <table id="offDaysTable" class="table table-bordered table-striped" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>Yıl</th>
+                                    <th>Açıklama</th>
+                                    <th>Başlangıç</th>
+                                    <th>Bitiş</th>
+                                    <th>Sil</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodyOffDay">
+                                @if (Model.OffDaysList != null)
+                                {
+                                    foreach (var item in Model.OffDaysList)
+                                    {
+                                        <tr id="@("row"+k)">
+                                            <td>@item.YEAR</td>
+                                            <td>@item.DESCRIPTION</td>
+                                            <td>@item.START_DATE</td>
+                                            <td>@item.END_DATE</td>
+                                            <td>
+                                                <button type="button" class="btn btn-danger" onclick="offDayRemove(@("row"+k),@k)">Sil</button>
+                                                <input type="hidden" value="@item.ID" name="PostOffDays[@k].ID" />
+                                                <input type="hidden" value="@item.YEAR" name="PostOffDays[@k].YEAR" />
+                                                <input type="hidden" value="@item.DESCRIPTION" name="PostOffDays[@k].DESCRIPTION" />
+                                                <input type="hidden" value="@item.START_DATE" name="PostOffDays[@k].START_DATE" />
+                                                <input type="hidden" value="@item.END_DATE" name="PostOffDays[@k].END_DATE" />
+                                            </td>
+                                        </tr>
+                                        k++;
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary">Kaydet</button>
+                </div>
+            </form>
+            <!--end::Form-->
+        </div>
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script src="~/Content/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="~/Content/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    <script src="~/Content/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+    <!-- bootstrap datepicker -->
+    <script src="~/Content/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $('#example1').DataTable({
+                "scrollX": true
+            });
+
+            $('#startDate').datepicker({
+                autoclose: true,
+                format: 'dd.mm.yyyy'
+            });
+            $('#endDate').datepicker({
+                autoclose: true,
+                format: 'dd.mm.yyyy'
+            });
+
+        });
+
+        var offDayRow =@k;
+
+        function offDayRemove(rowId,rowNum) {
+            $(rowId).remove();
+            $("#tbodyOffDay").append("<input type='hidden' value='-1' name='PostOffDays["+rowNum+"].ID' />");
+            }
+
+        $("#btnAddOffDay").click(function () {
+            if ($("#drpYear").val() == "") {
+                $("#drpYear").focus();
+                return;
+            }
+            if ($("#description").val()=="") {
+                $("#description").focus();
+                return;
+            }
+            if ($("#startDate").val()=="") {
+                $("#startDate").focus();
+                return;
+            }
+            if ($("#endDate").val()=="") {
+                $("#endDate").focus();
+                return;
+            }
+            var year = $("#drpYear").val();
+            var description = $("#description").val();
+            var startDate = $("#startDate").val();
+            var endDate = $("#endDate").val();
+            //startDate.toLocaleDateString()
+            //var startDate = new Date($("#startDate").val());
+            //var endDate = new Date($("#endDate").val());
+            $("#offDaysTable tbody").append("<tr id='offDayRow" + offDayRow + "'><td>" + year + "</td><td>" + description + "</td><td>" + startDate + "</td><td>" + endDate + "</td><td><button type='button' class='btn btn-danger' onclick='offDayRemove(offDayRow" + offDayRow + "," + offDayRow + ")'>Sil</button><input type='hidden' value='0' name='PostOffDays[" + offDayRow + "].ID'/><input type='hidden' value='" + year + "' name='PostOffDays[" + offDayRow + "].YEAR'/><input type='hidden' value='" + description + "' name='PostOffDays[" + offDayRow + "].DESCRIPTION'/><input type='hidden' value='" + startDate + "' name='PostOffDays[" + offDayRow + "].START_DATE'/><input type='hidden' value='" + endDate + "' name='PostOffDays[" + offDayRow + "].END_DATE'/></td></tr>");
+            offDayRow = offDayRow + 1;
+
+            $("#drpYear").val('');
+            $("#drpYear").trigger('change');
+            $("#description").val('');
+            $("#startDate").val('');
+            $("#endDate").val('');
+
+        });
+
+        $('#frmTimeManagement').submit(function (e) {
+            e.preventDefault();
+            var form = $("#frmTimeManagement");
+                var formData = new FormData(form[0]);
+                $.ajax({
+                    url: '@Url.Action("CreateOrEditTimeManagement","Organization")',
+                    type: "POST",
+                    data: formData,
+                    contentType: false,
+                    cache: false,
+                    dataType: "json",
+                    processData: false,
+                    success: function (data) {
+                        if (data.success === true) {
+                            location.reload();
+                        }
+                    },
+                    error: function (data) {
+                        toastr['error']('Hata oluştu. Lütfen daha sonra tekrar deneyiniz.');
+                    },
+                    complete: function (data) {
+                    }
+                });
+        });
+
+        $('#frmOffDays').submit(function (e) {
+            e.preventDefault();
+            var form = $("#frmOffDays");
+                var formData = new FormData(form[0]);
+                $.ajax({
+                    url: '@Url.Action("CreateOrEditOffDays","Organization")',
+                    type: "POST",
+                    data: formData,
+                    contentType: false,
+                    cache: false,
+                    dataType: "json",
+                    processData: false,
+                    success: function (data) {
+                        if (data.success === true) {
+                            location.reload();
+                        }
+                    },
+                    error: function (data) {
+                        toastr['error']('Hata oluştu. Lütfen daha sonra tekrar deneyiniz.');
+                    },
+                    complete: function (data) {
+                    }
+                });
+        });
+
+        $('#frmDeleteTimeManagement').submit(function (e) {
+            e.preventDefault();
+            var form = $("#frmDeleteTimeManagement");
+                var formData = new FormData(form[0]);
+                $.ajax({
+                    url: '@Url.Action("DeleteTimeManagement","Organization")',
+                    type: "POST",
+                    data: formData,
+                    contentType: false,
+                    cache: false,
+                    dataType: "json",
+                    processData: false,
+                    success: function (data) {
+                        if (data.success === true) {
+                            location.reload();
+                        }
+                    },
+                    error: function (data) {
+                        toastr['error']('Hata oluştu. Lütfen daha sonra tekrar deneyiniz.');
+                    },
+                    complete: function (data) {
+                    }
+                });
+        });
+
+        $('#frmDeleteOffDays').submit(function (e) {
+            e.preventDefault();
+            var form = $("#frmDeleteOffDays");
+                var formData = new FormData(form[0]);
+                $.ajax({
+                    url: '@Url.Action("DeleteOffDays","Organization")',
+                    type: "POST",
+                    data: formData,
+                    contentType: false,
+                    cache: false,
+                    dataType: "json",
+                    processData: false,
+                    success: function (data) {
+                        if (data.success === true) {
+                            location.reload();
+                        }
+                    },
+                    error: function (data) {
+                        toastr['error']('Hata oluştu. Lütfen daha sonra tekrar deneyiniz.');
+                    },
+                    complete: function (data) {
+                    }
+                });
+        });
+
+        //$('#createOrEditModal').on('shown.bs.modal', function (e) {
+        //    var tmId = $(e.relatedTarget).attr('data-id');
+        //    if (tmId != null) {
+        //        clearForm();
+
+        //        $.ajax({
+        //            url: '/Organization/GetTimeManagement?id=' + tmId,
+        //            type: "GET",
+        //            dataType: "json",
+        //            success: function (data) {
+        //                $("#id").val(tmId);
+        //                $("#calendarName").val(data.CALENDAR_NAME);
+        //                $("#drpTimezone").val(data.TIMEZONE_ID);
+        //                if (data.ISACTIVE) {
+        //                    $("#aktif").prop("checked", true);
+        //                }
+        //                else {
+        //                    $("#pasif").prop("checked", true);
+        //                }
+
+        //                var values=data.CALENDAR_DAYS;
+        //                $.each(values.split(","), function(i,e){
+        //                    $("#workDays option[value='" + e + "']").prop("selected", true);
+        //                });
+
+        //                var values=data.BUSINESS_HOURS;
+        //                $.each(values.split(","), function(i,e){
+        //                    $("#businessHours option[value='" + e + "']").prop("selected", true);
+        //                });
+
+        //            },
+        //            error: function (xhr, ajaxOptions, thrownError) {
+        //            },
+        //            complete: function (data) {
+        //            }
+        //        });
+        //    }
+        //});
+
+        //$('#createOrEditModalOffDays').on('shown.bs.modal', function (e) {
+        //    var offDayId = $(e.relatedTarget).attr('data-id');
+        //    if (offDayId != null) {
+        //        clearFormOffDays();
+
+        //        $.ajax({
+        //            url: '/Organization/GetOffDays?id=' + offDayId,
+        //            type: "GET",
+        //            dataType: "json",
+        //            success: function (data) {
+        //                $("#offDayId").val(offDayId);
+        //                $("#drpYear").val(data.YEAR);
+        //                $("#description").val(data.DESCRIPTION);
+        //                var startDate = new Date(data.START_DATE);
+        //                var endDate = new Date(data.END_DATE);
+        //                $("#startDate").val(startDate.toLocaleDateString());
+        //                $("#endDate").val(endDate.toLocaleDateString());
+        //            },
+        //            error: function (xhr, ajaxOptions, thrownError) {
+        //            },
+        //            complete: function (data) {
+        //            }
+        //        });
+        //    }
+        //});
+
+        //$('#offDayListModal').on('shown.bs.modal', function (e) {
+        //    var tmId = $(e.relatedTarget).attr('data-id');
+        //    $("#tmId").val(tmId);
+        //    if (tmId != null) {
+        //        $("#tbodyOffDay").empty();
+        //        $.ajax({
+        //            url: '/Organization/GetTimeManagementOffDays?timeManagementId=' + tmId,
+        //            type: "GET",
+        //            dataType: "json",
+        //            success: function (data) {
+        //                $.each(data, function (index, item) {
+        //                    var startDate = new Date(item.START_DATE);
+        //                    var endDate = new Date(item.END_DATE);
+        //                    //$("#offDaysTable tbody").append("<tr><td>"+item.YEAR+"</td><td>"+item.DESCRIPTION+"</td><td>"+startDate.toLocaleDateString()+"</td><td>"+endDate.toLocaleDateString()+"</td><td><a href='#' data-toggle='modal' data-target='#createOrEditModalOffDays' data-id='"+item.ID+"'>Güncelle</a></td><td><a href='#' data-toggle='modal' data-target='#deleteModalOffDays' data-id='"+item.ID+"'>Sil</a></td></tr>");
+        //                });
+        //            },
+        //            error: function (xhr, ajaxOptions, thrownError) {
+        //            },
+        //            complete: function (data) {
+        //            }
+        //        });
+        //    }
+        //});
+
+
+        //$('#deleteModal').on('shown.bs.modal', function (e) {
+        //    var tmId = $(e.relatedTarget).attr('data-id');
+        //    $('#deleteId').val(tmId);
+        //});
+        //$('#deleteModalOffDays').on('shown.bs.modal', function (e) {
+        //    var offDayId = $(e.relatedTarget).attr('data-id');
+        //    $('#offDayDeleteId').val(offDayId);
+        //});
+        //$(document).ready(function () {
+        //});
+
+        //function clearForm() {
+        //    $("#id").val('');
+        //    $("#calendarName").val('');
+        //    $("#drpTimezone").val('');
+        //    $("#aktif").prop("checked", true);
+        //    $("#workDays option:selected").prop("selected", false);
+        //    $("#businessHours option:selected").prop("selected", false);
+        //}
+
+        //function clearFormOffDays() {
+        //    $("#offDayId").val('');
+        //    $("#drpYear").val('');
+        //    $("#description").val('');
+        //    $("#startDate").val('');
+        //    $("#endDate").val('');
+        //}
+        //$('#btnAdd').click(function () {
+        //    clearForm();
+        //});
+    </script>
+}

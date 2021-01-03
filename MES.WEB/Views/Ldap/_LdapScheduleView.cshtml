@@ -1,0 +1,253 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model LdapViewModel
+Ldap bilgilerinin kontrolü için ouları seçin ve bir aralık belirleyin.
+
+<div>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>#Ou</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="cbKutular">
+            @{var i = 1; }
+            @foreach (var item in Model.LdapOus)
+            {
+                <tr>
+                    <td style="width:1%">
+                        @if(Model.SelectedOuModels != null && Model.SelectedOuModels.Contains(item.OuName))
+                        {
+                            <input type="checkbox" value="@item.IdentifierNameToString" checked>
+                        }
+                        else
+                        {
+                            <input type="checkbox" value="@item.IdentifierNameToString">
+                        }
+
+                    </td>
+                    <td style="width:99%">
+                        <button type="button" class="btn" data-toggle="collapse" data-target="#AA_@(i)">
+                            >@item.OuName
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width:1%">
+                    </td>
+                    <td style="width:99%">
+                        <div class="accordian-body collapse" id="AA_@(i)">
+                            <table class="table table-bordered table-checkable" id="example2">
+                                <thead>
+                                    <tr>
+                                        <th>Kullanıcı İsmi</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var userItem in item.IdentifierName)
+                                    {
+                                        <tr>
+                                            <td>@userItem</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+                i++;
+            }
+        </tbody>
+    </table>
+    <div>
+        <h6 class="card-label" style="color:cornflowerblue">Kaydedilmiş Oular: @Model.SelectedOuModels</h6>
+    </div>
+    <div class="separator separator-dashed my-8"></div>
+    <div id="tableArea2">
+        <form role="form" id="formLdapSchedule">
+            <table class="table table-bordered table-hover table-checkable" id="table2" style="margin-top: 13px !important;">
+                <thead>
+                    <tr>
+                        <th>#Görev Zamanı</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbod>
+                    <tr>
+                        <td>
+
+                            @if (Model.CronType != null && Model.CronType.Equals("Cron.Daily"))
+                            {
+                                <input type="radio" id="r1" name="time" value="Cron.Daily" checked>
+                            }
+                            else
+                            {
+                                <input type="radio" id="r1" name="time" value="Cron.Daily">
+                            }
+                            Günlük
+                            @if (Model.CronType != null && Model.CronType.Equals("Cron.Daily"))
+                            {
+                                <input type="time" id="dailyTime" value="@Model.DailyTime">
+                            }
+                            else
+                            {
+                                <input type="time" id="dailyTime">
+                            }
+
+                        </td>
+                        <td>
+                            @if (Model.CronType != null && Model.CronType.Equals("Cron.Weekly"))
+                            {
+                                <input type="radio" id="r2" name="time" value="Cron.Weekly" checked>
+                            }
+                            else
+                            {
+                                <input type="radio" id="r2" name="time" value="Cron.Weekly">
+                            }
+                            Haftalık
+                            @if (Model.CronType != null && Model.CronType.Equals("Cron.Weekly"))
+                            {
+                                @*<select id="dayofweekselect" name="Todays_Day">
+                                        <option value="0">Pazartesi</option>
+                                        <option value="1">Salı</option>
+                                        <option value="2">Çarşamba</option>
+                                        <option value="3">Perşembe</option>
+                                        <option value="4">Cuma</option>
+                                        <option value="5">Cumartesi</option>
+                                        <option value="6">Pazar</option>
+                                    </select>*@
+                                @Html.DropDownList("Günler", Model.DayOfWeekInit)
+                            }
+                            else
+                            {
+                                <select id="dayofweekselect" name="Todays_Day">
+                                    <option value="0">Pazartesi</option>
+                                    <option value="1">Salı</option>
+                                    <option value="2">Çarşamba</option>
+                                    <option value="3">Perşembe</option>
+                                    <option value="4">Cuma</option>
+                                    <option value="5">Cumartesi</option>
+                                    <option value="6">Pazar</option>
+                                </select>
+                            }
+
+                        </td>
+                        <td>
+                            @if (Model.CronType != null && Model.CronType.Equals("Cron.Monthly"))
+                            {
+                                <input type="radio" id="r3" name="time" value="Cron.Monthly" checked>
+                            }
+                            else
+                            {
+                                <input type="radio" id="r3" name="time" value="Cron.Monthly">
+                            }
+                            Aylık
+                            @if (Model.CronType != null && Model.CronType.Equals("Cron.Monthly"))
+                            {
+                                <input type="number" id="dayOfMonth" min="1" max="30" step="1" value="@Model.DayOfMonth">
+                            }
+                            else
+                            {
+                                <input type="number" id="dayOfMonth" min="1" max="30" step="1">
+                            }
+                        </td>
+                        <td>
+                            @if (Model.CronType != null && Model.CronType.Equals("Cron.Delayed"))
+                            {
+                                <input type="radio" id="r4" name="time" value="Cron.Delayed" checked>
+                            }
+                            else
+                            {
+                                <input type="radio" id="r4" name="time" value="Cron.Delayed">
+                            }
+                            Belirli bir tarih
+                            @if (Model.CronType != null && Model.CronType.Equals("Cron.Delayed"))
+                            {
+                                <input type="datetime-local" id="oneTime" value="@Model.OneTime">
+                            }
+                            else
+                            {
+                                <input type="datetime-local" id="oneTime">
+                            }
+                        </td>
+                        <td>
+                            <button id="btnSaveCheckedSchedule" type="submit" class="btn btn-primary btn-sm">Kaydet</button>
+                        </td>
+                    </tr>
+                </tbod>
+            </table>
+        </form>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $("#oneTime").datetimepicker();
+    });
+
+    $(document).ready(function () {
+        $("#btnSaveCheckedSchedule").click(function () {
+            var radioValue = $("input[name='time']:checked").val();
+            if (radioValue == undefined) {
+                toastr['error']("Lütfen bir aralık seçin!");
+                return false;
+            }
+            var Secilenler = "";
+            $('#cbKutular :checked').each(function () {
+                Secilenler += $(this).val() + "-";
+            });
+            if (Secilenler == "") {
+                toastr['error']("Lütfen bir ou seçin!");
+                return false;
+            }
+            debugger;
+            var oneTimeValue = $("#oneTime").datepicker({ dateFormat: 'dd,MM,yyyy' }).val();
+            var dailyTimeValue = $("#dailyTime").datepicker({ dateFormat: 'hh:MM:ss' }).val();
+            var dayofweekValue = $("#dayofweekselect option:selected").val();
+            var dayofmonthValue = $("#dayOfMonth").val();
+            $.ajax({
+                url: '/Ldap/SaveSceduleTime?cronType=' + radioValue +
+                    '&dailyTime=' + dailyTimeValue +
+                    '&dayOfWeek=' + dayofweekValue +
+                    '&dayOfMonth=' + dayofmonthValue +
+                    '&oneTime=' + oneTimeValue +
+                    '&ouselect=' + Secilenler,
+                type: "POST",
+                data: { 'cronType': radioValue, 'dailyTime': dailyTimeValue, 'dayOfWeek': dayofweekValue, 'dayOfMonth': dayofmonthValue, 'oneTime': oneTimeValue, 'ouselect': Secilenler },
+                contentType: false,
+                cache: false,
+                dataType: "json",
+                processData: false,
+                success: function (data) {
+                    toastr['success'](data.responseText);
+                    toastr.success(data.responseText, "Title");
+                },
+                error: function (data) {
+                    toastr['error'](data.responseText);
+                },
+                complete: function (data) {
+                }
+            });
+        });
+    });
+
+    $(function () {
+        $("#dayOfMonth").keyup(function () {
+            var max = parseInt($(this).attr('max'));
+            var min = parseInt($(this).attr('min'));
+            if ($(this).val() > max) {
+                $(this).val(max);
+            }
+            else if ($(this).val() < min) {
+                $(this).val(min);
+            }
+        });
+    });
+
+</script>

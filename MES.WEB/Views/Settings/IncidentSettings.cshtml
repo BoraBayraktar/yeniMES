@@ -1,0 +1,211 @@
+﻿@model SettingIncidentOrderNumbersViewModel
+@{
+    ViewData["Title"] = "Sıra Numaraları";
+    var orderNumberFormats = new List<SelectListItem>();
+    orderNumberFormats.Add(new SelectListItem()
+    {
+        Text = "000",
+        Value = "000"
+    });
+    orderNumberFormats.Add(new SelectListItem()
+    {
+        Text = "0000",
+        Value = "0000"
+    });
+    orderNumberFormats.Add(new SelectListItem()
+    {
+        Text = "00000",
+        Value = "00000"
+    });
+    orderNumberFormats.Add(new SelectListItem()
+    {
+        Text = "000000",
+        Value = "000000"
+    });
+    orderNumberFormats.Add(new SelectListItem()
+    {
+        Text = "0000000",
+        Value = "0000000"
+    });
+}
+
+@section Styles
+{
+    <link href="/Content/assets/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
+    .passive {
+    disabled="disabled";
+    }
+}
+
+<div class="card card-custom">
+    <div class="card-header">
+        <div class="card-title">
+            <span class="card-icon">
+                <i class="flaticon2-list-2 text-primary"></i>
+            </span>
+            <h3 class="card-label">Arıza Yönetimi Ayarları</h3>
+        </div>
+        <div class="card-toolbar">
+                <!--end::Button-->
+            </div>
+        </div>
+    <div class="card-body">
+        <h5 class="card-label">Sıra No Format Ayarı</h5>
+        <!--begin: Datatable-->
+        <table class="table table-bordered table-hover table-checkable" id="example1" style="margin-top: 13px !important;">
+            <thead>
+                <tr>
+                    <th>Süreç Adı</th>
+                    <th>Sıra No Kodu</th>
+                    <th>Sıra No Hane(Digit)</th>
+                    <th>En Son Sıra No</th>
+                    @*<th>Durum</th>*@
+                    <th>#</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.orderNumbersList)
+                {
+                    <tr>
+                        <td>@(item.MAINPROCESS_MODEL.NAME)</td>
+                        <td>@item.CODE</td>
+                        <td>@item.ID_FORMAT_CODE</td>
+                        <td>@item.LAST_ORDER_NUMBER</td>
+                        <td>
+                            <a href="#" class="btn btn-sm btn-clean btn-icon" title="Güncelle" data-toggle="modal" data-target="#createOrEditModal" data-id="@item.ID">
+                                <i class="la la-edit"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <!--end: Datatable-->
+    </div>
+</div>
+<form role="form" id="frmOrderNumbers">
+    <div class="modal fade" id="createOrEditModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Sıra Numarası Tanımalama</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i aria-hidden="true" class="ki ki-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="box-body">
+                        <div class="form-group-sm row" style="margin-bottom:4px;">
+                            <label class="col-lg-2 col-form-label text-left">Süreç :</label>
+                            <div class="col-lg-10">
+                                @Html.DropDownListFor(m => m.orderNumbers.MAIN_PROCESS_ID, Model.mainProcessList, "Seçiniz", new { @class = "form-control select2", id = "drpMainProcess", @style = "width:100%" })
+                            </div>
+                        </div>
+                        <div class="form-group-sm row" style="margin-bottom:4px;">
+                            <label class="col-lg-2 col-form-label text-left">Kodu :</label>
+                            <div class="col-lg-10">
+                                @Html.TextBoxFor(m => m.orderNumbers.CODE, new { @class = "form-control", @maxlength = "4", @required = true, @id = "code" })
+                            </div>
+                        </div>
+                        <div class="form-group-sm row" style="margin-bottom:4px;">
+                            <label class="col-lg-2 col-form-label text-left">Digit :</label>
+                            <div class="col-lg-10">
+                                @Html.DropDownListFor(m => m.orderNumbers.ID_FORMAT_CODE, orderNumberFormats, "Seçiniz", new { @class = "form-control selectpicker", @required = true, id = "digit" })
+                            </div>
+                        </div>
+                        <div class="form-group-sm row" style="margin-bottom:4px;">
+                            <label class="col-lg-2 col-form-label text-left">En Son Sıra No :</label>
+                            <div class="col-lg-10">
+                                @Html.TextBoxFor(m => m.orderNumbers.LAST_ORDER_NUMBER, new { @class = "form-control", @maxlength = "4", @id = "last_order_number" })
+                            </div>
+                        </div>
+                        <!-- /.box-body -->
+                        <input type="hidden" id="id" name="id" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Kapat</button>
+                        <button type="submit" class="btn btn-primary" id="btnSubmit">Kaydet</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+    </div>
+</form>
+
+
+
+
+    @section Scripts
+    {
+        <script src="/Content/assets/plugins/custom/datatables/datatables.bundle.js"></script>
+        <script src="/Content/assets/js/pages/crud/datatables/extensions/select.js"></script>
+
+        <script type="text/javascript">
+            $(function () {
+                $(document).ajaxStart(function () {
+                    $("#drpMainProcess").attr("disabled", "disabled");
+                    $("#last_order_number").attr("disabled", "disabled");
+                })
+
+                $('#drpMainProcess').select2();
+            });
+
+            //insert
+            $('#frmOrderNumbers').submit(function (e) {
+                e.preventDefault();
+                var form = $("#frmOrderNumbers");
+                    var formData = new FormData(form[0]);
+                    $.ajax({
+                        url: '@Url.Action("CreateOrEditIncidentOrderNumbers", "Settings")',
+                        type: "POST",
+                        data: formData,
+                        contentType: false,
+                        cache: false,
+                        dataType: "json",
+                        processData: false,
+                        success: function (data) {
+                            if (data.success === true) {
+                                location.reload();
+                            }
+                            else {
+                                toastr['error']('Bu süreç daha önce kayıt edilmişti. Bir süreç için sadece bir Sıra Numarası kaydı oluşturulabilir.');
+                            }
+                        },
+                        error: function (data) {
+                            toastr['error']('Hata oluştu. Lütfen daha sonra tekrar deneyiniz.');
+                        },
+                        complete: function (data) {
+                        }
+                    });
+            });
+
+            //FORMU DOLDUR
+            $('#createOrEditModal').on('shown.bs.modal', function (e) {
+                var orderId = $(e.relatedTarget).attr('data-id');
+                if (orderId != null) {
+                    $.ajax({
+                        url: '/Settings/GetIncidentOrderNumbers?id=' + orderId,
+                        type: "GET",
+                        dataType: "json",
+                        success: function (data) {
+                            $("#id").val(orderId);
+                            $("#drpMainProcess").val(data.MAIN_PROCESS_ID);
+                            $("#drpMainProcess").trigger('change');
+                            $("#code").val(data.CODE);
+                            $("#digit").val(data.ID_FORMAT_CODE);
+                            $("#digit").trigger('change');
+                            $("#last_order_number").val(data.LAST_ORDER_NUMBER);
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                        },
+                        complete: function (data) {
+                        }
+                    });
+                }
+            });
+
+        </script>
+    }

@@ -1,0 +1,85 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model LdapViewModel
+
+<button type="button" id="btnSaveCheckedOu" class="btn btn-primary">Seçilenleri Kaydet</button>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Kullanıcı Tipi</th>
+        </tr>
+    </thead>
+    <tbody id="cbKutular">
+        @{var i = 1; }
+        @foreach (var item in Model.LdapOus)
+        {
+            <tr>
+                <td style="width:1%">
+                    <input type="checkbox" value="@item.IdentifierNameToString">
+                </td>
+                <td style="width:99%">
+                    <button type="button" class="btn" data-toggle="collapse" data-target="#AA_@(i)">
+                        >@item.OuName
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td style="width:1%">
+                </td>
+                <td style="width:99%">
+                    <div class="accordian-body collapse" id="AA_@(i)">
+                        <table class="table table-bordered table-checkable" id="example2">
+                            <thead>
+                                <tr>
+                                    <th>Kullanıcı İsmi</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var userItem in item.IdentifierName)
+                                {
+                                    <tr>
+                                        <td>@userItem</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+            i++;
+        }
+    </tbody>
+</table>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#btnSaveCheckedOu").click(function () {
+            var Secilenler = "";
+            $('#cbKutular :checked').each(function () {
+                Secilenler += $(this).val() + "-";
+            });
+            $.ajax({
+                url: '/Ldap/SaveLdapOu?oulist=' + Secilenler,
+                type: "POST",
+                data: { 'oulist': Secilenler },
+                contentType: false,
+                cache: false,
+                dataType: "json",
+                processData: false,
+                success: function (data) {
+                    toastr['success'](data.responseText);
+                    var url = "/Organization/Users";
+                    window.location.href = url; 
+                },
+                error: function (data) {
+                    toastr['error'](data.responseText);
+                },
+                complete: function (data) {
+                }
+            });
+        });
+    });
+</script>

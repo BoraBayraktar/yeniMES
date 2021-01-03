@@ -1,0 +1,133 @@
+﻿@model AuthViewModel
+@{
+    ViewData["Title"] = "Yetkiler";
+}
+
+@section Styles
+{
+    <link href="/Content/assets/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
+}
+
+
+<div class="card card-body">
+    <div class="card-header">
+        <div class="card-title">
+            <div class="row">
+                <div class="col-md-1">
+                    <span class="card-icon">
+                        <i class="flaticon2-list-2 text-primary"> </i>
+                    </span>
+                </div>
+                <div class="col-md-11">
+                    <h3 class="card-label">Menü Yetkileri</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <!--begin: Datatable-->
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Kullanıcı Tipi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.UserTypeList)
+                {
+                    <tr>
+                        <td>
+
+                            <button type="button" class="btn" data-toggle="collapse" data-target="#AA_@(item.USER_TYPE_ID)">
+                                >@item.NAME
+                            </button>
+                        </td>
+                    </tr>
+                    <tr class="accordian-body collapse out" id="AA_@(item.USER_TYPE_ID)">
+                        <td>
+                            <div>
+                                <table class="table table-bordered table-checkable" id="example2" style="margin-top: 13px !important;">
+                                    <thead>
+                                        <tr>
+                                            <th>Durum</th>
+                                            <th>Menü İsmi</th>
+                                            <th>Menü Yolu</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var itemMenu in Model.MenuList)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <div class="form-check">
+                                                        @{
+                                                            if (item.USERTYPE_MENUS.Any(x => x.MenuId == itemMenu.MENU_ID))
+                                                            {
+                                                                <input type="checkbox" onclick="UpdateState(@item.USER_TYPE_ID,  @itemMenu.MENU_ID,false)" id="checkb" checked>
+                                                            }
+                                                            else
+                                                            {
+                                                                <input type="checkbox" onclick="UpdateState(@item.USER_TYPE_ID,  @itemMenu.MENU_ID,true)" id="checkb">
+                                                            }
+
+                                                        }
+                                                        @*@Html.CheckBox("messageCheckbox", false, new { onclick = String.Format("UpdateState('{0}', '{1}', '{2}')", item.USER_TYPE_ID, itemMenu.MENU_ID, this.Output) })*@
+
+                                                    </div>
+                                                </td>
+                                                <td>@itemMenu.MENU_NAME</td>
+                                                <td>@itemMenu.RealPath</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <!--end: Datatable-->
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script src="/Content/assets/plugins/custom/datatables/datatables.bundle.js"></script>
+    <script src="/Content/assets/js/pages/crud/datatables/extensions/select.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $('#example1').DataTable();
+        });
+
+        $('.table .accordian-body').on('show.bs.collapse', function () {
+            $(this).closest("table")
+                .find(".collapse.in")
+                .not(this)
+                .collapse('toggle')
+        })
+        function UpdateState(userTypeId, menuId,chechkBoxChecked) {
+            var checked = false;
+            if (document.querySelector('#checkb:checked')) {
+                checked = true;
+            }
+            $.ajax({
+            url: "@Url.Action("UpdateStatus", "Auth")",
+            type: "POST",
+            async: true,
+            dataType: "json",
+            data: {
+                usertypeId: userTypeId,
+                menuId: menuId,
+                checkStatus: chechkBoxChecked
+            },
+            success: function (data) {
+            }
+        });
+}
+    </script>
+}

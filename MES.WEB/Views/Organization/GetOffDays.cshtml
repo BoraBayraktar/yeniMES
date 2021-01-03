@@ -1,0 +1,265 @@
+﻿@model OffDaysViewModel
+@{
+    Layout = null;
+    ViewData["Title"] = "Tatil Günleri";
+    var yearList = new List<SelectListItem>();
+    for (int i = DateTime.Now.Year; i > (DateTime.Now.Year - 20); i--)
+    {
+        yearList.Add(new SelectListItem()
+        {
+            Text = i.ToString(),
+            Value = i.ToString()
+        });
+    }
+}
+
+@section Styles
+{
+    <link rel="stylesheet" href="~/Content/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="~/Content/dist/css/skins/_all-skins.min.css">
+}
+
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <br />
+            <div class="col-lg-2">
+                <button name="btnAdd" id="btnAdd" type="button" class="btn btn-block btn-primary" data-toggle="modal" data-target="#createOrEditModal">Yeni Kayıt Ekle</button>
+            </div>
+            <br /><br />
+            @*<div class="box-header">
+                <h3 class="box-title">Tatil Listesi</h3>
+            </div>*@
+            <!-- /.box-header -->
+            <div class="box-body">
+                <table id="example1" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Yıl</th>
+                            <th>Açıklama</th>
+                            <th>Başlangıç</th>
+                            <th>Bitiş</th>
+                            <th>Güncelle</th>
+                            <th>Sil</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.OffDaysList)
+                        {
+                            <tr>
+                                <td>@item.YEAR</td>
+                                <td>@item.DESCRIPTION</td>
+                                <td>@item.START_DATE</td>
+                                <td>@item.END_DATE</td>
+                                <td><a href="#" data-toggle="modal" data-target="#createOrEditModal2" data-id="@item.ID">Güncelle</a></td>
+                                <td><a href="#" data-toggle="modal" data-target="#deleteModal" data-id="@item.ID">Sil</a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+    </div>
+</div>
+
+
+<form role="form" id="frmOffDays">
+    <div class="modal fade" id="createOrEditModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">Tatil</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Yıl</label>
+                            @Html.DropDownListFor(m => m.OffDays.YEAR, yearList, "Seçiniz", new { @class = "form-control", id = "drpYear", @required = true })
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Açıklama</label>
+                            @Html.TextBoxFor(m => m.OffDays.DESCRIPTION, new { @class = "form-control", @placeholder = "Açıklama", @required = true, @id = "description" })
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Başlangıç Tarihi</label>
+                            @Html.TextBoxFor(m => m.OffDays.START_DATE, new { @class = "form-control", @placeholder = "Başlangıç Tarihi", @id = "startDate", @required = true })
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Bitiş Tarihi</label>
+                            @Html.TextBoxFor(m => m.OffDays.END_DATE, new { @class = "form-control", @placeholder = "Bitiş Tarihi", @id = "endDate", @required = true })
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
+                    <input type="hidden" id="id" name="id" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Kapat</button>
+                    <button type="submit" class="btn btn-primary" id="btnSubmit">Kaydet</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+</form>
+
+
+<form role="form" id="frmDeleteOffDays">
+    <div class="modal fade" id="deleteModal">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">Tatil Sil</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="box-body">
+                        <input type="hidden" id="deleteId" name="deleteId" />
+                        Silmek istediğinizden emin misiniz?
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Vazgeç</button>
+                    <button type="submit" class="btn btn-primary" id="btnSubmit">Sil</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+</form>
+
+
+@section Scripts
+{
+    <script src="~/Content/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="~/Content/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    <script src="~/Content/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+
+
+    <script type="text/javascript">
+        $(function () {
+            $('#example1').DataTable();
+        });
+
+        $('#frmOffDays').submit(function (e) {
+            e.preventDefault();
+            var form = $("#frmOffDays");
+                var formData = new FormData(form[0]);
+                $.ajax({
+                    url: '@Url.Action("CreateOrEditHolding","Organization")',
+                    type: "POST",
+                    data: formData,
+                    contentType: false,
+                    cache: false,
+                    dataType: "json",
+                    processData: false,
+                    success: function (data) {
+                        if (data.success === true) {
+                            location.reload();
+                        }
+                        @*//success
+                        if (data.success === true) {
+
+                            // toastr['success'](data.responseText);
+                            var delay = 1500;
+                            setTimeout(function () { location.reload() }, delay);
+                        }
+                        //fail
+                        else if (data.success === false) {
+                            toastr.error(data.responseText, data.responseErrorCode);
+                            mApp.unblock();
+                        }
+
+                        else {
+                            toastr.error(data.responseText, data.responseErrorCode);
+                            var notFoundPage = "@Url.Action("Index", "ErrorHandler")";
+                            var delayNotFoundPage = 1500;
+                            setTimeout(function () { window.location.href = notFoundPage; }, delayNotFoundPage);
+                        }*@
+
+                    },
+                    error: function (data) {
+                        toastr['error']('Hata oluştu. Lütfen daha sonra tekrar deneyiniz.');
+                    },
+                    complete: function (data) {
+                    }
+                });
+        });
+
+        $('#frmDeleteOffDays').submit(function (e) {
+            e.preventDefault();
+            var form = $("#frmDeleteHolding");
+                var formData = new FormData(form[0]);
+                $.ajax({
+                    url: '@Url.Action("DeleteHolding","Organization")',
+                    type: "POST",
+                    data: formData,
+                    contentType: false,
+                    cache: false,
+                    dataType: "json",
+                    processData: false,
+                    success: function (data) {
+                        if (data.success === true) {
+                            location.reload();
+                        }
+                    },
+                    error: function (data) {
+                        toastr['error']('Hata oluştu. Lütfen daha sonra tekrar deneyiniz.');
+                    },
+                    complete: function (data) {
+                    }
+                });
+        });
+
+        $('#createOrEditModal').on('shown.bs.modal', function (e) {
+            var holdingId = $(e.relatedTarget).attr('data-id');
+            if (holdingId != null) {
+                clearForm();
+
+                $.ajax({
+                    url: '/Organization/GetHolding?id=' + holdingId,
+                    type: "GET",
+                    dataType: "json",
+                    success: function (data) {
+                        $("#id").val(holdingId);
+                        $("#code").val(data.CODE);
+                        $("#name").val(data.NAME);
+                        $("#description").val(data.DESCRIPTION);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                    },
+                    complete: function (data) {
+                    }
+                });
+            }
+        });
+        $('#deleteModal').on('shown.bs.modal', function (e) {
+            var holdingId = $(e.relatedTarget).attr('data-id');
+            $('#deleteId').val(holdingId);
+        });
+        $(document).ready(function () {
+        });
+
+        function clearForm() {
+            $("#id").val('');
+            $("#code").val('');
+            $("#name").val('');
+            $("#description").val('');
+        }
+        $('#btnAdd').click(function () {
+            clearForm();
+        });
+    </script>
+}

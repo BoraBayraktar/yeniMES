@@ -1,0 +1,1 @@
+{"LdapInfo":{"Id":0,"ServerAddress":"ldap.forumsys.com","PortNumber":389,"Username":"cn=read-only-admin,dc=example,dc=com","Password":"password"}}

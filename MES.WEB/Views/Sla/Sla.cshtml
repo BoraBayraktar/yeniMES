@@ -1,0 +1,411 @@
+﻿@model SlaViewModel
+@{
+    ViewData["Title"] = "Sla Tanım";
+
+    var TypeList = new List<SelectListItem>();
+    var SlaEventList = new List<SelectListItem>();
+    var SlaAreaList = new List<SelectListItem>();
+
+    TypeList.Add(new SelectListItem()
+    {
+        Text = "SLA",
+        Value = "SLA"
+    });
+    TypeList.Add(new SelectListItem()
+    {
+        Text = "OLA",
+        Value = "OLA"
+    });
+
+    SlaEventList.Add(new SelectListItem()
+    {
+        Text = "Başlat",
+        Value = "1"
+    });
+    SlaEventList.Add(new SelectListItem()
+    {
+        Text = "Durdur",
+        Value = "2"
+    });
+    SlaEventList.Add(new SelectListItem()
+    {
+        Text = "Bitir",
+        Value = "3"
+    });
+
+    SlaAreaList.Add(new SelectListItem()
+    {
+        Text = "Genel",
+        Value = "1"
+    });
+    SlaAreaList.Add(new SelectListItem()
+    {
+        Text = "Müşteri",
+        Value = "2"
+    });
+    SlaAreaList.Add(new SelectListItem()
+    {
+        Text = "Hizmet",
+        Value = "3"
+    });
+    SlaAreaList.Add(new SelectListItem()
+    {
+        Text = "Varlık",
+        Value = "4"
+    });
+
+    int k = 0;
+}
+
+
+
+@section Styles
+{
+        <link href="/Content/assets/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
+}
+
+    @*<div class="row">
+        <div class="col-lg-10">*@
+    <!-- general form elements -->
+    <div class="card card-custom gutter-b example example-compact">
+        <div class="card-header">
+            <h3 class="card-title">Hizmet Seviye Tanımlama/Güncelleme</h3>
+        </div>
+        <!-- form start -->
+        <form class="form" id="formSla" method="post" action="/Sla/Sla">
+            @Html.AntiForgeryToken()
+            <div class="card-body">
+                <div class="form-group-sm row" style="margin-bottom:4px;">
+                    <label class="col-lg-2 col-form-label text-left">Hizmet Seviye Adı:</label>
+                    <div class="col-lg-4">
+                        @Html.TextBoxFor(m => m.sla.NAME, new { @class = "form-control", id = "txtName" })
+                        <input type="hidden" id="id" name="id" value="@(Context.Request.Query["id"])" />
+                    </div>
+                    <label class="col-lg-2 col-form-label text-left">Tipi:</label>
+                    <div class="col-lg-1">
+                        @Html.DropDownListFor(m => m.sla.TYPE, TypeList, "Seçiniz", new { @class = "form-control selectpicker", @required = true, id = "drpType" })
+                    </div>
+                </div>
+                <div class="form-group-sm row" style="margin-bottom:4px;">
+                    <label class="col-lg-2 col-form-label text-left">İlgili Süreç:</label>
+                    <div class="col-lg-4">
+                        @Html.DropDownListFor(m => m.sla.MAIN_PROCESS_ID, Model.MainProcessList, "Seçiniz", new { @class = "form-control selectpicker", @required = true, id = "drpMainProcess" })
+                    </div>
+                    <label class="col-lg-2 col-form-label text-left">Önem Derecesi:</label>
+                    <div class="col-lg-4">
+                        @Html.DropDownListFor(m => m.sla.IMPORTANCE_LEVEL_ID, Model.ImportanceLevelList, "Seçiniz", new { @class = "form-control selectpicker", @required = true, id = "drpImportanceLevel" })
+                    </div>
+                </div>
+                <div class="form-group-sm row" style="margin-bottom:50px;">
+                    <label class="col-lg-2 col-form-label text-left">Çalışma Zamanı:</label>
+                    <div class="col-lg-4">
+                        @Html.DropDownListFor(m => m.sla.WORKING_SCHEDULE_ID, Model.WorkingScheduleList, "Seçiniz", new { @class = "form-control selectpicker", @required = true, id = "drpWorkingSchedule" })
+                    </div>
+                </div>
+                <div class="form-group-sm row" style="margin-bottom:4px;">
+                    <label class="col-lg-2 col-form-label text-left">Çözüm Süresi:</label>
+                    <div class="col-lg-2">
+                        Gün
+                        @Html.TextBoxFor(m => m.sla.EFFORT_DAY, new { @class = "form-control", type = "number", min = "0", max = "60", step = "1", id = "txtDay" })
+                    </div>
+                    <div class="col-lg-2">
+                        Saat
+                        @Html.TextBoxFor(m => m.sla.EFFORT_HOUR, new { @class = "form-control", type = "number", min = "0", max = "23", step = "1", id = "txtHour" })
+                    </div>
+                    <div class="col-lg-2">
+                        Dakika
+                        @Html.TextBoxFor(m => m.sla.EFFORT_MINUTE, new { @class = "form-control", type = "number", min = "0", max = "59", step = "1", id = "txtMinute" })
+                    </div>
+                </div>
+                <br />
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="hizmetSeviyeTanim-tab" data-toggle="tab" href="#hizmetSeviyeTanim">
+                            <span class="nav-icon">
+                                <i class="flaticon2-chat-1"></i>
+                            </span>
+                            <span class="nav-text">Hizmet Seviye Tanimi</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#uygulamaAlani" aria-controls="uygulamaAlani">
+                            <span class="nav-icon">
+                                <i class="flaticon2-layers-1"></i>
+                            </span>
+                            <span class="nav-text">Uygulama Alanı</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="contact-tab" data-toggle="tab" href="#kurallar" aria-controls="kurallar">
+                            <span class="nav-icon">
+                                <i class="flaticon2-layers-1"></i>
+                            </span>
+                            <span class="nav-text">Kurallar</span>
+                        </a>
+                    </li>
+                </ul>
+                <br />
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="hizmetSeviyeTanim" role="tabpanel" aria-labelledby="hizmetSeviyeTanim-tab">
+
+                        <div class="form-group-sm row ">
+                            <table class="table table-bordered table-striped">
+                                <tr>
+                                    <td>
+                                        @Html.DropDownListFor(m => m.slaEvents.EVENT_ID, SlaEventList, "Olay Seçiniz", new { @class = "form-control selectpicker", id = "drpEvent" })
+                                    </td>
+                                    <td>
+                                        @Html.DropDownListFor(m => m.slaEvents.STATUS_ID, Model.prmStatusList, "Durum Seçiniz", new { @class = "form-control selectpicker", id = "drpStatus" })
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary" id="btnAddSlaEvent" name="btnAddSlaEvent">Ekle</button>
+                                    </td>
+                                    <td>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table id="slaEventTable" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Olay</th>
+                                        <th>Durum</th>
+                                        <th>#</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodySlaEvent">
+                                    @if (Model.slaEventsList != null)
+                                    {
+                                        foreach (var item in Model.slaEventsList)
+                                        {
+                                            <tr id="@("row"+k)">
+                                                <td>@(item.EVENT_ID == 1 ? "Başlat" :  item.EVENT_ID == 2 ? "Durdur" : "Bitir" )</td>
+                                                <td>@item.STATUS_MODEL.MAIN_DATA_NAME</td>
+                                                <td>
+                                                    <button type="button" class="btn btn-danger" onclick="slaEventRemove(@("row"+k),@k)">Sil</button>
+                                                    <input type="hidden" value="@item.ID" name="PostSlaEvent[@k].ID" />
+                                                    <input type="hidden" value="@item.EVENT_ID" name="PostSlaEvent[@k].EVENT_ID" />
+                                                    <input type="hidden" value="@item.STATUS_MODEL" name="PostSlaEvent[@k].STATUS_MODEL" />
+                                                </td>
+                                            </tr>
+                                            k++;
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="uygulamaAlani" role="tabpanel" aria-labelledby="uygulamaAlani-tab">
+                        <div class="form-group-sm row">
+                            <label class="col-lg-2 col-form-label text-left">Uygulama Alanı:</label>
+                            <div class="col-lg-3">
+                                @Html.DropDownListFor(m => m.slaArea.SLA_AREA_TYPE_ID, SlaAreaList, "Uygulama Alanı Seçiniz", new { @class = "form-control selectpicker", id = "drpAreaTypes" })
+                            </div>
+                        </div>
+                        <div class="form-group-sm row" id="divCustomers">
+                            <label class="col-lg-2 col-form-label text-left">Müşteriler</label>
+                            <div class="col-lg-3">
+                                @Html.ListBoxFor(m => m.slaArea.SERVICE_ID, Model.ServiceCatalogList, new { @class = "form-control select2", @id = "listCustomers", @placeholder = "Kişiler" })
+                            </div>
+                        </div>
+                        <div class="form-group row" id="divServices">
+                            <label class="col-lg-2 col-form-label text-left">Hizmetler:</label>
+                            <div class="col-lg-8" >
+                                @Html.ListBoxFor(m => m.slaArea.SERVICE_ID, Model.ServiceCatalogList, new { @class = "form-control select2", @id = "listServices", @placeholder = "Hizmetler", @multiple = "multiple" })
+                            </div>
+                        </div>
+                        <div class="form-group-sm row" id="divAssets">
+                            <label class="col-lg-2 col-form-label text-left">Varlıklar</label>
+                            <div class="col-lg-3">
+                                @Html.ListBoxFor(m => Model.ServiceCatalogList, Model.ServiceCatalogList, new { @class = "form-control select2", @id = "listAssets", @placeholder = "Gruplar" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="kurallar" role="tabpanel" aria-labelledby="kurallar-tab">...</div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="row">
+                    <div class="col-lg-2"></div>
+                    <div class="col-lg-12">
+                        <button id="btnSubmit" type="submit" class="btn btn-primary">Kaydet</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- /.box-body -->
+    <!-- /.box -->
+    @*</div>
+        </div>*@
+
+<form role="form" id="frmDeleteSla">
+    <div class="modal fade" id="deleteModal">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Dosya Sil</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i aria-hidden="true" class="ki ki-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="box-body">
+                        <input type="hidden" id="deleteId" name="deleteId" />
+                        Silmek istediğinizden emin misiniz?
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Vazgeç</button>
+                    <button type="submit" class="btn btn-primary" id="btnSubmit">Sil</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+</form>
+
+    @section Scripts
+{
+        <script src="~/Content/bower_components/ckeditor/ckeditor.js"></script>
+        @*<script src="/Content/assets/js/pages/crud/forms/widgets/select2.js"></script>*@
+        <script src="/Content/assets/plugins/bootstrap-input-spinner.js"></script>
+
+        <script type="text/javascript">
+
+            $(function () {
+                $("input[type='number']").inputSpinner();
+
+                $('.select2').select2();
+
+                $('#divCustomers').hide();
+                $('#divServices').hide();
+                $('#divAssets').hide();
+
+                CKEDITOR.replace('editor1');
+
+                $('#drpAreaTypes').change();
+                                
+            })
+
+            $('#drpAreaTypes').change(function () {
+                $('#divCustomers').hide();
+                $('#divServices').hide();
+                $('#divAssets').hide();
+                var valList = $(this).val();
+                for (var i = 0; i < valList.length; i++) {
+                    if (valList[i] == "2") {
+                        $('#divCustomers').show();
+                    }
+                    else if (valList[i] == "3") {
+                        $('#divServices').show();
+                    }
+                    else if (valList[i] == "4") {
+                        $('#divAssets').show();
+                    }
+                }
+            });
+
+        var slaEventRow = @k;
+
+        function slaEventRemove(rowId, rowNum) {
+                $(rowId).remove();
+                $("#tbodySlaEvent").append("<input type='hidden' value='-1' name='PostSlaEvent[" + rowNum + "].ID' />");
+            }
+
+        var eventNumber = 0;
+        //$("#btnSubmit").click(function () {
+
+        //    if (eventNumber < 3) {
+        //        toastr['error']('Başlat,Durdur,Bitir olaylarının tümünü eklemelisiniz.');
+        //        return false;
+        //    }
+        //});
+
+        $("#btnAddSlaEvent").click(function () {
+                var drpEventID = $("#drpEvent").val();
+                var drpEeventText = $("#drpEvent option:selected").html();
+                var drpStatusID = $("#drpStatus").val();
+                var drpStatusText = $("#drpStatus option:selected").html();
+                var startCount = 0;
+                var start = 0;
+                var stop = 0;
+                var finish = 0;
+
+                $('.table tbody tr').each(function (e) {
+                    var table = $(this)
+                    if (table.text().includes(drpEeventText)) {
+                        if (drpEventID == '1') {
+                            startCount += 1
+                            start += 1;
+                        }
+                        if (drpEventID == '2') {
+                            stop += start + 1;
+                        }
+                        if (drpEventID == '3') {
+                            finish += stop + 1;
+                        }
+                    }
+                });
+            eventNumber += start + stop + finish;
+
+
+            if (drpEventID != '' && drpStatusID != '') {
+                if (drpEventID == '1') {
+                    if (startCount == 1) {
+                        $("#slaEventTable tbody").append("<tr id='slaEventRow" + slaEventRow + "'><td>" + drpEeventText + "</td><td>" + drpStatusText + "</td><td><button type='button' class='btn btn-danger' onclick='slaEventRemove(slaEventRow" + slaEventRow + "," + slaEventRow + ")'>Sil</button><input type='hidden' value='0' name='PostSlaEvent[" + slaEventRow + "].ID'/><input type='hidden' value='" + drpEventID + "' name='PostSlaEvent[" + slaEventRow + "].EVENT_ID'/><input type='hidden' value='" + drpStatusID + "' name='PostSlaEvent[" + slaEventRow + "].STATUS_ID'/></td></tr>");
+                        slaEventRow = slaEventRow + 1;
+
+                        $("#drpEvent option:selected").remove();
+                        $("#drpStatus option:selected").remove();
+                    }
+                    else {
+                        toastr['error']('Başlat olayı zaten eklenmişti, Başlat olayını sadece bir kere ekleyebilirsiniz.');
+                    }
+                }
+                else {
+                    $("#slaEventTable tbody").append("<tr id='slaEventRow" + slaEventRow + "'><td>" + drpEeventText + "</td><td>" + drpStatusText + "</td><td><button type='button' class='btn btn-danger' onclick='slaEventRemove(slaEventRow" + slaEventRow + "," + slaEventRow + ")'>Sil</button><input type='hidden' value='0' name='PostSlaEvent[" + slaEventRow + "].ID'/><input type='hidden' value='" + drpEventID + "' name='PostSlaEvent[" + slaEventRow + "].EVENT_ID'/><input type='hidden' value='" + drpStatusID + "' name='PostSlaEvent[" + slaEventRow + "].STATUS_ID'/></td></tr>");
+                    slaEventRow = slaEventRow + 1;
+                }
+
+                $("#drpEvent").val('');
+                $("#drpEvent").trigger('change');
+                $("#drpStatus").val('');
+                $("#drpStatus").trigger('change');
+            }
+        });
+
+        $('#frmDeleteSla').submit(function (e) {
+            e.preventDefault();
+                var form = $("#frmDeleteSla");
+                var formData = new FormData(form[0]);
+                $.ajax({
+                    url: '@Url.Action("DeleteSla", "Sla")',
+                    type: "POST",
+                    data: formData,
+                    contentType: false,
+                    cache: false,
+                    dataType: "json",
+                    processData: false,
+                    success: function (data) {
+                        if (data.success === true) {
+                            location.reload();
+                        }
+                    },
+                    error: function (data) {
+                        toastr['error']('Hata oluştu. Lütfen daha sonra tekrar deneyiniz.');
+                    },
+                    complete: function (data) {
+                    }
+                });
+        });
+
+        $('#deleteModal').on('shown.bs.modal', function (e) {
+                var Id = $(e.relatedTarget).attr('data-id');
+                $('#deleteId').val(Id);
+            });
+
+        </script>
+    }
