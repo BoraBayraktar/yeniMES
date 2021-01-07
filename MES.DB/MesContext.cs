@@ -3,12 +3,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using System.Linq;
 
+
 namespace MES.DB
 {
     public partial class MesContext : DbContext
     {
         public virtual DbSet<MENU> MENU { get; set; }
 
+        public virtual DbSet<LOGGER_REQUEST> LOGGER_REQUESTS { get; set; }
+        public virtual DbSet<LOGGER_RESPONSE> LOGGER_RESPONSE { get; set; }
         public virtual DbSet<AD_CUSTOMERS> AD_CUSTOMERS { get; set; }
         public virtual DbSet<HOLDING> HOLDING { get; set; }
         public virtual DbSet<COMPANY> COMPANY { get; set; }

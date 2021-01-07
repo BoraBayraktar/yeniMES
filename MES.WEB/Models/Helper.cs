@@ -112,23 +112,23 @@
 
 //        public static void SendEmail(string subject, string emailToAddress, string body)
 //        {
-//            //MailSettingsLogic mailSettingsLogic = new MailSettingsLogic();
-//            //var mailSettings = mailSettingsLogic.GetList().FirstOrDefault();
-//            //using (MailMessage mail = new MailMessage())
-//            //{
-//            //    mail.From = new MailAddress(mailSettings.DEFAULT_ADDRESS);
-//            //    mail.To.Add(emailToAddress);
-//            //    mail.Subject = subject;
-//            //    mail.Body = body;
-//            //    mail.IsBodyHtml = true;
-//            //    //mail.Attachments.Add(new Attachment("D:\\TestFile.txt")); 
-//            //    using (SmtpClient smtp = new SmtpClient(mailSettings.SMTP_HOST, mailSettings.SMTP_PORT))
-//            //    {
-//            //        smtp.Credentials = new NetworkCredential(mailSettings.USERNAME, mailSettings.PASSWORD);
-//            //        //smtp.EnableSsl = enableSSL;
-//            //        smtp.Send(mail);
-//            //    }
-//            //}
+//            MailSettingsLogic mailSettingsLogic = new MailSettingsLogic();
+//            var mailSettings = mailSettingsLogic.GetList().FirstOrDefault();
+//            using (MailMessage mail = new MailMessage())
+//            {
+//                mail.From = new MailAddress(mailSettings.DEFAULT_ADDRESS);
+//                mail.To.Add(emailToAddress);
+//                mail.Subject = subject;
+//                mail.Body = body;
+//                mail.IsBodyHtml = true;
+//                //mail.Attachments.Add(new Attachment("D:\\TestFile.txt")); 
+//                using (SmtpClient smtp = new SmtpClient(mailSettings.SMTP_HOST, mailSettings.SMTP_PORT))
+//                {
+//                    smtp.Credentials = new NetworkCredential(mailSettings.USERNAME, mailSettings.PASSWORD);
+//                    //smtp.EnableSsl = enableSSL;
+//                    smtp.Send(mail);
+//                }
+//            }
 //        }
 
 //        public static int SayiYaz()

@@ -3,7 +3,7 @@
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 @{
     Layout = null;
-    var loginPageSettings = Context.Session.GetObject<MES.Entities.Model.GENERAL_SETTINGS>("GeneralSettings");
+    var loginPageSettings = Context.Session.GetObject<MES.Web.Model.GENERAL_SETTINGS>("GeneralSettings");
 }
 
 

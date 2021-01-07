@@ -1,6 +1,6 @@
 ﻿@model KnowledgeViewModel
 @{
-    var user = Context.Session.GetObject<MES.Entities.Model.USER>("User");
+    var user = Context.Session.GetObject<MES.Web.Model.USER>("User");
 }
 
 
@@ -38,8 +38,14 @@
                 <div class="form-group-sm row" style="margin-bottom:4px;">
                     <label class="col-lg-2 col-form-label text-left">Oluşturan:</label>
                     <div class="col-lg-4">
-                        @Html.DropDownListFor(m => m.knowledge.CREATED_USER_ID, new SelectList(Model.UserList, "Value", "Text", user.USER_ID.ToString()),
-                       new { @class = "form-control", id = "txtCreatedUser" })
+
+
+                        @*created user*@
+
+                        @*@Html.DropDownListFor(m => m.knowledge.CREATED_USER_ID, new SelectList(Model.UserList, "Value", "Text", user.USER_ID.ToString()),
+                       new { @class = "form-control", id = "txtCreatedUser" })*@
+
+
                     </div>
                     <label class="col-lg-2 col-form-label text-left">Açılış Tarihi:</label>
                     <div class="col-lg-4">
@@ -95,7 +101,7 @@
                                     {
                                         <tr>
                                             <td><a title="Dosyayı İndir" download href="@(item.FILE_PATH)">@(item.FILE_NAME)</a></td>
-                                            <td>@(item.CREATED_USER == null ? "-" : (item.CREATED_USER.NAME + " "+item.CREATED_USER.SURNAME))</td>
+                                            @*<td>@(item.CREATED_USER == null ? "-" : (item.CREATED_USER.NAME + " "+item.CREATED_USER.SURNAME))</td>*@
                                             <td>@(item.CREATED_DATE)</td>
                                             <td>
                                                 <a href="#" class="btn btn-sm btn-clean btn-icon" title="Sil" data-toggle="modal" data-target="#deleteModal" data-id="@item.ID">

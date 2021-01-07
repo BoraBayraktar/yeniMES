@@ -1,6 +1,6 @@
 ﻿@model MES.Web.Models.IncidentDetailViewModel
 @{
-    var user = Context.Session.GetObject<MES.Entities.Model.USER>("User");
+    var user = Context.Session.GetObject<MES.Web.Model.USER>("User");
 }
 
 <!--begin::Card-->
@@ -26,7 +26,7 @@
                 </div>
                 <label class="col-lg-1 col-form-label text-right">Ad Soyad:</label>
                 <div class="col-lg-3">
-                    <label class="col-form-label"><strong>@Model.incident.CREATED_USER.NAME @Model.incident.CREATED_USER.SURNAME</strong></label>
+                    @*<label class="col-form-label"><strong>@Model.incident.CREATED_USER.NAME @Model.incident.CREATED_USER.SURNAME</strong></label>*@
                 </div>
             </div>
             <div class="form-group-sm row">
@@ -37,7 +37,7 @@
                 </div>
                 <label class="col-lg-1 col-form-label text-right">Departman:</label>
                 <div class="col-lg-3">
-                    <label class="col-form-label"><strong>@(Model.incident.CREATED_USER.DEPARTMENT==null ? "" : Model.incident.CREATED_USER.DEPARTMENT.NAME)</strong></label>
+                    @*<label class="col-form-label"><strong>@(Model.incident.CREATED_USER.DEPARTMENT==null ? "" : Model.incident.CREATED_USER.DEPARTMENT.NAME)</strong></label>*@
                 </div>
             </div>
             <div class="form-group-sm row">
@@ -129,7 +129,7 @@
                                 {
                                     <tr>
                                         <td>@item.CREATED_DATE</td>
-                                        <td>@item.CREATED_USER.NAME @item.CREATED_USER.SURNAME</td>
+                                        @*<td>@item.CREATED_USER.NAME @item.CREATED_USER.SURNAME</td>*@
                                         <td>@item.DESCRIPTION</td>
                                         <td>@(item.INCIDENT_STATUS==null ? "" : item.INCIDENT_STATUS.MAIN_DATA_NAME)</td>
                                         <td>@(item.ASSIGNED_GROUP==null ? "" : item.ASSIGNED_GROUP.GROUP_NAME)</td>

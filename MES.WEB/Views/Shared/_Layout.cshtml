@@ -1,7 +1,7 @@
 ﻿@using System.Collections.Generic
 
 @{
-    var user = Context.Session.GetObject<MES.Entities.Model.USER>("User");
+    var user = Context.Session.GetObject<MES.Web.Model.USER>("User");
 }
 
 
@@ -128,7 +128,7 @@
                                 <i class="menu-icon ki ki-bold-more-hor icon-md"></i>
                             </li>*@
                             @{
-                                var menuList = Context.Session.GetObject<List<MES.Entities.Model.MENU>>("Menu");
+                                var menuList = Context.Session.GetObject<List<MES.Web.Model.MENU>>("Menu");
                                 GetTreeMenus(menuList, null);
                             }
                         </ul>
@@ -3209,7 +3209,7 @@
 
 @{
 
-    void GetTreeMenus(IEnumerable<MES.Entities.Model.MENU> siteMenu, Nullable<int> parentID)
+    void GetTreeMenus(IEnumerable<MES.Web.Model.MENU> siteMenu, Nullable<int> parentID)
     {
         foreach (var i in siteMenu.Where(a => a.TOPMENU_ID.Equals(parentID)))
         {

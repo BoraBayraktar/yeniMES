@@ -1,6 +1,6 @@
 ﻿@model MES.Web.Models.IncidentViewModel
 @{
-    var user = Context.Session.GetObject<MES.Entities.Model.USER>("User");
+    var user = Context.Session.GetObject<MES.Web.Model.USER>("User");
 }
 
 <!--begin::Card-->
@@ -52,7 +52,7 @@
                         <div class="col-lg-8">
                             <div class="input-group">
                                 <div class="input-group-prepend"><span class="input-group-text"><i class="la la-user"></i></span></div>
-                                @Html.DropDownListFor(m => m.incident.CREATED_USER_ID, new SelectList(Model.UserList, "Value", "Text", user.USER_ID.ToString()), "Seçiniz", new { @class = "form-control selectpicker", id = "drpCreatedUser", @required = true, @disabled = true })
+                                @*@Html.DropDownListFor(m => m.incident.CREATED_USER_ID, new SelectList(Model.UserList, "Value", "Text", user.USER_ID.ToString()), "Seçiniz", new { @class = "form-control selectpicker", id = "drpCreatedUser", @required = true, @disabled = true })*@
                             </div>
                         </div>
                     </div>
@@ -61,7 +61,7 @@
                         <div class="col-lg-8">
                             <div class="input-group">
                                 <div class="input-group-prepend"><span class="input-group-text"><i class="la flaticon-map"></i></span></div>
-                                @Html.DropDownListFor(m => m.incident.CREATED_USER_ID, new SelectList(Model.DepartmentList, "Value", "Text", user.DEPARTMENT_ID.ToString()), "Seçiniz", new { @class = "form-control selectpicker", id = "drpCreatedDepartment", @required = true, @disabled = true })
+                                @*@Html.DropDownListFor(m => m.incident.CREATED_USER_ID, new SelectList(Model.DepartmentList, "Value", "Text", user.DEPARTMENT_ID.ToString()), "Seçiniz", new { @class = "form-control selectpicker", id = "drpCreatedDepartment", @required = true, @disabled = true })*@
                             </div>
                         </div>
                     </div>
@@ -70,7 +70,7 @@
                         <div class="col-lg-8">
                             <div class="input-group">
                                 <div class="input-group-prepend"><span class="input-group-text"><i class="la flaticon-medal"></i></span></div>
-                                @Html.DropDownListFor(m => m.incident.CREATED_USER_ID, new SelectList(Model.TitleList, "Value", "Text", user.TITLE_ID.ToString()), "Seçiniz", new { @class = "form-control selectpicker", id = "drpCreatedTitle", @required = true, @disabled = true })
+                                @*@Html.DropDownListFor(m => m.incident.CREATED_USER_ID, new SelectList(Model.TitleList, "Value", "Text", user.TITLE_ID.ToString()), "Seçiniz", new { @class = "form-control selectpicker", id = "drpCreatedTitle", @required = true, @disabled = true })*@
                             </div>
                         </div>
                     </div>

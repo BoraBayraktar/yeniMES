@@ -1,7 +1,7 @@
 ﻿@model MES.Web.Models.IncidentViewModel
 @{
     ViewData["Title"] = "Arıza Listesi";
-    var user = Context.Session.GetObject<MES.Entities.Model.USER>("User");
+    var user = Context.Session.GetObject<MES.Web.Model.USER>("User");
     var sumUnrelesed = Model.SumUnRelased.ToString();
     //var sumOverdue = Model.SumOverdue.ToString();
     var sumOverdue = 0;
@@ -178,7 +178,7 @@
                     <td><a target="_blank" href="/Support/IncidentDetail?incidentId=@item.ID">@item.CODE</a></td>
                     <td>@item.SUBJECT</td>
                     <td>@item.DESCRIPTION</td>
-                    <td>@(item.CREATED_USER == null ? "-" : (item.CREATED_USER.NAME + " "+item.CREATED_USER.SURNAME))</td>
+                    @*<td>@(item.CREATED_USER == null ? "-" : (item.CREATED_USER.NAME + " "+item.CREATED_USER.SURNAME))</td>*@
                     <td>@(item.REPORTING_USER == null ? "-" : (item.REPORTING_USER.NAME + " "+item.REPORTING_USER.SURNAME))</td>
                     <td>@(item.INCIDENT_PRIORITY == null ? "-" : item.INCIDENT_PRIORITY.DESCRIPTION)</td>
                 </tr>

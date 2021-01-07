@@ -1,4 +1,5 @@
-﻿using MES.DB.Model;
+﻿using MES.API.ViewModels;
+using MES.DB.Model;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,7 @@ namespace MES.API.JwtToken
         }
 
 
-        public string Authenticate(USER users, COMPANY companies)
+        public string Authenticate(UserViewModel userViewModel)
         {
 
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -30,7 +31,7 @@ namespace MES.API.JwtToken
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.SerialNumber,users.USER_ID.ToString()),
+                    new Claim(ClaimTypes.SerialNumber,userViewModel.user.USER_ID.ToString()),
                 //    new Claim(ClaimTypes.NameIdentifier, users.USERNAME),
                 //    new Claim(ClaimTypes.Name, users.NAME +" "+ users.SURNAME),
                 //    new Claim( ClaimTypes.GroupSid, users..ToString()),

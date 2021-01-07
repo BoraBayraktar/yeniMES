@@ -15,12 +15,13 @@ using System.IO;
 using Microsoft.AspNetCore.Http;
 using MES.Web.Models;
 using System.Globalization;
-using MES.BackgroundJob.Schedules;
-using Hangfire;
-using MES.Business;
+//using MES.BackgroundJob.Schedules;
+//using Hangfire;
+//using MES.Business;
+using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
 using AutoMapper;
 using MES.Web.AutoMapper;
-using Hangfire.PostgreSql;
+//using Hangfire.PostgreSql;
 
 namespace MES.Web
 {
@@ -36,8 +37,8 @@ namespace MES.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews()
-                   .AddRazorRuntimeCompilation();
+            //services.AddControllersWithViews()
+            //       .AddRazorRuntimeCompilation();
 
             services.AddMvc();
             services.AddDistributedMemoryCache();
@@ -50,12 +51,12 @@ namespace MES.Web
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
 
             });
-            //services.AddMvc().AddNewtonsoftJson(options =>
-            //{
-            //    options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-            //    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            services.AddMvc().AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
 
-            //});
+            });
 
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             {
@@ -72,19 +73,19 @@ namespace MES.Web
             services.AddMemoryCache();
 
             #region Dependencies
-            services.AddScoped<MenuLogic>();
-            services.AddScoped<UserTypeLogic>();
-            services.AddScoped<UserTypeMenuLogic>();
-            services.AddScoped<ExcellLogic>();
-            services.AddScoped<UserLogic>();
-            services.AddScoped<DepartmentLogic>();
-            services.AddScoped<UserTypeLogic>();
-            services.AddScoped<TitleLogic>();
-            services.AddScoped<LocationLogic>();
-            services.AddScoped<HoldingLogic>();
-            services.AddScoped<CompanyLogic>();
-            services.AddScoped<CityLogic>();
-            services.AddScoped<LdapInfoLogic>();
+            //services.AddScoped<MenuLogic>();
+            //services.AddScoped<UserTypeLogic>();
+            //services.AddScoped<UserTypeMenuLogic>();
+            //services.AddScoped<ExcellLogic>();
+            //services.AddScoped<UserLogic>();
+            //services.AddScoped<DepartmentLogic>();
+            //services.AddScoped<UserTypeLogic>();
+            //services.AddScoped<TitleLogic>();
+            //services.AddScoped<LocationLogic>();
+            //services.AddScoped<HoldingLogic>();
+            //services.AddScoped<CompanyLogic>();
+            //services.AddScoped<CityLogic>();
+            //services.AddScoped<LdapInfoLogic>();
             #endregion
 
             // AutoMapper

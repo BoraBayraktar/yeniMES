@@ -46,7 +46,7 @@
                     {
                     <tr>
                         <td>@(item.KNOWLEDGE_NO)</td>
-                        <td>@(item.CREATED_USER == null ? "-" : (item.CREATED_USER.NAME + " "+item.CREATED_USER.SURNAME))</td>
+                        @*<td>@(item.CREATED_USER == null ? "-" : (item.CREATED_USER.NAME + " "+item.CREATED_USER.SURNAME))</td>*@
                         <td>@(item.KNOWLEDGE_ISACTIVE ? "Aktif" : "Pasif")</td>
                         <td>@(item.CREATED_DATE)</td>
                         <td>@(item.SERVICE_MODEL == null ? "-" : (@item.SERVICE_MODEL.SERVICE_NAME))</td>
