@@ -19,16 +19,40 @@ namespace MES.API.Controllers
     {
         private JwtAuthenticationManager jwtAuthenticationManager;
         private int requestId;
+        private int userid;
 
-        [HttpPost("SignIn")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public bool SignIn(UserViewModel userViewModel)
+        public USER LogMain(UserViewModel userViewModel)
         {
-            requestId = new LoggerBusiness().RequestLog(new LOGGER_REQUEST() { CONTROLLER = "SignInController", METHOD = "Post", USER_ID = userViewModel.user.USER_ID, DATE = DateTime.Now, PATH = "SignIn", JSONDATA = JsonConvert.SerializeObject(userViewModel) });
+            requestId = new LoggerBusiness().RequestLog(new LOGGER_REQUEST() { CONTROLLER = "LoginController", METHOD = "Post", USER_ID = userViewModel.user.USER_ID, DATE = DateTime.Now, PATH = "LoginMain", JSONDATA = JsonConvert.SerializeObject(userViewModel) });
 
             var response = new LoginBusiness(jwtAuthenticationManager).LoginMain(userViewModel);
 
-            new LoggerBusiness().ResponseLog(new LOGGER_RESPONSE() { CONTROLLER = "SignInController", METHOD = "Post", USER_ID = userViewModel.user.USER_ID, DATE = DateTime.Now, PATH = "SignIn", JSONDATA = JsonConvert.SerializeObject(response), REQUEST_ID = requestId });
+            if (response.USER_ID != 0) { userid = response.USER_ID; }
+
+            new LoggerBusiness().ResponseLog(new LOGGER_RESPONSE() { CONTROLLER = "LoginController", METHOD = "Post", USER_ID = userViewModel.user.USER_ID, DATE = DateTime.Now, PATH = "LoginMain", JSONDATA = JsonConvert.SerializeObject(response), REQUEST_ID = requestId });
+            return response;
+        }
+        [HttpPost]
+        public string GetJwt(UserViewModel userViewModel)
+        {
+            requestId = new LoggerBusiness().RequestLog(new LOGGER_REQUEST() { CONTROLLER = "LoginController", METHOD = "Post", USER_ID = userViewModel.user.USER_ID, DATE = DateTime.Now, PATH = "LoginMain", JSONDATA = JsonConvert.SerializeObject(userViewModel) });
+
+            var response = new LoginBusiness(jwtAuthenticationManager).GetJwt(userViewModel);
+
+            new LoggerBusiness().ResponseLog(new LOGGER_RESPONSE() { CONTROLLER = "LoginController", METHOD = "Post", USER_ID = userViewModel.user.USER_ID, DATE = DateTime.Now, PATH = "LoginMain", JSONDATA = JsonConvert.SerializeObject(response), REQUEST_ID = requestId });
+            return response;
+        }
+
+        [HttpPost]
+        public List<MENU> SetAuthMenu(int userTypeId)
+        {
+            requestId = new LoggerBusiness().RequestLog(new LOGGER_REQUEST() { CONTROLLER = "LoginController", METHOD = "Post", USER_ID = userid, DATE = DateTime.Now, PATH = "SetAuthMenu", JSONDATA = JsonConvert.SerializeObject(userTypeId) });
+
+            var response = new LoginBusiness(jwtAuthenticationManager).SetAuthMenu(userTypeId);
+
+            new LoggerBusiness().ResponseLog(new LOGGER_RESPONSE() { CONTROLLER = "LoginController", METHOD = "Post", USER_ID = userid, DATE = DateTime.Now, PATH = "SetAuthMenu", JSONDATA = JsonConvert.SerializeObject(response), REQUEST_ID = requestId });
             return response;
         }
 

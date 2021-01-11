@@ -21,6 +21,7 @@ using System.Globalization;
 using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
 using AutoMapper;
 using MES.Web.AutoMapper;
+using Microsoft.AspNetCore.Authentication.Cookies;
 //using Hangfire.PostgreSql;
 
 namespace MES.Web
@@ -37,25 +38,29 @@ namespace MES.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddControllersWithViews()
+            //services.AddControllersWithViews();
             //       .AddRazorRuntimeCompilation();
 
             services.AddMvc();
             services.AddDistributedMemoryCache();
             services.AddSession();
 
-            services.AddControllersWithViews()
-            .AddNewtonsoftJson(options =>
-            {
-                options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            services.AddControllersWithViews();
+            //.AddNewtonsoftJson(options =>
+            //{
+            //    options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+            //    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
 
+            //});
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie(options =>
+            {
+                options.LoginPath = "/Login/Index";
             });
             services.AddMvc().AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.ContractResolver = new DefaultContractResolver();
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-
             });
 
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
@@ -97,18 +102,18 @@ namespace MES.Web
 
             IMapper mapper = mapperConfig.CreateMapper();
             services.AddSingleton(mapper);
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            
             var cultureInfo = new CultureInfo("tr-TR");
             //cultureInfo.NumberFormat.CurrencySymbol = "";
 
             CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
             CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
-
+            app.UseAuthentication();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -118,6 +123,7 @@ namespace MES.Web
                 app.UseExceptionHandler("/Home/Error");
             }
             //app.UseStaticFiles();
+            app.UseHttpsRedirection();
             app.UseStaticFiles(new StaticFileOptions()
             {
                 FileProvider = new PhysicalFileProvider(
@@ -135,7 +141,7 @@ namespace MES.Web
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Login}/{action=Index}/{id?}");
             });
 
             //app.UseHangfireDashboard("/hangfire", new DashboardOptions

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MES.Web.ServiceBusiness
+namespace MES.Web.Service
 {
     public class LoginServiceBusiness : IServiceBusiness
     {

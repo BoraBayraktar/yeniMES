@@ -8,7 +8,7 @@ namespace MES.Web.Interfaces
     public class IServiceBusiness
     {
         //Target IP to reach API
-        public static string IpTarget = "https://localhost:5001/";
+        public static string IpTarget = "http://localhost:5000/";
         
     }
 }

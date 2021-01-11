@@ -1,68 +1,86 @@
 ﻿
+using MES.Web.Model;
 using MES.Web.Models;
+using MES.Web.Service;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 
 namespace MES.Web.Controllers
 {
     public class LoginController : Controller
     {
-        //UserLogic userLogic = new UserLogic();
-        //PasswordChangeLogic passwordChangeLogic = new PasswordChangeLogic();
-        //MailToSendLogic mailToSendLogic = new MailToSendLogic();
-        //MenuLogic menuLogic = new MenuLogic();
-        //UserTypeMenuLogic userTypeMenuLogic = new UserTypeMenuLogic();
+        ServiceBusiness serviceBusiness = new ServiceBusiness();
+        private Encryption.Encryption encryption;
 
+        public IActionResult Index()
+        {
+            return View();
+        }
 
-        //public IActionResult Index()
-        //{
-        //    return View();
-        //}
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public  IActionResult Index(UserViewModel userViewModel)
+        {
+            try
+            {
+                userViewModel.Password = encryption.Encrypt(userViewModel.Password);
+                userViewModel.NewPassword = encryption.Encrypt(userViewModel.NewPassword);
+                userViewModel.NewPassword = encryption.Encrypt(userViewModel.ReNewPassword);
+                object useR = serviceBusiness.ObjSendObjGet(userViewModel, "Login", "LoginMain");
+                USER user = (USER)useR;
+                if (user == null)
+                {
+                    ShowLoginFailedToastMessage();
+                    return View();
+                }
+                else
+                {
+                    object jwtobj = serviceBusiness.ObjSendObjGet(userViewModel, "Login", "GetJwt");
+                    string jwt = (string)jwtobj;
+                    if (!String.IsNullOrEmpty(jwt))
+                    {
+                        var claims = new List<Claim>
+                        {
+                            new Claim(ClaimTypes.UserData, jwt)
+                            //new Claim(ClaimTypes.Name, user.NAME)
+                        };
+                        var userIdentity = new ClaimsIdentity(claims, "login");
+                        ClaimsPrincipal principal = new ClaimsPrincipal(userIdentity);
+                        HttpContext.SignInAsync(principal);
+                    }
+                }
+                int uti = (int)user.USER_TYPE_ID;
+                SetAuthMenu(uti);
+                HttpContext.Session.SetObject("User", user);
+                return RedirectToAction("Index", "Home");
+            }
+            catch (System.Exception ex)
+            {
+                ShowToastMessage("error", "Hata Oluştu", ex.Message);
+            }
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public IActionResult Index(UserViewModel userViewModel)
-        //{
-        //    try
-        //    {
-        //        var user = userLogic.CheckUser(userViewModel.Username, Helper.MD5HashDoubleLayer(userViewModel.Password));
-        //        if (user == null)
-        //        {
-        //            ShowLoginFailedToastMessage();
-        //            return View();
-        //        }
-        //        int uti = user.USER_TYPE_ID ?? default(int);
-        //        SetAuthMenu(uti);
-        //        HttpContext.Session.SetObject("User", user);
-        //        return RedirectToAction("Index", "Home");
-        //    }
-        //    catch (System.Exception ex)
-        //    {
-        //        ShowToastMessage("error", "Hata Oluştu", ex.Message);
-        //    }
+            return View();
+        }
 
-        //    return View();
-        //}
+        public void SetAuthMenu(int userTypeId)
+        {
+            try
+            {
+                object modifedobj = serviceBusiness.ObjSendObjGet(userTypeId, "Login", "SetAuthMenu");
+                List<MENU> modifedMenu = (List<MENU>)modifedobj;
+                HttpContext.Session.SetObject("Menu", modifedMenu);
+            }
+            catch (Exception ex)
+            {
 
-        //public void SetAuthMenu(int userTypeId)
-        //{
-        //    try
-        //    {
-        //        var firstMenuModel = menuLogic.GetAllMenu();
-        //        var userTypeMenuModel = userTypeMenuLogic.GetList().Where(x => x.UserTypeId == userTypeId).ToList();
-        //        var lastMenuModel = firstMenuModel.Where(item => userTypeMenuModel.Any(utm => utm.MenuId == item.MENU_ID)).ToList();
-        //        var modifedMenu = AddTopMenu(lastMenuModel);
-        //        HttpContext.Session.SetObject("Menu", modifedMenu);
-        //    }
-        //    catch (Exception ex)
-        //    {
-
-        //    }
-        //}
+            }
+        }
 
         //public List<MENU> AddTopMenu(List<MENU> lastmenu)
         //{
@@ -204,14 +222,14 @@ namespace MES.Web.Controllers
 
 
 
-        //public ActionResult LogOut()
-        //{
-        //    HttpContext.Session.Remove("User");
-        //    HttpContext.Session.Remove("Menu");
-        //    HttpContext.Session.Remove("GeneralSettings");
-        //    return RedirectToAction("Index", "Login");
+        public ActionResult LogOut()
+        {
+            HttpContext.Session.Remove("User");
+            HttpContext.Session.Remove("Menu");
+            HttpContext.Session.Remove("GeneralSettings");
+            return RedirectToAction("Index", "Login");
 
-        //}
+        }
 
         public void ShowLoginFailedToastMessage()
         {
