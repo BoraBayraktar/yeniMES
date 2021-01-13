@@ -60,23 +60,25 @@ namespace MES.Data
                 };
             });
             services.AddSingleton<IJwtAuthenticationManager>(new JwtAuthenticationManager(Key));
-
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1.0", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "MES", Version = "v1.0" });
-
-                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-                {
-                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-                    Name = "Authorization",
-                    In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.ApiKey
-                });
-
-                c.AddSecurityRequirement(
-                    new OpenApiSecurityRequirement {
-                        { new OpenApiSecurityScheme { Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" } }, new string[] { } } });
+            services.AddSwaggerGen(c=> {
+                c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
             });
+            //services.AddSwaggerGen(c =>
+            //{
+                //c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "MES.API", Version = "v1" });
+
+                //c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                //{
+                //    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                //    Name = "Authorization",
+                //    In = ParameterLocation.Header,
+                //    Type = SecuritySchemeType.ApiKey
+                //});
+
+                //c.AddSecurityRequirement(
+                //    new OpenApiSecurityRequirement {
+                //        { new OpenApiSecurityScheme { Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" } }, new string[] { } } });
+            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

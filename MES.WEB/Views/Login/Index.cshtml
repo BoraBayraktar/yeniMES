@@ -4,6 +4,10 @@
 @{
     Layout = null;
     //var loginPageSettings = Context.Session.GetObject<MES.Web.Model.GENERAL_SETTINGS>("GeneralSettings");
+    MES.Web.Model.GENERAL_SETTINGS loginPageSettings;
+    if (ViewData["GeneralSettings"] == null) { loginPageSettings = new MES.Web.Model.GENERAL_SETTINGS(); }
+    else { loginPageSettings = ViewData["GeneralSettings"] as MES.Web.Model.GENERAL_SETTINGS; }
+
 }
 
 
@@ -43,12 +47,12 @@
     <div class="d-flex flex-column flex-root">
         <!--begin::Login-->
         <div class="login login-1 login-signin-on d-flex flex-row-fluid" id="kt_login">
-            <div class="d-flex flex-center bgi-size-cover bgi-no-repeat flex-row-fluid" style="background-image: url(@*@loginPageSettings.LOGIN_PAGE_BACKGROUND*@);">
+            <div class="d-flex flex-center bgi-size-cover bgi-no-repeat flex-row-fluid" style="background-image: url(@loginPageSettings.LOGIN_PAGE_BACKGROUND);">
                 <div class="login-form text-center text-white p-7 position-relative overflow-hidden">
                     <!--begin::Login Header-->
                     <div class="d-flex flex-center mb-15">
                         <a href="#">
-                            <img src="@*@loginPageSettings.LOGO*@" class="max-h-100px" alt="" />
+                            <img src="@loginPageSettings.LOGO" class="max-h-100px" alt="" />
                         </a>
                     </div>
                     <!--end::Login Header-->
@@ -56,7 +60,7 @@
                     <div class="login-signin">
                         <div class="mb-20">
                             <h3>Sign In To Admin</h3>
-                            <p class="opacity-60 font-weight-bold">@*@loginPageSettings.LOGIN_PAGE_TEXT*@</p>
+                            <p class="opacity-60 font-weight-bold">@loginPageSettings.LOGIN_PAGE_TEXT</p>
                         </div>
                         <form id="userForm" class="form" method="post" action="/Login/Index">
                             @Html.AntiForgeryToken()

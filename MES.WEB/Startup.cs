@@ -111,6 +111,7 @@ namespace MES.Web
             var cultureInfo = new CultureInfo("tr-TR");
             //cultureInfo.NumberFormat.CurrencySymbol = "";
 
+            app.UseSession();
             CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
             CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
             app.UseAuthentication();
@@ -135,13 +136,13 @@ namespace MES.Web
 
             app.UseAuthorization();
 
-            app.UseSession();
+            
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Login}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
 
             //app.UseHangfireDashboard("/hangfire", new DashboardOptions

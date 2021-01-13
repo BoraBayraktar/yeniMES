@@ -17,11 +17,8 @@ namespace MES.API.Business
         MenuLogic menuLogic = new MenuLogic();
         UserTypeMenuLogic userTypeMenuLogic = new UserTypeMenuLogic();
         private Encryption.Encryption encryption;
-        private IJwtAuthenticationManager jwtAuthentication;
-        public LoginBusiness(IJwtAuthenticationManager jwtAuthenticationManager)
-        {
-            this.jwtAuthentication = jwtAuthenticationManager;
-        }
+        private JwtAuthenticationManager jwtAuthentication;
+
         public USER LoginMain(UserViewModel userViewModel)
         {
             USER user = userLogic.CheckUser(userViewModel.Username, encryption.Decrypt(userViewModel.Password));
@@ -30,7 +27,6 @@ namespace MES.API.Business
                 return user;
             }
             return null;
-            
         }
 
         public string GetJwt(UserViewModel userViewModel)
@@ -69,10 +65,11 @@ namespace MES.API.Business
                 }
             }
             return result;
-
         }
 
-
-
+        public GENERAL_SETTINGS GeneralSettings()
+        {
+            return new GeneralSettingsLogic().GetGeneralSettings();
+        }
     }
 }

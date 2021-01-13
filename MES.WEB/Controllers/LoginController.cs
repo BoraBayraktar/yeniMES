@@ -20,6 +20,11 @@ namespace MES.Web.Controllers
 
         public IActionResult Index()
         {
+            //serviceBusiness.ObjSendObjGet(null, "");
+            
+            object generalobj = serviceBusiness.ObjSendObjGet("Login", "GeneralSettings");
+            GENERAL_SETTINGS generalSettings = (GENERAL_SETTINGS)generalobj;
+            ViewData["GeneralSettings"] = generalSettings;
             return View();
         }
 
@@ -32,7 +37,7 @@ namespace MES.Web.Controllers
                 userViewModel.Password = encryption.Encrypt(userViewModel.Password);
                 userViewModel.NewPassword = encryption.Encrypt(userViewModel.NewPassword);
                 userViewModel.NewPassword = encryption.Encrypt(userViewModel.ReNewPassword);
-                object useR = serviceBusiness.ObjSendObjGet(userViewModel, "Login", "LoginMain");
+                object useR = serviceBusiness.ObjSendObjPost(userViewModel, "Login", "LoginMain");
                 USER user = (USER)useR;
                 if (user == null)
                 {
@@ -41,7 +46,7 @@ namespace MES.Web.Controllers
                 }
                 else
                 {
-                    object jwtobj = serviceBusiness.ObjSendObjGet(userViewModel, "Login", "GetJwt");
+                    object jwtobj = serviceBusiness.ObjSendObjPost(userViewModel, "Login", "GetJwt");
                     string jwt = (string)jwtobj;
                     if (!String.IsNullOrEmpty(jwt))
                     {
@@ -72,7 +77,7 @@ namespace MES.Web.Controllers
         {
             try
             {
-                object modifedobj = serviceBusiness.ObjSendObjGet(userTypeId, "Login", "SetAuthMenu");
+                object modifedobj = serviceBusiness.ObjSendObjPost(userTypeId, "Login", "SetAuthMenu");
                 List<MENU> modifedMenu = (List<MENU>)modifedobj;
                 HttpContext.Session.SetObject("Menu", modifedMenu);
             }
