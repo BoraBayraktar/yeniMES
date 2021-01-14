@@ -13,7 +13,7 @@ namespace MES.Web.Service
 {
     public class ServiceBusiness : IServiceBusiness
     {
-        public T ServicePost<T>(T objects, string controller, string func)
+        public T ServicePost<T>(object objects, string controller, string func)
         {
             try
             {
@@ -38,7 +38,6 @@ namespace MES.Web.Service
             }
         }
 
-
         public T ServiceGet<T>(string controller, string func)
         {
             try
@@ -62,33 +61,7 @@ namespace MES.Web.Service
                 throw;
             }
         }
-        //public bool ServiceDelete<T>(T objects, string controller, string func)
-        //{
-        //    try
-        //    {
-        //        using (var client = new HttpClient())
-        //        {
-        //            client.BaseAddress = new Uri(IpTarget);
-        //            HttpRequestMessage requestMessage = new HttpRequestMessage();
-        //            var data = JsonConvert.SerializeObject(objects);
-        //            requestMessage.Content = new StringContent(data, Encoding.UTF8, "application/json");
-        //            var response = client.DeleteAsync("api/" + controller + "/" + func).Result;
-        //            if (response.IsSuccessStatusCode)
-        //            {
-        //                string responsestr = response.Content.ReadAsStringAsync().Result;
-        //                return JsonConvert.DeserializeObject<bool>(responsestr);
-
-        //            }
-        //            else { return false; }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw;
-        //    }
-        //}
-
-        public bool ServicePut<T>(T objects, string controller, string func)
+        public void ServiceDelete<T>(T objects, string controller, string func)
         {
             try
             {
@@ -98,12 +71,26 @@ namespace MES.Web.Service
                     HttpRequestMessage requestMessage = new HttpRequestMessage();
                     var data = JsonConvert.SerializeObject(objects);
                     requestMessage.Content = new StringContent(data, Encoding.UTF8, "application/json");
-                    var response = client.PutAsync("api/" + controller + "/" + func, requestMessage.Content).Result;
-                    if (response.IsSuccessStatusCode)
-                    {
-                        return true;
-                    }
-                    else { return false; }
+                    client.DeleteAsync("api/" + controller + "/" + func);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public void ServicePut<T>(T objects, string controller, string func)
+        {
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(IpTarget);
+                    HttpRequestMessage requestMessage = new HttpRequestMessage();
+                    var data = JsonConvert.SerializeObject(objects);
+                    requestMessage.Content = new StringContent(data, Encoding.UTF8, "application/json");
+                    client.PutAsync("api/" + controller + "/" + func, requestMessage.Content);
                 }
             }
             catch (Exception ex)

@@ -19,53 +19,52 @@ namespace MES.API.Controllers
     {
         private int requestId;
         private int userid;
+        Log logger = new Log();
 
         [HttpPost("LogMain")]
         [ValidateAntiForgeryToken]
         public USER LogMain(UserViewModel userViewModel)
         {
-            requestId = new LoggerBusiness().RequestLog(new LOGGER_REQUEST() { CONTROLLER = "LoginController", METHOD = "Post", USER_ID = userViewModel.user.USER_ID, DATE = DateTime.Now, PATH = "LoginMain", JSONDATA = JsonConvert.SerializeObject(userViewModel) });
-
-            var response = new LoginBusiness().LoginMain(userViewModel);
-
-            if (response.USER_ID != 0) { userid = response.USER_ID; }
-
-            new LoggerBusiness().ResponseLog(new LOGGER_RESPONSE() { CONTROLLER = "LoginController", METHOD = "Post", USER_ID = userViewModel.user.USER_ID, DATE = DateTime.Now, PATH = "LoginMain", JSONDATA = JsonConvert.SerializeObject(response), REQUEST_ID = requestId });
-            return response;
+            userid = userViewModel.user.USER_ID;
+            return logger.Logging<USER>(userViewModel, "LoginController", "Post", userid, "LogMain", new LoginBusiness().LoginMain(userViewModel));
         }
         [HttpPost("GetJwt")]
         public string GetJwt(UserViewModel userViewModel)
         {
-            requestId = new LoggerBusiness().RequestLog(new LOGGER_REQUEST() { CONTROLLER = "LoginController", METHOD = "Post", USER_ID = userViewModel.user.USER_ID, DATE = DateTime.Now, PATH = "LoginMain", JSONDATA = JsonConvert.SerializeObject(userViewModel) });
-
-            var response = new LoginBusiness().GetJwt(userViewModel);
-
-            new LoggerBusiness().ResponseLog(new LOGGER_RESPONSE() { CONTROLLER = "LoginController", METHOD = "Post", USER_ID = userViewModel.user.USER_ID, DATE = DateTime.Now, PATH = "LoginMain", JSONDATA = JsonConvert.SerializeObject(response), REQUEST_ID = requestId });
-            return response;
+            return logger.Logging<string>(userViewModel, "LoginController", "Post", userid, "GetJwt", new LoginBusiness().GetJwt(userViewModel));
         }
-
         [HttpPost("SetAuthMenu")]
-        [ValidateAntiForgeryToken]
         public List<MENU> SetAuthMenu(int userTypeId)
         {
-            requestId = new LoggerBusiness().RequestLog(new LOGGER_REQUEST() { CONTROLLER = "LoginController", METHOD = "Post", USER_ID = userid, DATE = DateTime.Now, PATH = "SetAuthMenu", JSONDATA = JsonConvert.SerializeObject(userTypeId) });
-
-            var response = new LoginBusiness().SetAuthMenu(userTypeId);
-
-            new LoggerBusiness().ResponseLog(new LOGGER_RESPONSE() { CONTROLLER = "LoginController", METHOD = "Post", USER_ID = userid, DATE = DateTime.Now, PATH = "SetAuthMenu", JSONDATA = JsonConvert.SerializeObject(response), REQUEST_ID = requestId });
-            return response;
+            return logger.Logging<List<MENU>>(userTypeId, "LoginController", "Post", userid, "SetAuthMenu", new LoginBusiness().SetAuthMenu(userTypeId));
         }
 
         [HttpGet("GeneralSettings")]
         public GENERAL_SETTINGS GeneralSettings()
         {
-            requestId = new LoggerBusiness().RequestLog(new LOGGER_REQUEST() { CONTROLLER = "LoginController", METHOD = "Get", USER_ID = userid, DATE = DateTime.Now, PATH = "GeneralSetting", JSONDATA = JsonConvert.SerializeObject(null) });
-
-            var response = new LoginBusiness().GeneralSettings();
-
-            new LoggerBusiness().ResponseLog(new LOGGER_RESPONSE() { CONTROLLER = "LoginController", METHOD = "Get", USER_ID = userid, DATE = DateTime.Now, PATH = "GeneralSetting", JSONDATA = JsonConvert.SerializeObject(response), REQUEST_ID = requestId });
-            return response;
+            return logger.Logging<GENERAL_SETTINGS>(null, "LoginController", "Get", userid, "GeneralSettings", new LoginBusiness().GeneralSettings());
         }
 
+        [HttpPost("EmailCheck")]
+        public USER EmailCheck(UserViewModel userViewModel)
+        {
+            return logger.Logging<USER>(userViewModel, "LoginController", "Post", userid, "EmailCheck", new LoginBusiness().EmailCheck(userViewModel));
+        }
+        [HttpDelete("DeletePassChange")]
+        public void DeletePassChange(int UserId)
+        {
+            logger.LoggingNoReturn(UserId, "LoginController", "Delete", userid, "DeletePassChange");
+            new LoginBusiness().DeletePassChange(UserId);
+        }
+        [HttpPost("InsertPassChange")]
+        public bool InsertPassChange(PASSWORD_CHANGE_HISTORY pch)
+        {
+            return logger.Logging<bool>(pch, "LoginController", "Post", userid, "InsertPassChange", new LoginBusiness().InsertPassChange(pch));
+        }
+        [HttpPost("InsertMailToSend")]
+        public bool InsertMailToSend(MAIL_TO_SEND mailToSend)
+        {
+            return logger.Logging<bool>(mailToSend, "LoginController", "Post", userid, "InsertMailToSend", new LoginBusiness().InsertMailToSend(mailToSend));
+        }
     }
 }

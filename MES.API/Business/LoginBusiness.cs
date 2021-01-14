@@ -71,5 +71,22 @@ namespace MES.API.Business
         {
             return new GeneralSettingsLogic().GetGeneralSettings();
         }
+
+        public USER EmailCheck(UserViewModel userViewModel)
+        {
+            return userLogic.GetUser(userViewModel.Email);
+        }
+        public void DeletePassChange(int UserId)
+        {
+            passwordChangeLogic.DeleteAllPasswordChange(UserId);
+        }
+        public bool InsertPassChange(PASSWORD_CHANGE_HISTORY pch)
+        {
+            return passwordChangeLogic.InsertPasswordChange(pch);
+        }
+        public bool InsertMailToSend(MAIL_TO_SEND mailToSend)
+        {
+            return mailToSendLogic.InsertMailToSend(mailToSend);
+        }
     }
 }
