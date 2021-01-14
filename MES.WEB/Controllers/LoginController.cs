@@ -22,8 +22,8 @@ namespace MES.Web.Controllers
         {
             //serviceBusiness.ObjSendObjGet(null, "");
             
-            object generalobj = serviceBusiness.ObjSendObjGet("Login", "GeneralSettings");
-            GENERAL_SETTINGS generalSettings = (GENERAL_SETTINGS)generalobj;
+            GENERAL_SETTINGS generalSettings = serviceBusiness.ServiceGet<GENERAL_SETTINGS>("Login", "GeneralSettings");
+            //GENERAL_SETTINGS generalSettings = JsonConvert.DeserializeObject<GENERAL_SETTINGS>(generalobj);
             ViewData["GeneralSettings"] = generalSettings;
             return View();
         }

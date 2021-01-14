@@ -13,7 +13,7 @@ namespace MES.Web.Service
 {
     public class ServiceBusiness : IServiceBusiness
     {
-        public async Task<Object> ObjSendObjPost(object objects, string controller, string func)
+        public T ServicePost<T>(T objects, string controller, string func)
         {
             try
             {
@@ -26,11 +26,10 @@ namespace MES.Web.Service
                     var response = client.PostAsync("api/" + controller + "/" + func, requestMessage.Content).Result;
                     if (response.IsSuccessStatusCode)
                     {
-                        string received = await response.Content.ReadAsStringAsync();
-                        Object recobj = JsonConvert.DeserializeObject<Object>(received);
-                        return recobj;
+                        string responsestr = response.Content.ReadAsStringAsync().Result;
+                        return JsonConvert.DeserializeObject<T>(responsestr);
                     }
-                    else { return null; }
+                    else { return default(T); }
                 }
             }
             catch (Exception ex)
@@ -40,7 +39,7 @@ namespace MES.Web.Service
         }
 
 
-        public object ObjSendObjGet(string controller, string func)
+        public T ServiceGet<T>(string controller, string func)
         {
             try
             {
@@ -51,15 +50,11 @@ namespace MES.Web.Service
                     var response = client.GetAsync("api/" + controller + "/" + func).Result;
                     if (response.IsSuccessStatusCode)
                     {
-                        string received = response.Content.ReadAsStringAsync().Result;
-                        //object obj = JsonConvert.DeserializeObject(received);
-                        //JObject jObject = received[0] as JObject;
-                        JValue jValue = new JValue(received);
-                        object obj = jValue.ToObject(typeof(object));
-                        return obj;
+                        string responsestr = response.Content.ReadAsStringAsync().Result;
+                        return JsonConvert.DeserializeObject<T>(responsestr);
                         
                     }
-                    else { return null; }
+                    else { return default(T); }
                 }
             }
             catch (Exception ex)
@@ -67,8 +62,33 @@ namespace MES.Web.Service
                 throw;
             }
         }
+        //public bool ServiceDelete<T>(T objects, string controller, string func)
+        //{
+        //    try
+        //    {
+        //        using (var client = new HttpClient())
+        //        {
+        //            client.BaseAddress = new Uri(IpTarget);
+        //            HttpRequestMessage requestMessage = new HttpRequestMessage();
+        //            var data = JsonConvert.SerializeObject(objects);
+        //            requestMessage.Content = new StringContent(data, Encoding.UTF8, "application/json");
+        //            var response = client.DeleteAsync("api/" + controller + "/" + func).Result;
+        //            if (response.IsSuccessStatusCode)
+        //            {
+        //                string responsestr = response.Content.ReadAsStringAsync().Result;
+        //                return JsonConvert.DeserializeObject<bool>(responsestr);
 
-        public string ObjSendObjGeter(string controller, string func)
+        //            }
+        //            else { return false; }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw;
+        //    }
+        //}
+
+        public bool ServicePut<T>(T objects, string controller, string func)
         {
             try
             {
@@ -76,13 +96,14 @@ namespace MES.Web.Service
                 {
                     client.BaseAddress = new Uri(IpTarget);
                     HttpRequestMessage requestMessage = new HttpRequestMessage();
-                    var response = client.GetAsync("api/" + controller + "/" + func).Result;
+                    var data = JsonConvert.SerializeObject(objects);
+                    requestMessage.Content = new StringContent(data, Encoding.UTF8, "application/json");
+                    var response = client.PutAsync("api/" + controller + "/" + func, requestMessage.Content).Result;
                     if (response.IsSuccessStatusCode)
                     {
-
-                        return response.Content.ReadAsStringAsync().Result;
+                        return true;
                     }
-                    else { return null; }
+                    else { return false; }
                 }
             }
             catch (Exception ex)
@@ -90,6 +111,5 @@ namespace MES.Web.Service
                 throw;
             }
         }
-
     }
 }
