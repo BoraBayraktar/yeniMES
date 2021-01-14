@@ -178,43 +178,43 @@ namespace MES.Web.Controllers
         }
 
 
-        public ActionResult ChangePassword(string guid, UserViewModel userViewModel)
-        {
-            try
-            {
-                var passwordChange = passwordChangeLogic.GetPasswordChange(guid);
-                if (passwordChange == null)
-                {
-                    ShowToastMessage("error", "Hata Mesajı", "Şifre değiştirme linki bulunamadı.");
-                    return RedirectToAction("ChangePassword", "Login", new { guid = guid });
-                }
-                else
-                {
-                    if (userViewModel.NewPassword != userViewModel.ReNewPassword)
-                    {
-                        ShowToastMessage("error", "Hata", "Girdiğiniz şifreler eşleşmemektedir.");
-                        return RedirectToAction("ChangePassword", "Login", new { guid = guid });
-                    }
-                    if (userViewModel.NewPassword.Length < 6)
-                    {
-                        ShowToastMessage("error", "Hata", "Şifreniz en az 6 karakterli olmalıdır.");
-                        return RedirectToAction("ChangePassword", "Login", new { guid = guid });
-                    }
+        //public ActionResult ChangePassword(string guid, UserViewModel userViewModel)
+        //{
+        //    try
+        //    {
+        //        var passwordChange = passwordChangeLogic.GetPasswordChange(guid);
+        //        if (passwordChange == null)
+        //        {
+        //            ShowToastMessage("error", "Hata Mesajı", "Şifre değiştirme linki bulunamadı.");
+        //            return RedirectToAction("ChangePassword", "Login", new { guid = guid });
+        //        }
+        //        else
+        //        {
+        //            if (userViewModel.NewPassword != userViewModel.ReNewPassword)
+        //            {
+        //                ShowToastMessage("error", "Hata", "Girdiğiniz şifreler eşleşmemektedir.");
+        //                return RedirectToAction("ChangePassword", "Login", new { guid = guid });
+        //            }
+        //            if (userViewModel.NewPassword.Length < 6)
+        //            {
+        //                ShowToastMessage("error", "Hata", "Şifreniz en az 6 karakterli olmalıdır.");
+        //                return RedirectToAction("ChangePassword", "Login", new { guid = guid });
+        //            }
 
-                    passwordChangeLogic.UpdatePasswordChange(passwordChange.ID);
-                    userLogic.UserChangePassword(passwordChange.USER_ID, Helper.MD5HashDoubleLayer(userViewModel.NewPassword));
-                }
-                ShowToastMessage("success", "İşlem Başarılı", "Şifreniz başarıyla değiştirilmiştir.");
-                return RedirectToAction("Index", "Login");
+        //            passwordChangeLogic.UpdatePasswordChange(passwordChange.ID);
+        //            userLogic.UserChangePassword(passwordChange.USER_ID, Helper.MD5HashDoubleLayer(userViewModel.NewPassword));
+        //        }
+        //        ShowToastMessage("success", "İşlem Başarılı", "Şifreniz başarıyla değiştirilmiştir.");
+        //        return RedirectToAction("Index", "Login");
 
-            }
-            catch (System.Exception ex)
-            {
-                ShowToastMessage("error", "Hata Mesajı", "Sistemden kaynaklanan bir hata oluştu. Lütfen daha sonra tekrar deneyiniz.");
-            }
+        //    }
+        //    catch (System.Exception ex)
+        //    {
+        //        ShowToastMessage("error", "Hata Mesajı", "Sistemden kaynaklanan bir hata oluştu. Lütfen daha sonra tekrar deneyiniz.");
+        //    }
 
-            return RedirectToAction("ChangePassword", "Login", new { guid = guid });
-        }
+        //    return RedirectToAction("ChangePassword", "Login", new { guid = guid });
+        //}
 
 
 
