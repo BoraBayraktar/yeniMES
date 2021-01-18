@@ -1,91 +1,75 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.IO;
-//using System.Linq;
-//using System.Net.Http.Headers;
-//using System.Threading.Tasks;
-//using MES.Business;
-//using MES.Entities.Model;
-//using MES.Web.Models;
-//using Microsoft.AspNetCore.Hosting;
-//using Microsoft.AspNetCore.Http;
-//using Microsoft.AspNetCore.Mvc;
-//using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
+using MES.Web.Model;
+using MES.Web.Models;
+using MES.Web.Service;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
-//namespace MES.Web.Controllers
-//{
-//    public class OrganizationController : BaseController
-//    {
-//        #region Instance
-//        private IHostingEnvironment _hostingEnvironment;
+namespace MES.Web.Controllers
+{
+    [Authorize]
+    public class OrganizationController : BaseController
+    {
+        #region Instance
+        private IHostingEnvironment _hostingEnvironment;
+        ServiceBusiness serviceBusiness = new ServiceBusiness();
 
-//        HoldingLogic holdingLogic = new HoldingLogic();
-//        CompanyLogic companyLogic = new CompanyLogic();
-//        DepartmentLogic departmentLogic = new DepartmentLogic();
-//        TitleLogic titleLogic = new TitleLogic();
-//        LocationLogic locationLogic = new LocationLogic();
-//        CityLogic cityLogic = new CityLogic();
-//        UserGroupLogic userGroupLogic = new UserGroupLogic();
-//        UserLogic userLogic = new UserLogic();
-//        UserTypeLogic userTypeLogic = new UserTypeLogic();
-//        LeaveLogic leaveLogic = new LeaveLogic();
-//        LeaveTypeLogic leaveTypeLogic = new LeaveTypeLogic();
-//        WorkingScheduleLogic workingScheduleLogic = new WorkingScheduleLogic();
-//        MailSettingsLogic emailSettingsLogic = new MailSettingsLogic();
-//        TimeManagementLogic timeManagementLogic = new TimeManagementLogic();
-//        TimeManagementOffDaysLogic timeManagementOffDaysLogic = new TimeManagementOffDaysLogic();
-//        WorkingDaysLogic workingDaysLogic = new WorkingDaysLogic();
-//        GeneralSettingsLogic generalSettingsLogic = new GeneralSettingsLogic();
+        #endregion
 
-//        #endregion
+        public OrganizationController(IHostingEnvironment environment)
+        {
+            _hostingEnvironment = environment;
+        }
 
-//        public OrganizationController(IHostingEnvironment environment)
-//        {
-//            _hostingEnvironment = environment;
-//        }
+        #region Holding
+        public IActionResult Holding()
+        {
+            var holdingList = serviceBusiness.ServiceGet<List<HOLDING>>("Organization", "HoldingGetList");
+            HoldingViewModel hvm = new HoldingViewModel();
+            hvm.HoldingList = holdingList;
+            return View(hvm);
+        }
+        [HttpPost]
+        public JsonResult CreateOrEditHolding(int? id, HOLDING holding)
+        {
+            var user = HttpContext.Session.GetObject<USER>("User");
 
-//        #region Holding
-//        public IActionResult Holding()
-//        {
-//            var holdingList = holdingLogic.GetList();
-//            HoldingViewModel hvm = new HoldingViewModel();
-//            hvm.HoldingList = holdingList;
+            bool success = false;
+            if (id == null)
+            {
+                holding.CREATED_USER_ID = user.USER_ID;
+                success = holdingLogic.InsertHolding(holding);
+            }
+            else
+            {
+                holding.HOLDING_ID = Convert.ToInt32(id);
+                holding.UPDATED_USER_ID = user.USER_ID;
+                success = holdingLogic.UpdateHolding(holding);
+            }
+            return Json(new { success = success });
+        }
+        [HttpPost]
+        public JsonResult DeleteHolding(int deleteId)
+        {
+            bool success = false;
+            success = holdingLogic.DeleteHolding(deleteId);
+            return Json(new { success = success });
+        }
 
-//            return View(hvm);
-//        }
-//        [HttpPost]
-//        public JsonResult CreateOrEditHolding(int? id, HOLDING holding)
-//        {
-//            var user = HttpContext.Session.GetObject<USER>("User");
-
-//            bool success = false;
-//            if (id == null)
-//            {
-//                holding.CREATED_USER_ID = user.USER_ID;
-//                success = holdingLogic.InsertHolding(holding);
-//            }
-//            else
-//            {
-//                holding.HOLDING_ID = Convert.ToInt32(id);
-//                holding.UPDATED_USER_ID = user.USER_ID;
-//                success = holdingLogic.UpdateHolding(holding);
-//            }
-//            return Json(new { success = success });
-//        }
-//        [HttpPost]
-//        public JsonResult DeleteHolding(int deleteId)
-//        {
-//            bool success = false;
-//            success = holdingLogic.DeleteHolding(deleteId);
-//            return Json(new { success = success });
-//        }
-
-//        public JsonResult GetHolding(int id)
-//        {
-//            var holding = holdingLogic.GetHolding(id);
-//            return Json(holding);
-//        }
-//        #endregion
+        public JsonResult GetHolding(int id)
+        {
+            var holding = holdingLogic.GetHolding(id);
+            return Json(holding);
+        }
+        #endregion
 
 //        #region Company
 //        public IActionResult Company()

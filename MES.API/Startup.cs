@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 using MES.API.Encryption;
 using MES.API.JwtToken;
 
-namespace MES.Data
+namespace MES.API
 {
     public class Startup
     {

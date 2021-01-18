@@ -31,7 +31,8 @@ namespace MES.API.JwtToken
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.SerialNumber,userViewModel.user.USER_ID.ToString()),
+                    new Claim(ClaimTypes.SerialNumber,userViewModel.user.USER_ID.ToString())
+                    //new Claim(ClaimTypes.UserData.)
                 //    new Claim(ClaimTypes.NameIdentifier, users.USERNAME),
                 //    new Claim(ClaimTypes.Name, users.NAME +" "+ users.SURNAME),
                 //    new Claim( ClaimTypes.GroupSid, users..ToString()),
@@ -46,6 +47,20 @@ namespace MES.API.JwtToken
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
 
+        }
+        public int Decode(string token)
+        {
+            var keyenc = Encoding.ASCII.GetBytes(key);
+            var handler = new JwtSecurityTokenHandler();
+            var validations = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(keyenc),
+                ValidateIssuer = false,
+                ValidateAudience = false
+            };
+            var claims = handler.ValidateToken(token, validations, out var tokenSecure);
+            return Convert.ToInt32(claims.FindFirstValue(ClaimTypes.SerialNumber));
         }
 
     }

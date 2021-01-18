@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MES.Data
+namespace MES.API
 {
     public class Program
     {

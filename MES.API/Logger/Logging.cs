@@ -9,6 +9,7 @@ namespace MES.API.Logger
 {
     public class Log
     {
+        int userId;
         private int requestId;
         public T Logging<T>(object obj, string controller, string method, int user_id, string path, T response)
         {

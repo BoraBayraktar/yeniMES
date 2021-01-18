@@ -18,7 +18,6 @@ namespace MES.API.Business
         UserTypeMenuLogic userTypeMenuLogic = new UserTypeMenuLogic();
         private Encryption.Encryption encryption;
         private JwtAuthenticationManager jwtAuthentication;
-
         public USER LoginMain(UserViewModel userViewModel)
         {
             USER user = userLogic.CheckUser(userViewModel.Username, encryption.Decrypt(userViewModel.Password));
@@ -66,12 +65,10 @@ namespace MES.API.Business
             }
             return result;
         }
-
         public GENERAL_SETTINGS GeneralSettings()
         {
             return new GeneralSettingsLogic().GetGeneralSettings();
         }
-
         public USER EmailCheck(UserViewModel userViewModel)
         {
             return userLogic.GetUser(userViewModel.Email);
@@ -87,6 +84,18 @@ namespace MES.API.Business
         public bool InsertMailToSend(MAIL_TO_SEND mailToSend)
         {
             return mailToSendLogic.InsertMailToSend(mailToSend);
+        }
+        public PASSWORD_CHANGE_HISTORY GetPassChange(string guid)
+        {
+            return passwordChangeLogic.GetPasswordChange(guid);
+        }
+        public void UpdatePassChange(int pcId)
+        {
+            passwordChangeLogic.UpdatePasswordChange(pcId);
+        }
+        public void UserChangePassword(List<(int, string)> list)
+        {
+            userLogic.UserChangePassword(list.First().Item1, encryption.Decrypt(list.First().Item2));
         }
     }
 }

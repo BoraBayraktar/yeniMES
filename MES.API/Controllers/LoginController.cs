@@ -10,6 +10,8 @@ using MES.DB.Model;
 using MES.API.Logger;
 using Newtonsoft.Json;
 using MES.API.JwtToken;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 
 namespace MES.API.Controllers
 {
@@ -19,8 +21,12 @@ namespace MES.API.Controllers
     {
         private int requestId;
         private int userid;
+        private JwtAuthenticationManager jwtAuthentication;
         Log logger = new Log();
-
+        public LoginController(IHttpContextAccessor accessor)
+        {
+            
+        }
         [HttpPost("LogMain")]
         [ValidateAntiForgeryToken]
         public USER LogMain(UserViewModel userViewModel)
@@ -66,5 +72,23 @@ namespace MES.API.Controllers
         {
             return logger.Logging<bool>(mailToSend, "LoginController", "Post", userid, "InsertMailToSend", new LoginBusiness().InsertMailToSend(mailToSend));
         }
+        [HttpPost("GetPassChange")]
+        public PASSWORD_CHANGE_HISTORY GetPassChange(string guid)
+        {
+            return logger.Logging<PASSWORD_CHANGE_HISTORY>(guid, "LoginController", "Post", userid, "GetPassChange", new LoginBusiness().GetPassChange(guid));
+        }
+        [HttpPut("UpdatePassChange")]
+        public void UpdatePassChange(int pcId)
+        {
+            logger.LoggingNoReturn(pcId, "LoginController", "Put", userid, "UpdatePassChange");
+            new LoginBusiness().UpdatePassChange(pcId);
+        }
+        [HttpPut("UserChangePassword")]
+        public void UserChangePassword(List<(int, string)> list)
+        {
+            logger.LoggingNoReturn(list, "LoginController", "Put", userid, "UserChangePassword");
+            new LoginBusiness().UserChangePassword(list);
+        }
+
     }
 }

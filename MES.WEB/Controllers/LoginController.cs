@@ -34,8 +34,8 @@ namespace MES.Web.Controllers
             try
             {
                 userViewModel.Password = encryption.Encrypt(userViewModel.Password);
-                userViewModel.NewPassword = encryption.Encrypt(userViewModel.NewPassword);
-                userViewModel.NewPassword = encryption.Encrypt(userViewModel.ReNewPassword);
+                //userViewModel.NewPassword = encryption.Encrypt(userViewModel.NewPassword);
+                //userViewModel.NewPassword = encryption.Encrypt(userViewModel.ReNewPassword);
                 USER user = serviceBusiness.ServicePost<USER>(userViewModel, "Login", "LoginMain");
                 if (user == null)
                 {
@@ -49,7 +49,8 @@ namespace MES.Web.Controllers
                     {
                         var claims = new List<Claim>
                         {
-                            new Claim(ClaimTypes.UserData, jwt)
+                            new Claim(ClaimTypes.UserData, jwt),
+                            new Claim(ClaimTypes.NameIdentifier, userViewModel.user.USER_ID.ToString())
                             //new Claim(ClaimTypes.Name, user.NAME)
                         };
                         var userIdentity = new ClaimsIdentity(claims, "login");
@@ -107,7 +108,7 @@ namespace MES.Web.Controllers
         }
 
         //[HttpPost]
-        //[ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
         public ActionResult ForgotPassword(UserViewModel userViewModel)
         {
             try
@@ -150,7 +151,7 @@ namespace MES.Web.Controllers
                         CREATED_DATE = DateTime.Now
                     };
 
-                    var mailToSuccess = serviceBusiness.ServicePost<bool>(mailToSend, "Login", "InsertMailToSend");
+                    bool mailToSuccess = serviceBusiness.ServicePost<bool>(mailToSend, "Login", "InsertMailToSend");
                     if (!mailToSuccess)
                     {
                         ShowToastMessage("error", "Hata Mesajı", "Hata oluştu, lütfen daha sonra tekrar deneyiniz.");
@@ -178,43 +179,45 @@ namespace MES.Web.Controllers
         }
 
 
-        //public ActionResult ChangePassword(string guid, UserViewModel userViewModel)
-        //{
-        //    try
-        //    {
-        //        var passwordChange = passwordChangeLogic.GetPasswordChange(guid);
-        //        if (passwordChange == null)
-        //        {
-        //            ShowToastMessage("error", "Hata Mesajı", "Şifre değiştirme linki bulunamadı.");
-        //            return RedirectToAction("ChangePassword", "Login", new { guid = guid });
-        //        }
-        //        else
-        //        {
-        //            if (userViewModel.NewPassword != userViewModel.ReNewPassword)
-        //            {
-        //                ShowToastMessage("error", "Hata", "Girdiğiniz şifreler eşleşmemektedir.");
-        //                return RedirectToAction("ChangePassword", "Login", new { guid = guid });
-        //            }
-        //            if (userViewModel.NewPassword.Length < 6)
-        //            {
-        //                ShowToastMessage("error", "Hata", "Şifreniz en az 6 karakterli olmalıdır.");
-        //                return RedirectToAction("ChangePassword", "Login", new { guid = guid });
-        //            }
+        public ActionResult ChangePassword(string guid, UserViewModel userViewModel)
+        {
+            try
+            {
+                PASSWORD_CHANGE_HISTORY passwordChange = serviceBusiness.ServicePost<PASSWORD_CHANGE_HISTORY>(guid, "Login", "GetPassChange");
+                if (passwordChange == null)
+                {
+                    ShowToastMessage("error", "Hata Mesajı", "Şifre değiştirme linki bulunamadı.");
+                    return RedirectToAction("ChangePassword", "Login", new { guid = guid });
+                }
+                else
+                {
+                    if (userViewModel.NewPassword != userViewModel.ReNewPassword)
+                    {
+                        ShowToastMessage("error", "Hata", "Girdiğiniz şifreler eşleşmemektedir.");
+                        return RedirectToAction("ChangePassword", "Login", new { guid = guid });
+                    }
+                    if (userViewModel.NewPassword.Length < 6)
+                    {
+                        ShowToastMessage("error", "Hata", "Şifreniz en az 6 karakterli olmalıdır.");
+                        return RedirectToAction("ChangePassword", "Login", new { guid = guid });
+                    }
 
-        //            passwordChangeLogic.UpdatePasswordChange(passwordChange.ID);
-        //            userLogic.UserChangePassword(passwordChange.USER_ID, Helper.MD5HashDoubleLayer(userViewModel.NewPassword));
-        //        }
-        //        ShowToastMessage("success", "İşlem Başarılı", "Şifreniz başarıyla değiştirilmiştir.");
-        //        return RedirectToAction("Index", "Login");
+                    serviceBusiness.ServicePut<int>(passwordChange.ID, "Login", "UpdatePassChange");
 
-        //    }
-        //    catch (System.Exception ex)
-        //    {
-        //        ShowToastMessage("error", "Hata Mesajı", "Sistemden kaynaklanan bir hata oluştu. Lütfen daha sonra tekrar deneyiniz.");
-        //    }
+                    List<(int, string)> list = new List<(int, string)>();
+                    list.Add((passwordChange.USER_ID,encryption.Encrypt(userViewModel.NewPassword)));
+                    serviceBusiness.ServicePut<List<(int, string)>>(list, "Login", "UserChangePassword");
+                }
+                ShowToastMessage("success", "İşlem Başarılı", "Şifreniz başarıyla değiştirilmiştir.");
+                return RedirectToAction("Index", "Login");
+            }
+            catch (System.Exception ex)
+            {
+                ShowToastMessage("error", "Hata Mesajı", "Sistemden kaynaklanan bir hata oluştu. Lütfen daha sonra tekrar deneyiniz.");
+            }
 
-        //    return RedirectToAction("ChangePassword", "Login", new { guid = guid });
-        //}
+            return RedirectToAction("ChangePassword", "Login", new { guid = guid });
+        }
 
 
 
@@ -226,9 +229,7 @@ namespace MES.Web.Controllers
             HttpContext.Session.Remove("Menu");
             HttpContext.Session.Remove("GeneralSettings");
             return RedirectToAction("Index", "Login");
-
         }
-
         public void ShowLoginFailedToastMessage()
         {
             TempData["toastType"] = "error";
