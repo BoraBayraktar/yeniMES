@@ -23,7 +23,7 @@ namespace MES.Web.Service
                     HttpRequestMessage requestMessage = new HttpRequestMessage();
                     var data = JsonConvert.SerializeObject(objects);
                     requestMessage.Content = new StringContent(data, Encoding.UTF8, "application/json");
-                    var response = client.PostAsync("api/" + controller + "/" + func, requestMessage.Content).Result;
+                    var response = client.PostAsync($"api/{controller}/{func}", requestMessage.Content).Result;
                     if (response.IsSuccessStatusCode)
                     {
                         string responsestr = response.Content.ReadAsStringAsync().Result;

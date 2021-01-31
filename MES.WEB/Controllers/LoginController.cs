@@ -1,10 +1,12 @@
 ﻿
+using MES.Web.Encrypter;
 using MES.Web.Model;
 using MES.Web.Models;
 using MES.Web.Service;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -16,8 +18,16 @@ namespace MES.Web.Controllers
     public class LoginController : Controller
     {
         ServiceBusiness serviceBusiness = new ServiceBusiness();
-        private Encryption.Encryption encryption;
+        private Encryption encryption = new Encryption();
+        public LoginController()
+        {
+            var SCollection = new ServiceCollection();
 
+            //add protection services
+            SCollection.AddDataProtection();
+            var LockerKey = SCollection.BuildServiceProvider();
+            encryption = ActivatorUtilities.CreateInstance<Encryption>(LockerKey);
+        }
         public IActionResult Index()
         {
             //serviceBusiness.ObjSendObjGet(null, "");
@@ -27,7 +37,7 @@ namespace MES.Web.Controllers
             return View();
         }
 
-        [HttpPost]
+        //[HttpPost]
         [ValidateAntiForgeryToken]
         public  IActionResult Index(UserViewModel userViewModel)
         {
@@ -36,7 +46,7 @@ namespace MES.Web.Controllers
                 userViewModel.Password = encryption.Encrypt(userViewModel.Password);
                 //userViewModel.NewPassword = encryption.Encrypt(userViewModel.NewPassword);
                 //userViewModel.NewPassword = encryption.Encrypt(userViewModel.ReNewPassword);
-                USER user = serviceBusiness.ServicePost<USER>(userViewModel, "Login", "LoginMain");
+                USER user = serviceBusiness.ServicePost<USER>(userViewModel, "Login", "LogMain");
                 if (user == null)
                 {
                     ShowLoginFailedToastMessage();

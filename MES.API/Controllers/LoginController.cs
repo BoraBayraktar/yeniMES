@@ -12,6 +12,8 @@ using Newtonsoft.Json;
 using MES.API.JwtToken;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
+using Microsoft.Extensions.DependencyInjection;
+using MES.API.Encrypter;
 
 namespace MES.API.Controllers
 {
@@ -20,18 +22,18 @@ namespace MES.API.Controllers
     public class LoginController : Controller
     {
         private int requestId;
-        private int userid;
+        public int userid;
         private JwtAuthenticationManager jwtAuthentication;
         Log logger = new Log();
-        public LoginController(IHttpContextAccessor accessor)
+        public LoginController()
         {
-            
+            userid = 0;
         }
+
+        //[ValidateAntiForgeryToken]
         [HttpPost("LogMain")]
-        [ValidateAntiForgeryToken]
         public USER LogMain(UserViewModel userViewModel)
         {
-            userid = userViewModel.user.USER_ID;
             return logger.Logging<USER>(userViewModel, "LoginController", "Post", userid, "LogMain", new LoginBusiness().LoginMain(userViewModel));
         }
         [HttpPost("GetJwt")]

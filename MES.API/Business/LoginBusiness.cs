@@ -1,7 +1,9 @@
-﻿using MES.API.JwtToken;
+﻿using MES.API.Encrypter;
+using MES.API.JwtToken;
 using MES.API.ViewModels;
 using MES.Data.Logics;
 using MES.DB.Model;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,11 +18,15 @@ namespace MES.API.Business
         MailToSendLogic mailToSendLogic = new MailToSendLogic();
         MenuLogic menuLogic = new MenuLogic();
         UserTypeMenuLogic userTypeMenuLogic = new UserTypeMenuLogic();
-        private Encryption.Encryption encryption;
+        Encryption encryption = new Encryption();
         private JwtAuthenticationManager jwtAuthentication;
+        public LoginBusiness()
+        {
+            
+        }
         public USER LoginMain(UserViewModel userViewModel)
         {
-            USER user = userLogic.CheckUser(userViewModel.Username, encryption.Decrypt(userViewModel.Password));
+            USER user = userLogic.CheckUser(userViewModel.Username, userViewModel.Password);
             if (user != null)
             {
                 return user;
@@ -31,7 +37,6 @@ namespace MES.API.Business
         public string GetJwt(UserViewModel userViewModel)
         {
             return jwtAuthentication.Authenticate(userViewModel);
-            
         }
         public List<MENU> SetAuthMenu(int userTypeId)
         {
