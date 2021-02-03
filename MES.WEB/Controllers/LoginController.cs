@@ -32,7 +32,7 @@ namespace MES.Web.Controllers
         {
             //serviceBusiness.ObjSendObjGet(null, "");
             
-            GENERAL_SETTINGS generalSettings = serviceBusiness.ServiceGet<GENERAL_SETTINGS>("Login", "GeneralSettings");
+            GENERAL_SETTINGS generalSettings = serviceBusiness.ServiceGet<GENERAL_SETTINGS>("GeneralSettings", "GetGeneralSettings");
             ViewData["GeneralSettings"] = generalSettings;
             return View();
         }

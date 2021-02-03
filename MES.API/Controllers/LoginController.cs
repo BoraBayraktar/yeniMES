@@ -47,12 +47,6 @@ namespace MES.API.Controllers
             return logger.Logging<List<MENU>>(userTypeId, "LoginController", "Post", userid, "SetAuthMenu", new LoginBusiness().SetAuthMenu(userTypeId));
         }
 
-        [HttpGet("GeneralSettings")]
-        public GENERAL_SETTINGS GeneralSettings()
-        {
-            return logger.Logging<GENERAL_SETTINGS>(null, "LoginController", "Get", userid, "GeneralSettings", new LoginBusiness().GeneralSettings());
-        }
-
         [HttpPost("EmailCheck")]
         public USER EmailCheck(UserViewModel userViewModel)
         {

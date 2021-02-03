@@ -22,10 +22,11 @@ namespace MES.API.Controllers
     [ApiController]
     public class OrganizationController : ControllerBase
     {
-        Log logger = new Log();
+        
         private JwtAuthenticationManager jwtAuthentication;
         private OrganizationBusiness organizationBusiness = new OrganizationBusiness();
         private int userid;
+        Log logger = new Log();
 
         public OrganizationController(IHttpContextAccessor accessor)
         {
