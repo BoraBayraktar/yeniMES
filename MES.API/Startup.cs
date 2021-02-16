@@ -30,12 +30,11 @@ namespace MES.API
         }
 
         public IConfiguration Configuration { get; }
-        private const string Key = "KDFSDG3425TGHTH6HG45YRJRYJY234T3G3G53Y54YHY46H6J456";
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            
+            var Key = "KDFSDG3425TGHTH6HG45YRJRYJY234T3G3G53Y54YHY46H6J456";
             services.AddControllers();
             services.AddHttpContextAccessor();
             services.AddEntityFrameworkSqlServer();

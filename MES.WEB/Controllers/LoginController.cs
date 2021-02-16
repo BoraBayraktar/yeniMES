@@ -21,12 +21,6 @@ namespace MES.Web.Controllers
         private Encryption encryption = new Encryption();
         public LoginController()
         {
-            var SCollection = new ServiceCollection();
-
-            //add protection services
-            SCollection.AddDataProtection();
-            var LockerKey = SCollection.BuildServiceProvider();
-            encryption = ActivatorUtilities.CreateInstance<Encryption>(LockerKey);
         }
         public IActionResult Index()
         {
@@ -37,7 +31,7 @@ namespace MES.Web.Controllers
             return View();
         }
 
-        //[HttpPost]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public  IActionResult Index(UserViewModel userViewModel)
         {
@@ -54,13 +48,14 @@ namespace MES.Web.Controllers
                 }
                 else
                 {
+                    userViewModel.user = new USER(){ USER_ID = Convert.ToInt32(user.USER_ID)};
                     string jwt = serviceBusiness.ServicePost<string>(userViewModel, "Login", "GetJwt");
-                    if (!String.IsNullOrEmpty(jwt))
+                    if (jwt != null)
                     {
                         var claims = new List<Claim>
                         {
-                            new Claim(ClaimTypes.UserData, jwt),
-                            new Claim(ClaimTypes.NameIdentifier, userViewModel.user.USER_ID.ToString())
+                            new Claim(ClaimTypes.UserData, jwt)
+                            //new Claim(ClaimTypes.NameIdentifier, userViewModel.user.USER_ID.ToString())
                             //new Claim(ClaimTypes.Name, user.NAME)
                         };
                         var userIdentity = new ClaimsIdentity(claims, "login");
@@ -117,7 +112,7 @@ namespace MES.Web.Controllers
             return View();
         }
 
-        //[HttpPost]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult ForgotPassword(UserViewModel userViewModel)
         {
@@ -238,6 +233,7 @@ namespace MES.Web.Controllers
             HttpContext.Session.Remove("User");
             HttpContext.Session.Remove("Menu");
             HttpContext.Session.Remove("GeneralSettings");
+            HttpContext.SignOutAsync();
             return RedirectToAction("Index", "Login");
         }
         public void ShowLoginFailedToastMessage()

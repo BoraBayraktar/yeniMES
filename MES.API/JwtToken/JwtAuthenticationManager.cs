@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace MES.API.JwtToken
 {
-    public class JwtAuthenticationManager:IJwtAuthenticationManager
+    public class JwtAuthenticationManager: IJwtAuthenticationManager
     {
         
         private readonly string key;
@@ -32,14 +32,8 @@ namespace MES.API.JwtToken
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.SerialNumber,userViewModel.user.USER_ID.ToString())
-                    //new Claim(ClaimTypes.UserData.)
-                //    new Claim(ClaimTypes.NameIdentifier, users.USERNAME),
-                //    new Claim(ClaimTypes.Name, users.NAME +" "+ users.SURNAME),
-                //    new Claim( ClaimTypes.GroupSid, users..ToString()),
-                //new Claim(ClaimTypes.PrimaryGroupSid, companies.ProductCategoryId.ToString()),
-                //new Claim(ClaimTypes.Email, users.Email)
                 }),
-                Expires = DateTime.UtcNow.AddYears(1),
+                Expires = DateTime.UtcNow.AddSeconds(60),
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(tokenKey),
                     SecurityAlgorithms.HmacSha256Signature)
