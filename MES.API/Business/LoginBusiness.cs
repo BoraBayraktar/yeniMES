@@ -3,6 +3,8 @@ using MES.API.JwtToken;
 using MES.API.ViewModels;
 using MES.Data.Logics;
 using MES.DB.Model;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -36,8 +38,10 @@ namespace MES.API.Business
 
         public string GetJwt(UserViewModel userViewModel)
         {
+            
             return jwtAuthenticationManager.Authenticate(userViewModel);
         }
+        
         public List<MENU> SetAuthMenu(int userTypeId)
         {
             try
@@ -45,13 +49,31 @@ namespace MES.API.Business
                 var firstMenuModel = menuLogic.GetAllMenu();
                 var userTypeMenuModel = userTypeMenuLogic.GetList().Where(x => x.UserTypeId == userTypeId).ToList();
                 var lastMenuModel = firstMenuModel.Where(item => userTypeMenuModel.Any(utm => utm.MenuId == item.MENU_ID)).ToList();
-                var modifedMenu = AddTopMenu(lastMenuModel);
+                //var modifedMenu = AddTopMenu(lastMenuModel);
+                var modifedMenu = RemoveTopMenu(lastMenuModel);
                 return modifedMenu;
+                
             }
             catch (Exception ex)
             {
                 return null;
             }
+        }
+        public List<MENU> RemoveTopMenu(List<MENU> menulist)
+        {
+            List<MENU> result = new List<MENU>(menulist);
+            foreach (var item in menulist)
+            {
+                foreach(var inside in item.SUBMENULIST)
+                {
+                    inside.TOPMENU = null;
+                    foreach (var item2 in inside.SUBMENULIST)
+                    {
+                        item2.TOPMENU = null;
+                    }
+                }
+            }
+            return result;
         }
         public List<MENU> AddTopMenu(List<MENU> lastmenu) 
         {

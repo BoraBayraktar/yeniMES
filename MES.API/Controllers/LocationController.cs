@@ -19,7 +19,10 @@ namespace MES.API.Controllers
         LocationLogic locationLogic = new LocationLogic();
         Log logger = new Log();
         private int userid;
-
+        public LocationController()
+        {
+            userid = Convert.ToInt32(User.FindFirst("Name").Value);
+        }
         #region Location
         [HttpGet("LocationGetList")]
         public List<LOCATION> LocationGetList()
@@ -37,12 +40,12 @@ namespace MES.API.Controllers
             return logger.Logging<bool>(location, "Location", "Post", userid, "UpdateLocation", locationLogic.UpdateLocation(location));
         }
         [HttpPost("DeleteLocation")]
-        public bool DeleteLocation(int deleteId)
+        public bool DeleteLocation([FromBody] int deleteId)
         {
             return logger.Logging<bool>(deleteId, "Location", "Post", userid, "DeleteLocation", locationLogic.DeleteLocation(deleteId));
         }
         [HttpPost("GetLocation")]
-        public LOCATION GetLocation(int id)
+        public LOCATION GetLocation([FromBody] int id)
         {
             return logger.Logging<LOCATION>(id, "Location", "Post", userid, "GetLocation", locationLogic.GetLocation(id));
         }

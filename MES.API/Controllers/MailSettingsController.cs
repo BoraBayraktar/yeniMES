@@ -19,7 +19,10 @@ namespace MES.API.Controllers
         MailSettingsLogic mailSettingsLogic = new MailSettingsLogic();
         private int userid;
         Log logger = new Log();
-
+        public MailSettingsController()
+        {
+            userid = Convert.ToInt32(User.FindFirst("Name").Value);
+        }
         #region MailSettings
         [HttpGet("MailSettingsGetList")]
         public List<MAIL_SERVER_SETUP> MailSettingsGetList()

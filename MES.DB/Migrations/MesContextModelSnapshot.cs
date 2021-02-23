@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace MES.Web.Migrations
+namespace MES.DB.Migrations
 {
     [DbContext(typeof(MesContext))]
     partial class MesContextModelSnapshot : ModelSnapshot
@@ -15,16 +15,16 @@ namespace MES.Web.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.2");
+                .HasAnnotation("ProductVersion", "5.0.3")
+                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("MES.DB.Model.AD_CUSTOMERS", b =>
                 {
                     b.Property<int>("CUSTOMER_ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("CODE")
                         .HasMaxLength(50)
@@ -48,7 +48,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("CITY_ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("CODE")
                         .HasMaxLength(50)
@@ -82,7 +82,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("COMPANY_ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("CODE")
                         .HasMaxLength(50)
@@ -120,7 +120,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("COUNTRY_ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("CODE")
                         .HasMaxLength(50)
@@ -149,7 +149,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("DEPARTMENT_ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("CODE")
                         .HasMaxLength(50)
@@ -187,7 +187,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
@@ -212,7 +212,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("BODY")
                         .HasColumnType("nvarchar(max)");
@@ -269,7 +269,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("MAIN_PROCESS_ID")
                         .HasColumnType("int");
@@ -290,7 +290,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("LOGIN_PAGE_BACKGROUND")
                         .HasMaxLength(100)
@@ -314,7 +314,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("BUSINESS_HOURS")
                         .IsRequired()
@@ -365,7 +365,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
@@ -400,7 +400,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
@@ -425,7 +425,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("HOLDING_ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("CODE")
                         .HasMaxLength(50)
@@ -463,7 +463,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int?>("ASSIGNED_GROUP_ID")
                         .HasColumnType("int");
@@ -556,7 +556,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("FILE_PATH")
                         .HasMaxLength(150)
@@ -577,7 +577,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int?>("ASSIGNED_GROUP_ID")
                         .HasColumnType("int");
@@ -690,7 +690,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
@@ -728,7 +728,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("INCIDENT_TYPE_ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("CODE")
                         .HasMaxLength(50)
@@ -748,7 +748,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
@@ -781,7 +781,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
@@ -834,7 +834,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
@@ -860,7 +860,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
@@ -914,7 +914,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("LEAVE_ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
@@ -958,7 +958,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("LEAVE_TYPE_ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("CODE")
                         .HasMaxLength(50)
@@ -987,7 +987,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("LOCATION_ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("CITY_ID")
                         .HasColumnType("int");
@@ -1021,7 +1021,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("CONTROLLER")
                         .HasMaxLength(50)
@@ -1054,7 +1054,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("CONTROLLER")
                         .HasMaxLength(50)
@@ -1090,7 +1090,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
@@ -1137,7 +1137,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
@@ -1180,7 +1180,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
@@ -1214,7 +1214,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("MENU_ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("ACTION")
                         .HasMaxLength(50)
@@ -1265,7 +1265,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("CODE")
                         .IsRequired()
@@ -1314,7 +1314,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
@@ -1364,7 +1364,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("PARAMETER_TYPE_ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("CODE")
                         .HasMaxLength(50)
@@ -1398,7 +1398,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime?>("CHANGE_DATE")
                         .HasColumnType("datetime2");
@@ -1430,7 +1430,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("REGION_ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("CODE")
                         .HasMaxLength(50)
@@ -1464,7 +1464,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("RULE_ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
@@ -1505,7 +1505,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("ACTION_ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("ACTION_CODE")
                         .HasMaxLength(50)
@@ -1525,7 +1525,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("CODE")
                         .HasMaxLength(100)
@@ -1564,7 +1564,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("RULE_DETAIL_ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("CONDITION")
                         .HasMaxLength(50)
@@ -1606,7 +1606,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("SERVICE_ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
@@ -1658,7 +1658,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
@@ -1712,7 +1712,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("ASSET_ID")
                         .HasMaxLength(150)
@@ -1753,7 +1753,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
@@ -1787,7 +1787,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("SURVEY_ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
@@ -1846,7 +1846,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
@@ -1876,7 +1876,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("BINARY_OPTION_1")
                         .HasMaxLength(50)
@@ -1937,7 +1937,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("ANSWER")
                         .HasMaxLength(50)
@@ -1972,7 +1972,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("NAME")
                         .HasMaxLength(100)
@@ -1996,7 +1996,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("BUSINESS_HOURS")
                         .HasMaxLength(150)
@@ -2037,7 +2037,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
@@ -2079,7 +2079,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("TITLE_ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("CODE")
                         .HasMaxLength(50)
@@ -2112,7 +2112,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("USER_ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
@@ -2222,7 +2222,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("USER_GROUP_ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("CODE")
                         .HasMaxLength(50)
@@ -2251,7 +2251,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("USER_TYPE_ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("CODE")
                         .HasMaxLength(50)
@@ -2280,7 +2280,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("CODE")
                         .HasMaxLength(50)
@@ -2309,7 +2309,7 @@ namespace MES.Web.Migrations
                     b.Property<int>("WORKING_SCHEDULE_ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");

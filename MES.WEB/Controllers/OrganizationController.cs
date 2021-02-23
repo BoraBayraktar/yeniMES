@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Configuration;
 
 namespace MES.Web.Controllers
 {
@@ -19,13 +20,16 @@ namespace MES.Web.Controllers
     public class OrganizationController : BaseController
     {
         #region Instance
-        private IHostingEnvironment _hostingEnvironment;
-        ServiceBusiness serviceBusiness = new ServiceBusiness();
+        [Obsolete]
+        IHostingEnvironment _hostingEnvironment;
+        ServiceBusiness serviceBusiness;
 
         #endregion
 
-        public OrganizationController(IHostingEnvironment environment)
+        [Obsolete]
+        public OrganizationController(IHostingEnvironment environment, IConfiguration configuration, IHttpContextAccessor accessor)
         {
+            serviceBusiness = new ServiceBusiness(configuration, accessor);
             _hostingEnvironment = environment;
         }
 

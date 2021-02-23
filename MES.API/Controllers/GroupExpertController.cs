@@ -1,6 +1,7 @@
 ﻿using MES.API.Logger;
 using MES.Data.Logics;
 using MES.DB.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace MES.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class GroupExpertController : ControllerBase
@@ -17,7 +19,10 @@ namespace MES.API.Controllers
         GroupExpertLogic groupExpertLogic = new GroupExpertLogic();
         private int userid;
         Log logger = new Log();
-
+        public GroupExpertController()
+        {
+            userid = Convert.ToInt32(User.FindFirst("Name").Value);
+        }
         #region GroupExpert
         [HttpGet("GroupExpertGetList")]
         public List<GROUP_EXPERT> GroupExpertGetList()
@@ -35,17 +40,17 @@ namespace MES.API.Controllers
             return logger.Logging<bool>(groupExpert, "GroupExpert", "Post", userid, "UpdateGroupExpert", groupExpertLogic.UpdateExpert(groupExpert));
         }
         [HttpPost("DeleteGroupExpert")]
-        public bool DeleteGroupExpert(int deleteId)
+        public bool DeleteGroupExpert([FromBody] int deleteId)
         {
             return logger.Logging<bool>(deleteId, "GroupExpert", "Post", userid, "DeleteGroupExpert", groupExpertLogic.DeleteExpert(deleteId));
         }
         [HttpPost("GetGroupExpert")]
-        public GROUP_EXPERT GetGroupExpert(int id)
+        public GROUP_EXPERT GetGroupExpert([FromBody] int id)
         {
             return logger.Logging<GROUP_EXPERT>(id, "Group", "Post", userid, "GetGroupExpert", groupExpertLogic.GetExpert(id));
         }
         [HttpPost("GetExpertListByGrpId")]
-        public List<GROUP_EXPERT> GetExpertListByGrpId(int id)
+        public List<GROUP_EXPERT> GetExpertListByGrpId([FromBody] int id)
         {
             return logger.Logging<List<GROUP_EXPERT>>(id, "Group", "Post", userid, "GetExpertListByGrpId", groupExpertLogic.GetExpertListByGrpId(id));
         }

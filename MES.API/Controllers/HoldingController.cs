@@ -19,7 +19,10 @@ namespace MES.API.Controllers
         HoldingLogic holdingLogic = new HoldingLogic();
         Log logger = new Log();
         private int userid;
-
+        public HoldingController()
+        {
+            userid = Convert.ToInt32(User.FindFirst("Name").Value);
+        }
         #region Holding
         [HttpGet("HoldingGetList")]
         public List<HOLDING> HoldingGetList()
@@ -37,12 +40,12 @@ namespace MES.API.Controllers
             return logger.Logging<bool>(holding, "Holding", "Post", userid, "UpdateHolding", holdingLogic.UpdateHolding(holding));
         }
         [HttpPost("DeleteHolding")]
-        public bool DeleteHolding(int deleteId)
+        public bool DeleteHolding([FromBody] int deleteId)
         {
             return logger.Logging<bool>(deleteId, "Holding", "Post", userid, "DeleteHolding", holdingLogic.DeleteHolding(deleteId));
         }
         [HttpPost("GetHolding")]
-        public HOLDING GetHolding(int id)
+        public HOLDING GetHolding([FromBody] int id)
         {
             return logger.Logging<HOLDING>(id, "Holding", "Post", userid, "GetHolding", holdingLogic.GetHolding(id));
         }

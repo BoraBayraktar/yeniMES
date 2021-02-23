@@ -21,6 +21,10 @@ namespace MES.API.Controllers
         RuleLogic ruleLogic = new RuleLogic();
         Log logger = new Log();
         private int userid;
+        public RuleController()
+        {
+            userid = Convert.ToInt32(User.FindFirst("Name").Value);
+        }
 
         [HttpGet("RuleCriteriaGetList")]
         public List<RULE_CRITERIA> RuleCriteriaGetList()
@@ -28,7 +32,7 @@ namespace MES.API.Controllers
             return logger.Logging<List<RULE_CRITERIA>>(null, "Rule", "Get", userid, "RuleCriteriaGetList", ruleLogic.GetRuleCriteriaList());
         }
         [HttpPost("RuleCriteriaDataGetList")]
-        public List<RuleCriteriaData> RuleCriteriaDataGetList(int id)
+        public List<RuleCriteriaData> RuleCriteriaDataGetList([FromBody] int id)
         {
             return logger.Logging<List<RuleCriteriaData>>(id, "Rule", "Post", userid, "RuleCriteriaDataGetList", ruleLogic.GetRuleCriteriaData(id));
         }
@@ -51,7 +55,7 @@ namespace MES.API.Controllers
             return logger.Logging<bool>(rule, "Rule", "Post", userid, "UpdateRule", ruleLogic.UpdateRule(rule));
         }
         [HttpPost("DeleteRule")]
-        public bool DeleteRule(int deleteId)
+        public bool DeleteRule([FromBody] int deleteId)
         {
             return logger.Logging<bool>(deleteId, "Rule", "Post", userid, "DeleteRule", ruleLogic.DeleteRule(deleteId));
         }
@@ -74,12 +78,12 @@ namespace MES.API.Controllers
             return logger.Logging<bool>(ruleDetail, "Rule", "Post", userid, "UpdateRuleDetail", ruleLogic.UpdateRuleDetail(ruleDetail));
         }
         [HttpPost("DeleteRuleDetail")]
-        public bool DeleteRuleDetail(int deleteId)
+        public bool DeleteRuleDetail([FromBody] int deleteId)
         {
             return logger.Logging<bool>(deleteId, "Rule", "Post", userid, "DeleteRuleDetail", ruleLogic.DeleteRuleDetail(deleteId));
         }
         [HttpPost("GetRuleDetailByRuleId")]
-        public List<RULE_DETAIL> GetRuleDetailByRuleId(int ruleDetailid)
+        public List<RULE_DETAIL> GetRuleDetailByRuleId([FromBody] int ruleDetailid)
         {
             return logger.Logging<List<RULE_DETAIL>>(ruleDetailid, "Rule", "Post", userid, "GetRuleDetailByRuleId", ruleLogic.GetRuleDetailByRuleId(ruleDetailid));
         }

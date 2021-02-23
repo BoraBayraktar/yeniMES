@@ -1,6 +1,7 @@
 ﻿using MES.API.Logger;
 using MES.Data.Logics;
 using MES.DB.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace MES.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class MainProcessController : ControllerBase
@@ -17,7 +19,10 @@ namespace MES.API.Controllers
         MainProcessLogic mainProcessLogic = new MainProcessLogic();
         private int userid;
         Log logger = new Log();
-
+        public MainProcessController()
+        {
+            userid = Convert.ToInt32(User.FindFirst("Name").Value);
+        }
         #region MainProcess
         [HttpGet("MainProcessGetList")]
         public List<MAIN_PROCESS> MainProcessGetList()
@@ -35,12 +40,12 @@ namespace MES.API.Controllers
             return logger.Logging<bool>(mainProcess, "MainProcess", "Post", userid, "UpdateMainProcess", mainProcessLogic.UpdateMainProcess(mainProcess));
         }
         [HttpPost("DeleteMainProcess")]
-        public bool DeleteMainProcess(int deleteId)
+        public bool DeleteMainProcess([FromBody] int deleteId)
         {
             return logger.Logging<bool>(deleteId, "MainProcess", "Post", userid, "DeleteMainProcess", mainProcessLogic.DeleteMainProcess(deleteId));
         }
         [HttpPost("GetMainProcess")]
-        public MAIN_PROCESS GetMainProcess(int id)
+        public MAIN_PROCESS GetMainProcess([FromBody] int id)
         {
             return logger.Logging<MAIN_PROCESS>(id, "MainProcess", "Post", userid, "GetMainProcess", mainProcessLogic.GetMainProcess(id));
         }

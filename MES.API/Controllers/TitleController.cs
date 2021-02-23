@@ -19,7 +19,10 @@ namespace MES.API.Controllers
         TitleLogic titleLogic = new TitleLogic();
         Log logger = new Log();
         private int userid;
-
+        public TitleController()
+        {
+            userid = Convert.ToInt32(User.FindFirst("Name").Value);
+        }
         #region Title
         [HttpGet("TitleGetList")]
         public List<TITLE> TitleGetList()
@@ -37,12 +40,12 @@ namespace MES.API.Controllers
             return logger.Logging<bool>(title, "Title", "Post", userid, "UpdateTitle", titleLogic.UpdateTitle(title));
         }
         [HttpPost("DeleteTitle")]
-        public bool DeleteTitle(int deleteId)
+        public bool DeleteTitle([FromBody] int deleteId)
         {
             return logger.Logging<bool>(deleteId, "Title", "Post", userid, "DeleteTitle", titleLogic.DeleteTitle(deleteId));
         }
         [HttpPost("GetTitle")]
-        public TITLE GetTitle(int id)
+        public TITLE GetTitle([FromBody] int id)
         {
             return logger.Logging<TITLE>(id, "Title", "Post", userid, "GetTitle", titleLogic.GetTitle(id));
         }

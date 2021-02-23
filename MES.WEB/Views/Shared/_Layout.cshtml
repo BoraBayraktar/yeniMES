@@ -3209,7 +3209,7 @@
 
 @{
 
-    void GetTreeMenus(IEnumerable<MES.Web.Model.MENU> siteMenu, Nullable<int> parentID)
+    void GetTreeMenus(List<MES.Web.Model.MENU> siteMenu, Nullable<int> parentID)
     {
         foreach (var i in siteMenu.Where(a => a.TOPMENU_ID.Equals(parentID)))
         {

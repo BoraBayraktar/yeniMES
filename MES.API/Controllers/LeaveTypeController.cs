@@ -19,7 +19,10 @@ namespace MES.API.Controllers
         LeaveTypeLogic leaveTypeLogic = new LeaveTypeLogic();
         private int userid;
         Log logger = new Log();
-
+        public LeaveTypeController()
+        {
+            userid = Convert.ToInt32(User.FindFirst("Name").Value);
+        }
         #region LeaveType
         [HttpGet("LeaveTypeGetList")]
         public List<LEAVE_TYPE> LeaveTypeGetList()
@@ -37,12 +40,12 @@ namespace MES.API.Controllers
             return logger.Logging<bool>(leaveType, "LeaveType", "Post", userid, "UpdateLeaveType", leaveTypeLogic.UpdateLeaveType(leaveType));
         }
         [HttpPost("DeleteLeaveType")]
-        public bool DeleteLeaveType(int deleteId)
+        public bool DeleteLeaveType([FromBody] int deleteId)
         {
             return logger.Logging<bool>(deleteId, "LeaveType", "Post", userid, "DeleteLeaveType", leaveTypeLogic.DeleteLeaveType(deleteId));
         }
         [HttpPost("GetLeaveType")]
-        public LEAVE_TYPE GetLeaveType(int id)
+        public LEAVE_TYPE GetLeaveType([FromBody] int id)
         {
             return logger.Logging<LEAVE_TYPE>(id, "LeaveType", "Post", userid, "GetLeaveType", leaveTypeLogic.GetLeaveType(id));
         }

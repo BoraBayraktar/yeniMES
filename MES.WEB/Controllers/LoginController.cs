@@ -1,31 +1,35 @@
-﻿
-using MES.Web.Encrypter;
+﻿using MES.Web.Encrypter;
 using MES.Web.Model;
 using MES.Web.Models;
 using MES.Web.Service;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace MES.Web.Controllers
 {
     public class LoginController : Controller
     {
-        ServiceBusiness serviceBusiness = new ServiceBusiness();
+        private IConfiguration configuration;
+        ServiceBusiness serviceBusiness;
         private Encryption encryption = new Encryption();
-        public LoginController()
+        private IHttpContextAccessor httpContextAccessor;
+        public LoginController(IConfiguration configuration, IHttpContextAccessor accessor)
         {
+            httpContextAccessor = accessor;
+            serviceBusiness = new ServiceBusiness(configuration, accessor);
         }
         public IActionResult Index()
         {
-            //serviceBusiness.ObjSendObjGet(null, "");
-            
             GENERAL_SETTINGS generalSettings = serviceBusiness.ServiceGet<GENERAL_SETTINGS>("GeneralSettings", "GetGeneralSettings");
             ViewData["GeneralSettings"] = generalSettings;
             return View();
@@ -33,13 +37,11 @@ namespace MES.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public  IActionResult Index(UserViewModel userViewModel)
+        public IActionResult IndexAsync(UserViewModel userViewModel)
         {
             try
             {
                 userViewModel.Password = encryption.Encrypt(userViewModel.Password);
-                //userViewModel.NewPassword = encryption.Encrypt(userViewModel.NewPassword);
-                //userViewModel.NewPassword = encryption.Encrypt(userViewModel.ReNewPassword);
                 USER user = serviceBusiness.ServicePost<USER>(userViewModel, "Login", "LogMain");
                 if (user == null)
                 {
@@ -49,23 +51,28 @@ namespace MES.Web.Controllers
                 else
                 {
                     userViewModel.user = new USER(){ USER_ID = Convert.ToInt32(user.USER_ID)};
-                    string jwt = serviceBusiness.ServicePost<string>(userViewModel, "Login", "GetJwt");
+                    var jwt = serviceBusiness.ServicePost<string>(userViewModel, "Login", "GetJwt");
                     if (jwt != null)
                     {
                         var claims = new List<Claim>
                         {
-                            new Claim(ClaimTypes.UserData, jwt)
-                            //new Claim(ClaimTypes.NameIdentifier, userViewModel.user.USER_ID.ToString())
-                            //new Claim(ClaimTypes.Name, user.NAME)
+                            new Claim(ClaimTypes.Authentication, jwt),
+                            new Claim(ClaimTypes.Name, user.USER_ID.ToString())
                         };
-                        var userIdentity = new ClaimsIdentity(claims, "login");
+                        var userIdentity = new ClaimsIdentity(claims);
                         ClaimsPrincipal principal = new ClaimsPrincipal(userIdentity);
                         HttpContext.SignInAsync(principal);
+                        HttpContext.Session.SetString("token", jwt);
+                        
                     }
                 }
+                //var username = User.Claims.Where(x=> x.Type == ClaimTypes.Name).FirstOrDefault()?.Value;
                 int uti = (int)user.USER_TYPE_ID;
-                SetAuthMenu(uti);
+                
                 HttpContext.Session.SetObject("User", user);
+                List<MENU> modifedMenu = serviceBusiness.ServicePost<List<MENU>>(uti, "Login", "SetAuthMenu");
+                HttpContext.Session.SetObject("Menu", modifedMenu);
+                
                 return RedirectToAction("Index", "Home");
             }
             catch (System.Exception ex)
@@ -75,38 +82,10 @@ namespace MES.Web.Controllers
 
             return View();
         }
-
-        public void SetAuthMenu(int userTypeId)
-        {
-            try
-            {
-                List<MENU> modifedMenu = serviceBusiness.ServicePost<List<MENU>>(userTypeId, "Login", "SetAuthMenu");
-                HttpContext.Session.SetObject("Menu", modifedMenu);
-            }
-            catch (Exception ex)
-            {
-                
-            }
-        }
-
-        public List<MENU> AddTopMenu(List<MENU> lastmenu)
-        {
-            List<MENU> result = new List<MENU>(lastmenu);
-            foreach (var item in lastmenu)
-            {
-                if (item.TOPMENU == null) continue;
-                if (!result.Contains(item.TOPMENU))
-                {
-                    result.Add(item.TOPMENU);
-                    if (item.TOPMENU.TOPMENU != null && !result.Contains(item.TOPMENU.TOPMENU))
-                    {
-                        result.Add(item.TOPMENU.TOPMENU);
-                    }
-                }
-            }
-            return result;
-        }
-
+        //public async void signIn(ClaimsPrincipal claims)
+        //{
+        //    await HttpContext.SignInAsync(claims);
+        //}
         public ActionResult ForgotPassword()
         {
             return View();

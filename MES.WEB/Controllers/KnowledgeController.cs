@@ -11,20 +11,18 @@ using Microsoft.AspNetCore.Http;
 using System.Reflection.Metadata;
 using MES.Web.Service;
 using MES.Web.Model;
+using Microsoft.Extensions.Configuration;
 
 namespace MES.Web.Controllers
 {
     public class KnowledgeController : BaseController
     {
-        ServiceBusiness serviceBusiness = new ServiceBusiness();
-
         private IHostingEnvironment _hostingEnvironment;
-
-
-        public KnowledgeController(IHostingEnvironment environment)
+        ServiceBusiness serviceBusiness;
+        public KnowledgeController(IHostingEnvironment environment, IConfiguration configuration, IHttpContextAccessor accessor)
         {
             _hostingEnvironment = environment;
-
+            serviceBusiness = new ServiceBusiness(configuration, accessor);
         }
         public IActionResult KnowledgeList()
         {

@@ -19,6 +19,10 @@ namespace MES.API.Controllers
         UserLogic userLogic = new UserLogic();
         private int userid;
         Log logger = new Log();
+        public UserController()
+        {
+            userid = Convert.ToInt32(User.FindFirst("Name").Value);
+        }
         #region User
         [HttpGet("UserGetList")]
         public List<USER> UserGetList()
@@ -36,12 +40,12 @@ namespace MES.API.Controllers
             return logger.Logging<bool>(user, "User", "Post", userid, "UpdateUser", userLogic.UpdateUser(user));
         }
         [HttpPost("DeleteUser")]
-        public bool DeleteUser(int deleteId)
+        public bool DeleteUser([FromBody] int deleteId)
         {
             return logger.Logging<bool>(deleteId, "User", "Post", userid, "DeleteUser", userLogic.DeleteUser(deleteId));
         }
         [HttpPost("GetUser")]
-        public USER GetUser(int id)
+        public USER GetUser([FromBody] int id)
         {
             return logger.Logging<USER>(id, "User", "Post", userid, "GetUser", userLogic.GetUser(id));
         }

@@ -19,7 +19,10 @@ namespace MES.API.Controllers
         WorkingScheduleLogic workingScheduleLogic = new WorkingScheduleLogic();
         private int userid;
         Log logger = new Log();
-
+        public WorkingScheduleController()
+        {
+            userid = Convert.ToInt32(User.FindFirst("Name").Value);
+        }
         #region WorkingSchedule
         [HttpGet("WorkingScheduleGetList")]
         public List<WORKING_SCHEDULE> WorkingScheduleGetList()
@@ -37,12 +40,12 @@ namespace MES.API.Controllers
             return logger.Logging<bool>(workingSchedule, "WorkingSchedule", "Post", userid, "UpdateWorkingSchedule", workingScheduleLogic.UpdateWorkingSchedule(workingSchedule));
         }
         [HttpPost("DeleteWorkingSchedule")]
-        public bool DeleteWorkingSchedule(int deleteId)
+        public bool DeleteWorkingSchedule([FromBody] int deleteId)
         {
             return logger.Logging<bool>(deleteId, "WorkingSchedule", "Post", userid, "DeleteWorkingSchedule", workingScheduleLogic.DeleteWorkingSchedule(deleteId));
         }
         [HttpPost("GetWorkingSchedule")]
-        public WORKING_SCHEDULE GetWorkingSchedule(int id)
+        public WORKING_SCHEDULE GetWorkingSchedule([FromBody] int id)
         {
             return logger.Logging<WORKING_SCHEDULE>(id, "WorkingSchedule", "Post", userid, "GetWorkingSchedule", workingScheduleLogic.GetWorkingSchedule(id));
         }

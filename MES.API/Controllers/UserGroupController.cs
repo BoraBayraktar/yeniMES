@@ -19,7 +19,10 @@ namespace MES.API.Controllers
         Log logger = new Log();
         private int userid;
         UserGroupLogic userGroupLogic = new UserGroupLogic();
-
+        public UserGroupController()
+        {
+            userid = Convert.ToInt32(User.FindFirst("Name").Value);
+        }
         #region UserGroup
         [HttpGet("UserGroupGetList")]
         public List<USER_GROUP> UserGroupGetList()
@@ -37,12 +40,12 @@ namespace MES.API.Controllers
             return logger.Logging<bool>(userGroup, "UserGroup", "Post", userid, "UpdateUserGroup", userGroupLogic.UpdateUserGroup(userGroup));
         }
         [HttpPost("DeleteUserGroup")]
-        public bool DeleteUserGroup(int deleteId)
+        public bool DeleteUserGroup([FromBody] int deleteId)
         {
             return logger.Logging<bool>(deleteId, "UserGroup", "Post", userid, "DeleteUserGroup", userGroupLogic.DeleteUserGroup(deleteId));
         }
         [HttpPost("GetUserGroup")]
-        public USER_GROUP GetUserGroup(int id)
+        public USER_GROUP GetUserGroup([FromBody] int id)
         {
             return logger.Logging<USER_GROUP>(id, "UserGroup", "Post", userid, "GetUserGroup", userGroupLogic.GetUserGroup(id));
         }

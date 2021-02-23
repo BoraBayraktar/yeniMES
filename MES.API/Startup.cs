@@ -18,7 +18,9 @@ using System.Threading.Tasks;
 using MES.API.Encrypter;
 using MES.API.JwtToken;
 using MES.API.Encrypter;
+using Newtonsoft.Json;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Http;
 
 namespace MES.API
 {
@@ -35,13 +37,12 @@ namespace MES.API
         public void ConfigureServices(IServiceCollection services)
         {
             var Key = "KDFSDG3425TGHTH6HG45YRJRYJY234T3G3G53Y54YHY46H6J456";
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            });
             services.AddHttpContextAccessor();
             services.AddEntityFrameworkSqlServer();
-            //services.AddSwaggerGen(c =>
-            //{
-            //    c.SwaggerDoc("v1", new OpenApiInfo { Title = "MES.API", Version = "v1" });
-            //});
 
             services.AddAuthentication(x =>
             {
@@ -61,9 +62,6 @@ namespace MES.API
                 };
             });
             services.AddSingleton<IJwtAuthenticationManager>(new JwtAuthenticationManager(Key));
-            //services.AddSwaggerGen(c=> {
-            //    c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
-            //});
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "MES.API", Version = "v1" });
@@ -92,15 +90,11 @@ namespace MES.API
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MES.API v1"));
             }
 
-            app.UseHttpsRedirection();
-
             app.UseRouting();
 
             app.UseAuthentication();
 
             app.UseAuthorization();
-
-            app.UseHttpsRedirection();
 
             app.UseEndpoints(endpoints =>
             {

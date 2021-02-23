@@ -14,10 +14,12 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using Microsoft.Extensions.DependencyInjection;
 using MES.API.Encrypter;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication;
 
 namespace MES.API.Controllers
 {
-
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class LoginController : Controller
@@ -31,32 +33,33 @@ namespace MES.API.Controllers
         {
             this.jwtAuthentication = jwtAuthenticationManager;
             loginBusiness = new LoginBusiness(jwtAuthentication);
-            //userid = Convert.ToInt32(User.Claims.Where(x => x.Type == ClaimTypes.Actor).FirstOrDefault());
-            userid = 0;
+            userid = 0;/*Convert.ToInt32(User.Identity.Name);*/
         }
+        [AllowAnonymous]
         [HttpPost("LogMain")]
         public USER LogMain(UserViewModel userViewModel)
         {
-            return logger.Logging<USER>(userViewModel, "LoginController", "Post", userid, "LogMain", loginBusiness.LoginMain(userViewModel));
+            USER user = logger.Logging<USER>(userViewModel, "LoginController", "Post", 0, "LogMain", loginBusiness.LoginMain(userViewModel));
+            return user;
         }
+        [AllowAnonymous]
         [HttpPost("GetJwt")]
         public string GetJwt(UserViewModel userViewModel)
         {
-            return logger.Logging<string>(userViewModel, "LoginController", "Post", userid, "GetJwt", loginBusiness.GetJwt(userViewModel));
+            return logger.Logging<string>(userViewModel, "LoginController", "Post", 0, "GetJwt", loginBusiness.GetJwt(userViewModel));
         }
         [HttpPost("SetAuthMenu")]
-        public List<MENU> SetAuthMenu(int userTypeId)
+        public List<MENU> SetAuthMenu([FromBody]int userTypeId)
         {
             return logger.Logging<List<MENU>>(userTypeId, "LoginController", "Post", userid, "SetAuthMenu", loginBusiness.SetAuthMenu(userTypeId));
         }
-
         [HttpPost("EmailCheck")]
         public USER EmailCheck(UserViewModel userViewModel)
         {
             return logger.Logging<USER>(userViewModel, "LoginController", "Post", userid, "EmailCheck", loginBusiness.EmailCheck(userViewModel));
         }
         [HttpDelete("DeletePassChange")]
-        public void DeletePassChange(int UserId)
+        public void DeletePassChange([FromBody]int UserId)
         {
             logger.LoggingNoReturn(UserId, "LoginController", "Delete", userid, "DeletePassChange");
             loginBusiness.DeletePassChange(UserId);
@@ -77,7 +80,7 @@ namespace MES.API.Controllers
             return logger.Logging<PASSWORD_CHANGE_HISTORY>(guid, "LoginController", "Post", userid, "GetPassChange", loginBusiness.GetPassChange(guid));
         }
         [HttpPut("UpdatePassChange")]
-        public void UpdatePassChange(int pcId)
+        public void UpdatePassChange([FromBody] int pcId)
         {
             logger.LoggingNoReturn(pcId, "LoginController", "Put", userid, "UpdatePassChange");
             loginBusiness.UpdatePassChange(pcId);

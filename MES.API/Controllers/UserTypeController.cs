@@ -19,7 +19,10 @@ namespace MES.API.Controllers
         UserTypeLogic userTypeLogic = new UserTypeLogic();
         private int userid;
         Log logger = new Log();
-
+        public UserTypeController()
+        {
+            userid = Convert.ToInt32(User.FindFirst("Name").Value);
+        }
         #region UserType
         [HttpGet("UserTypeGetList")]
         public List<USER_TYPE> UserTypeGetList()

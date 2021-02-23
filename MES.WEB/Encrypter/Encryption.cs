@@ -11,7 +11,7 @@ namespace MES.Web.Encrypter
 {
     public class Encryption
     {
-        private const string Key = "KDFSDG3425TGHTH6HG45YRJRYJY234T3G3G53Y54YHY46H6J456";
+        private const string Key = "qHJhfH@jUıolMunP373U3ubrf3F3U½+^+&7/%Fuf4ıjfnFN4V_r3_343Rr3r4ttT443T2Tg1312324/(&43TgRGGRT3T43T4G4h43iN3RzxcDVdvDEFgegGrhRT?=5!4#$½£$2NTHTNhrew324er4RWFrERfe";
         public string Encrypt(string input)
         {
             if (input == null)

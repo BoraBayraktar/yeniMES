@@ -40,7 +40,8 @@ namespace MES.Web
         {
             //services.AddControllersWithViews();
             //       .AddRazorRuntimeCompilation();
-
+            services.AddHttpContextAccessor();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddMvc();
             services.AddDistributedMemoryCache();
             services.AddSession();
@@ -57,11 +58,11 @@ namespace MES.Web
             {
                 options.LoginPath = "/Login/Index";
             });
-            services.AddMvc().AddNewtonsoftJson(options =>
-            {
-                options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-            });
+            //services.AddMvc().AddNewtonsoftJson(options =>
+            //{
+            //    options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+            //    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            //});
 
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             {
@@ -69,12 +70,8 @@ namespace MES.Web
                 ReferenceLoopHandling = ReferenceLoopHandling.Serialize,
                 PreserveReferencesHandling = PreserveReferencesHandling.Objects
             };
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
-            //services.AddHangfire(_ => _.UseSqlServerStorage(Configuration.GetConnectionString("MesHangfireDb")));
-
-            //services.AddHangfire(_ => _.UsePostgreSqlStorage(Configuration.GetConnectionString("MesHangfireDb")));
-
+            
+            services.AddSingleton<IConfiguration>(Configuration);
             services.AddMemoryCache();
 
             #region Dependencies
@@ -105,7 +102,7 @@ namespace MES.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHttpContextAccessor accessor)
         {
             
             var cultureInfo = new CultureInfo("tr-TR");
@@ -114,7 +111,7 @@ namespace MES.Web
             app.UseSession();
             CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
             CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
-            app.UseAuthentication();
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -125,15 +122,16 @@ namespace MES.Web
             }
             //app.UseStaticFiles();
             app.UseHttpsRedirection();
+
             app.UseStaticFiles(new StaticFileOptions()
             {
                 FileProvider = new PhysicalFileProvider(
                 Path.Combine(Directory.GetCurrentDirectory(), "Content")),
                 RequestPath = new PathString("/Content")
             });
-
+            
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

@@ -19,7 +19,10 @@ namespace MES.API.Controllers
         TimeManagementOffDaysLogic timeManagementOffDaysLogic = new TimeManagementOffDaysLogic();
         private int userid;
         Log logger = new Log();
-
+        public TimeManagementOffDaysController()
+        {
+            userid = Convert.ToInt32(User.FindFirst("Name").Value);
+        }
         #region TimeManagement
         [HttpGet("TimeManagementOffDaysGetList")]
         public List<TIME_MANAGEMENT_OFFDAYS> TimeManagementOffDaysGetList()
@@ -37,17 +40,17 @@ namespace MES.API.Controllers
             return logger.Logging<bool>(timeManagementOffDays, "TimeManagementOffDays", "Post", userid, "UpdateTimeManagementOffDays", timeManagementOffDaysLogic.UpdateOffDays(timeManagementOffDays));
         }
         [HttpPost("DeleteTimeManagementOffDays")]
-        public bool DeleteTimeManagementOffDays(int deleteId)
+        public bool DeleteTimeManagementOffDays([FromBody] int deleteId)
         {
             return logger.Logging<bool>(deleteId, "TimeManagementOffDays", "Post", userid, "DeleteTimeManagementOffDays", timeManagementOffDaysLogic.DeleteOffDays(deleteId));
         }
         [HttpPost("GetTimeManagementOffDays")]
-        public TIME_MANAGEMENT_OFFDAYS GetTimeManagementOffDays(int id)
+        public TIME_MANAGEMENT_OFFDAYS GetTimeManagementOffDays([FromBody] int id)
         {
             return logger.Logging<TIME_MANAGEMENT_OFFDAYS>(id, "TimeManagementOffDays", "Post", userid, "GetTimeManagementOffDays", timeManagementOffDaysLogic.GetOffDays(id));
         }
         [HttpPost("TimeManagementOffDaysGetListById")]
-        public List<TIME_MANAGEMENT_OFFDAYS> TimeManagementOffDaysGetListById(int id)
+        public List<TIME_MANAGEMENT_OFFDAYS> TimeManagementOffDaysGetListById([FromBody] int id)
         {
             return logger.Logging<List<TIME_MANAGEMENT_OFFDAYS>>(null, "TimeManagementOffDays", "Post", userid, "TimeManagementOffDaysGetListById", timeManagementOffDaysLogic.GetOffDaysListByTmId(id));
         }

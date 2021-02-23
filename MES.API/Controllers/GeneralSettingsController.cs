@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace MES.API.Controllers
 {
+    
     [Route("api/[controller]")]
     [ApiController]
     public class GeneralSettingsController : ControllerBase
@@ -18,6 +19,10 @@ namespace MES.API.Controllers
         GeneralSettingsLogic generalSettingsLogic = new GeneralSettingsLogic();
         private int userid;
         Log logger = new Log();
+        public GeneralSettingsController(IHttpContextAccessor accessor)
+        {
+            userid = Convert.ToInt32(accessor.HttpContext.User.Identity.Name);
+        }
         [HttpGet("GetGeneralSettings")]
         public GENERAL_SETTINGS GetGeneralSettings()
         {

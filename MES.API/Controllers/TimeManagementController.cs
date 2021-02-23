@@ -19,6 +19,10 @@ namespace MES.API.Controllers
         TimeManagementLogic timeManagementLogic = new TimeManagementLogic();
         private int userid;
         Log logger = new Log();
+        public TimeManagementController()
+        {
+            userid = Convert.ToInt32(User.FindFirst("Name").Value);
+        }
 
         #region TimeManagement
         [HttpGet("TimeManagementGetList")]
@@ -37,12 +41,12 @@ namespace MES.API.Controllers
             return logger.Logging<bool>(timeManagement, "TimeManagement", "Post", userid, "UpdateTimeManagement", timeManagementLogic.UpdateTimeManagement(timeManagement));
         }
         [HttpPost("DeleteTimeManagement")]
-        public bool DeleteTimeManagement(int deleteId)
+        public bool DeleteTimeManagement([FromBody] int deleteId)
         {
             return logger.Logging<bool>(deleteId, "TimeManagement", "Post", userid, "DeleteTimeManagement", timeManagementLogic.DeleteTimeManagement(deleteId));
         }
         [HttpPost("GetTimeManagement")]
-        public TIME_MANAGEMENT GetTimeManagement(int id)
+        public TIME_MANAGEMENT GetTimeManagement([FromBody] int id)
         {
             return logger.Logging<TIME_MANAGEMENT>(id, "TimeManagement", "Post", userid, "GetTimeManagement", timeManagementLogic.GetTimeManagement(id));
         }

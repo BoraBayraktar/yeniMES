@@ -5,15 +5,20 @@ using System.Threading.Tasks;
 using MES.Web.Model;
 using MES.Web.Models;
 using MES.Web.Service;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Configuration;
 
 namespace MES.Web.Controllers
 {
     public class RulesController : BaseController
     {
-        ServiceBusiness serviceBusiness = new ServiceBusiness();
-
+        ServiceBusiness serviceBusiness;
+        public RulesController(IConfiguration configuration, IHttpContextAccessor accessor)
+        {
+            serviceBusiness = new ServiceBusiness(configuration, accessor);
+        }
         public IActionResult RuleDefinition(int? id)
         {
             RuleViewModel rvm = new RuleViewModel();

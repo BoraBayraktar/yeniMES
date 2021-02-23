@@ -1,6 +1,7 @@
 ﻿using MES.API.Logger;
 using MES.Data.Logics;
 using MES.DB.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace MES.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class KnowledgeController : ControllerBase
@@ -17,15 +19,18 @@ namespace MES.API.Controllers
         KnowledgeLogic knowledgeLogic = new KnowledgeLogic();
         private int userid;
         Log logger = new Log();
-
+        public KnowledgeController()
+        {
+            userid = Convert.ToInt32(User.FindFirst("Name").Value);
+        }
         #region Knowledge
         [HttpPost("KnowledgeGetList")]
-        public List<KNOWLEDGE_MANAGEMENT> KnowledgeGetList(int userID)
+        public List<KNOWLEDGE_MANAGEMENT> KnowledgeGetList([FromBody] int userID)
         {
             return logger.Logging<List<KNOWLEDGE_MANAGEMENT>>(userID, "Knowledge", "Post", userid, "KnowledgeGetList", knowledgeLogic.GetList(userID));
         }
         [HttpPost("GetKnowledge")]
-        public KNOWLEDGE_MANAGEMENT GetKnowledge(int userID)
+        public KNOWLEDGE_MANAGEMENT GetKnowledge([FromBody] int userID)
         {
             return logger.Logging<KNOWLEDGE_MANAGEMENT>(userID, "Knowledge", "Post", userid, "GetKnowledge", knowledgeLogic.GetKnowledge(userID));
         }
@@ -55,7 +60,7 @@ namespace MES.API.Controllers
             return logger.Logging<bool>(knowledge, "Knowledge", "Post", userid, "UpdateKnowledge", knowledgeLogic.UpdateKnowledge(knowledge));
         }
         [HttpPost("DeleteKnowledge")]
-        public bool DeleteKnowledge(int userID)
+        public bool DeleteKnowledge([FromBody] int userID)
         {
             return logger.Logging<bool>(userID, "Knowledge", "Post", userid, "DeleteKnowledge", knowledgeLogic.DeleteKnowledge(userID));
         }
@@ -70,12 +75,12 @@ namespace MES.API.Controllers
             return logger.Logging<bool>(knowledgeFile, "Knowledge", "Post", userid, "InsertKnowledgeFiles", knowledgeLogic.InsertKnowledgeFiles(knowledgeFile));
         }
         [HttpPost("GetFileList")]
-        public List<KNOWLEDGE_FILES> GetFileList (int knowledgeId)
+        public List<KNOWLEDGE_FILES> GetFileList ([FromBody] int knowledgeId)
         {
             return logger.Logging<List<KNOWLEDGE_FILES>>(knowledgeId, "Knowledge", "Post", userid, "GetFileList", knowledgeLogic.GetFileList(knowledgeId));
         }
         [HttpPost("DeleteKnowledgeFiles")]
-        public bool DeleteKnowledgeFiles(int deleteId)
+        public bool DeleteKnowledgeFiles([FromBody] int deleteId)
         {
             return logger.Logging<bool>(deleteId, "Knowledge", "Post", userid, "DeleteKnowledgeFiles", knowledgeLogic.DeleteKnowledgeFiles(deleteId));
         }

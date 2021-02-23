@@ -19,7 +19,10 @@ namespace MES.API.Controllers
         CompanyLogic companyLogic = new CompanyLogic();
         private int userid;
         Log logger = new Log();
-
+        public CompanyController()
+        {
+            userid = Convert.ToInt32(User.FindFirst("Name").Value);
+        }
         #region Company
         [HttpGet("CompanyGetList")]
         public List<COMPANY> CompanyGetList()
@@ -37,12 +40,12 @@ namespace MES.API.Controllers
             return logger.Logging<bool>(company, "Company", "Post", userid, "UpdateCompany", companyLogic.UpdateCompany(company));
         }
         [HttpPost("DeleteCompany")]
-        public bool DeleteCompany(int deleteId)
+        public bool DeleteCompany([FromBody] int deleteId)
         {
             return logger.Logging<bool>(deleteId, "Company", "Post", userid, "DeleteCompany", companyLogic.DeleteCompany(deleteId));
         }
         [HttpPost("GetCompany")]
-        public COMPANY GetCompany(int id)
+        public COMPANY GetCompany([FromBody] int id)
         {
             return logger.Logging<COMPANY>(id, "Company", "Post", userid, "GetCompany", companyLogic.GetCompany(id));
         }

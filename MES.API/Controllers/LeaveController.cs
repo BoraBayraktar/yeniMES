@@ -19,6 +19,10 @@ namespace MES.API.Controllers
         LeaveLogic leaveLogic = new LeaveLogic();
         private int userid;
         Log logger = new Log();
+        public LeaveController()
+        {
+            userid = Convert.ToInt32(User.FindFirst("Name").Value);
+        }
         #region Leave
         [HttpGet("LeaveGetList")]
         public List<LEAVE> LeaveGetList()
@@ -36,12 +40,12 @@ namespace MES.API.Controllers
             return logger.Logging<bool>(leave, "Leave", "Post", userid, "UpdateLeave", leaveLogic.UpdateLeave(leave));
         }
         [HttpPost("DeleteLeave")]
-        public bool DeleteLeave(int deleteId)
+        public bool DeleteLeave([FromBody] int deleteId)
         {
             return logger.Logging<bool>(deleteId, "Leave", "Post", userid, "DeleteLeave", leaveLogic.DeleteLeave(deleteId));
         }
         [HttpPost("GetLeave")]
-        public LEAVE GetLeave(int id)
+        public LEAVE GetLeave([FromBody] int id)
         {
             return logger.Logging<LEAVE>(id, "Leave", "Post", userid, "GetLeave", leaveLogic.GetLeave(id));
         }

@@ -33,7 +33,7 @@ namespace MES.API.JwtToken
                 {
                     new Claim(ClaimTypes.SerialNumber,userViewModel.user.USER_ID.ToString())
                 }),
-                Expires = DateTime.UtcNow.AddSeconds(60),
+                Expires = DateTime.UtcNow.AddYears(1),
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(tokenKey),
                     SecurityAlgorithms.HmacSha256Signature)

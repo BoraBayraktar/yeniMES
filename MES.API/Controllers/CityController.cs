@@ -19,7 +19,10 @@ namespace MES.API.Controllers
         CityLogic cityLogic = new CityLogic();
         private int userid;
         Log logger = new Log();
-
+        public CityController()
+        {
+            userid = Convert.ToInt32(User.FindFirst("Name").Value);
+        }
         #region City
         [HttpGet("CityGetList")]
         public List<CITY> CityGetList()

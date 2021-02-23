@@ -1,6 +1,7 @@
 ﻿using MES.API.Logger;
 using MES.Data.Logics;
 using MES.DB.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace MES.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class DepartmentController : ControllerBase
@@ -35,12 +37,12 @@ namespace MES.API.Controllers
             return logger.Logging<bool>(department, "Department", "Post", userid, "UpdateDepartment", departmentLogic.UpdateDepartment(department));
         }
         [HttpPost("DeleteDepartment")]
-        public bool DeleteDepartment(int deleteId)
+        public bool DeleteDepartment([FromBody] int deleteId)
         {
             return logger.Logging<bool>(deleteId, "Department", "Post", userid, "DeleteDepartment", departmentLogic.DeleteDepartment(deleteId));
         }
         [HttpPost("GetDepartment")]
-        public DEPARTMENT GetDepartment(int id)
+        public DEPARTMENT GetDepartment([FromBody] int id)
         {
             return logger.Logging<DEPARTMENT>(id, "Department", "Post", userid, "GetDepartment", departmentLogic.GetDepartment(id));
         }

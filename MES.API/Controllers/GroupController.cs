@@ -1,6 +1,7 @@
 ﻿using MES.API.Logger;
 using MES.Data.Logics;
 using MES.DB.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace MES.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class GroupController : ControllerBase
@@ -17,7 +19,10 @@ namespace MES.API.Controllers
         GroupLogic groupLogic = new GroupLogic();
         private int userid;
         Log logger = new Log();
-
+        public GroupController()
+        {
+            userid = Convert.ToInt32(User.FindFirst("Name").Value);
+        }
         #region Group
         [HttpGet("GroupGetList")]
         public List<GROUP> GroupGetList()
@@ -50,22 +55,22 @@ namespace MES.API.Controllers
             return logger.Logging<bool>(group, "Group", "Post", userid, "UpdateGroup", groupLogic.UpdateGroup(group));
         }
         [HttpPost("DeleteGroup")]
-        public bool DeleteGroup(int deleteId)
+        public bool DeleteGroup([FromBody] int deleteId)
         {
             return logger.Logging<bool>(deleteId, "Group", "Post", userid, "DeleteGroup", groupLogic.DeleteGroup(deleteId));
         }
         [HttpPost("GetGroup")]
-        public GROUP GetGroup(int id)
+        public GROUP GetGroup([FromBody] int id)
         {
             return logger.Logging<GROUP>(id, "Group", "Post", userid, "GetGroup", groupLogic.GetGroup(id));
         }
         [HttpPost("GetExpertListByExpId")]
-        public List<USER> GetExpertListByExpId(int id)
+        public List<USER> GetExpertListByExpId([FromBody] int id)
         {
             return logger.Logging<List<USER>>(id, "Group", "Post", userid, "GetExpertListByExpId", groupLogic.GetExpertListByExpId(id));
         }
         [HttpPost("GetExpertListByGrpId")]
-        public List<GROUP_EXPERT> GetExpertListByGrpId(int id)
+        public List<GROUP_EXPERT> GetExpertListByGrpId([FromBody] int id)
         {
             return logger.Logging<List<GROUP_EXPERT>>(id, "Group", "Post", userid, "GetExpertListByGrpId", groupLogic.GetExpertListByGrpId(id));
         }

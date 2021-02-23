@@ -19,7 +19,10 @@ namespace MES.API.Controllers
         WorkingDaysLogic workingDaysLogic = new WorkingDaysLogic();
         private int userid;
         Log logger = new Log();
-
+        public WorkingDaysController()
+        {
+            userid = Convert.ToInt32(User.FindFirst("Name").Value);
+        }
         #region WorkingDays
         [HttpGet("WorkingDaysGetList")]
         public List<WORKING_DAYS> WorkingDaysGetList()
@@ -37,12 +40,12 @@ namespace MES.API.Controllers
             return logger.Logging<bool>(workingDays, "WorkingDays", "Post", userid, "UpdateWorkingDays", workingDaysLogic.UpdateWorkingDays(workingDays));
         }
         [HttpPost("DeleteWorkingDays")]
-        public bool DeleteWorkingDays(int deleteId)
+        public bool DeleteWorkingDays([FromBody] int deleteId)
         {
             return logger.Logging<bool>(deleteId, "WorkingDays", "Post", userid, "DeleteWorkingDays", workingDaysLogic.DeleteWorkingDays(deleteId));
         }
         [HttpPost("GetWorkingDays")]
-        public WORKING_DAYS GetWorkingDays(int id)
+        public WORKING_DAYS GetWorkingDays([FromBody] int id)
         {
             return logger.Logging<WORKING_DAYS>(id, "WorkingDays", "Post", userid, "GetWorkingDays", workingDaysLogic.GetWorkingDays(id));
         }
