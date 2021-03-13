@@ -26,27 +26,22 @@ namespace MES.API.Controllers
     {
         public int requestId;
         public int userid;
-        IJwtAuthenticationManager jwtAuthentication;
+        IJwtAuthenticationManager jwtAuthenticationManager;
+        private IHttpContextAccessor accessor;
         LoginBusiness loginBusiness;
         Log logger = new Log();
-        public LoginController(IJwtAuthenticationManager jwtAuthenticationManager)
+        public LoginController(IJwtAuthenticationManager jwtAuthenticationManager, IHttpContextAccessor accessor)
         {
-            this.jwtAuthentication = jwtAuthenticationManager;
-            loginBusiness = new LoginBusiness(jwtAuthentication);
-            userid = 0;/*Convert.ToInt32(User.Identity.Name);*/
+            this.jwtAuthenticationManager = jwtAuthenticationManager;
+            loginBusiness = new LoginBusiness(jwtAuthenticationManager);
+            userid = Convert.ToInt32(accessor?.HttpContext.User.FindFirstValue(ClaimTypes.SerialNumber));
+            this.accessor = accessor;
         }
         [AllowAnonymous]
         [HttpPost("LogMain")]
-        public USER LogMain(UserViewModel userViewModel)
+        public (USER, string) LogMain(UserViewModel userViewModel)
         {
-            USER user = logger.Logging<USER>(userViewModel, "LoginController", "Post", 0, "LogMain", loginBusiness.LoginMain(userViewModel));
-            return user;
-        }
-        [AllowAnonymous]
-        [HttpPost("GetJwt")]
-        public string GetJwt(UserViewModel userViewModel)
-        {
-            return logger.Logging<string>(userViewModel, "LoginController", "Post", 0, "GetJwt", loginBusiness.GetJwt(userViewModel));
+            return logger.Logging<(USER, string)>(userViewModel, "LoginController", "Post", 0, "LogMain", loginBusiness.LoginMain(userViewModel));
         }
         [HttpPost("SetAuthMenu")]
         public List<MENU> SetAuthMenu([FromBody]int userTypeId)

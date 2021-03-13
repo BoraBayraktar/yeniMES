@@ -17,7 +17,6 @@ using System.Text;
 using System.Threading.Tasks;
 using MES.API.Encrypter;
 using MES.API.JwtToken;
-using MES.API.Encrypter;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
@@ -36,6 +35,7 @@ namespace MES.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllers();
             var Key = "KDFSDG3425TGHTH6HG45YRJRYJY234T3G3G53Y54YHY46H6J456";
             services.AddControllers().AddNewtonsoftJson(options =>
             {
@@ -89,7 +89,9 @@ namespace MES.API
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MES.API v1"));
             }
-
+            app.UseDeveloperExceptionPage();
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MES.API v1"));
             app.UseRouting();
 
             app.UseAuthentication();

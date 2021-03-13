@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace MES.API.Controllers
@@ -21,7 +22,7 @@ namespace MES.API.Controllers
         Log logger = new Log();
         public GeneralSettingsController(IHttpContextAccessor accessor)
         {
-            userid = Convert.ToInt32(accessor.HttpContext.User.Identity.Name);
+            userid = Convert.ToInt32(accessor?.HttpContext.User.FindFirstValue(ClaimTypes.SerialNumber));
         }
         [HttpGet("GetGeneralSettings")]
         public GENERAL_SETTINGS GetGeneralSettings()

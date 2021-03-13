@@ -26,22 +26,17 @@ namespace MES.API.Business
         {
             this.jwtAuthenticationManager = jwtAuthentication;
         }
-        public USER LoginMain(UserViewModel userViewModel)
+        public (USER,string) LoginMain(UserViewModel userViewModel)
         {
             USER user = userLogic.CheckUser(userViewModel.Username, userViewModel.Password);
             if (user != null)
             {
-                return user;
+                user.PASSWORD = null;
+                string jwt = jwtAuthenticationManager.Authenticate(user);
+                return (user, jwt);
             }
-            return null;
+            return (null,null);
         }
-
-        public string GetJwt(UserViewModel userViewModel)
-        {
-            
-            return jwtAuthenticationManager.Authenticate(userViewModel);
-        }
-        
         public List<MENU> SetAuthMenu(int userTypeId)
         {
             try
@@ -50,9 +45,7 @@ namespace MES.API.Business
                 var userTypeMenuModel = userTypeMenuLogic.GetList().Where(x => x.UserTypeId == userTypeId).ToList();
                 var lastMenuModel = firstMenuModel.Where(item => userTypeMenuModel.Any(utm => utm.MenuId == item.MENU_ID)).ToList();
                 //var modifedMenu = AddTopMenu(lastMenuModel);
-                var modifedMenu = RemoveTopMenu(lastMenuModel);
-                return modifedMenu;
-                
+                return lastMenuModel;
             }
             catch (Exception ex)
             {
@@ -64,14 +57,14 @@ namespace MES.API.Business
             List<MENU> result = new List<MENU>(menulist);
             foreach (var item in menulist)
             {
-                foreach(var inside in item.SUBMENULIST)
-                {
-                    inside.TOPMENU = null;
-                    foreach (var item2 in inside.SUBMENULIST)
-                    {
-                        item2.TOPMENU = null;
-                    }
-                }
+                //foreach(var inside in item.SUBMENULIST)
+                //{
+                //    inside.TOPMENU = null;
+                //    foreach (var item2 in inside.SUBMENULIST)
+                //    {
+                //        item2.TOPMENU = null;
+                //    }
+                //}
             }
             return result;
         }
@@ -80,15 +73,15 @@ namespace MES.API.Business
             List<MENU> result = new List<MENU>(lastmenu);
             foreach (var item in lastmenu)
             {
-                if (item.TOPMENU == null) continue;
-                if (!result.Contains(item.TOPMENU))
-                {
-                    result.Add(item.TOPMENU);
-                    if (item.TOPMENU.TOPMENU != null && !result.Contains(item.TOPMENU.TOPMENU))
-                    {
-                        result.Add(item.TOPMENU.TOPMENU);
-                    }
-                }
+                //if (item.TOPMENU == null) continue;
+                //if (!result.Contains(item.TOPMENU))
+                //{
+                //    result.Add(item.TOPMENU);
+                //    if (item.TOPMENU.TOPMENU != null && !result.Contains(item.TOPMENU.TOPMENU))
+                //    {
+                //        result.Add(item.TOPMENU.TOPMENU);
+                //    }
+                //}
             }
             return result;
         }

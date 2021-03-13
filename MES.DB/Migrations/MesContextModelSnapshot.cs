@@ -2145,8 +2145,8 @@ namespace MES.DB.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("NAME")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(5000)
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PASSWORD")
                         .HasMaxLength(50)

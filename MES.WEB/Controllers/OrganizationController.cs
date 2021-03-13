@@ -16,12 +16,13 @@ using Microsoft.Extensions.Configuration;
 
 namespace MES.Web.Controllers
 {
-    [Authorize]
+    
     public class OrganizationController : BaseController
     {
         #region Instance
         [Obsolete]
         IHostingEnvironment _hostingEnvironment;
+        IHttpContextAccessor accessor;
         ServiceBusiness serviceBusiness;
 
         #endregion
@@ -29,6 +30,7 @@ namespace MES.Web.Controllers
         [Obsolete]
         public OrganizationController(IHostingEnvironment environment, IConfiguration configuration, IHttpContextAccessor accessor)
         {
+            this.accessor = accessor;
             serviceBusiness = new ServiceBusiness(configuration, accessor);
             _hostingEnvironment = environment;
         }
@@ -377,11 +379,10 @@ namespace MES.Web.Controllers
 
             return View(uvm);
         }
-        //[HttpPost]
+        [HttpPost]
         public JsonResult CreateOrEditUser(int? id, USER user, IFormFile imageFile)
         {
             bool success = false;
-
             var currentUser = HttpContext.Session.GetObject<USER>("User");
             if (imageFile != null)
             {

@@ -22,16 +22,15 @@ namespace MES.API.JwtToken
         }
 
 
-        public string Authenticate(UserViewModel userViewModel)
+        public string Authenticate(USER user)
         {
-
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenKey = Encoding.ASCII.GetBytes(key);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.SerialNumber,userViewModel.user.USER_ID.ToString())
+                    new Claim(ClaimTypes.SerialNumber,user.USER_ID.ToString())
                 }),
                 Expires = DateTime.UtcNow.AddYears(1),
                 SigningCredentials = new SigningCredentials(
@@ -40,10 +39,13 @@ namespace MES.API.JwtToken
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
-
         }
         public int Decode(string token)
         {
+            if (token == null)
+            {
+                return 0;
+            }
             var keyenc = Encoding.ASCII.GetBytes(key);
             var handler = new JwtSecurityTokenHandler();
             var validations = new TokenValidationParameters

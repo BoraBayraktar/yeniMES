@@ -21,12 +21,11 @@ namespace MES.API.Controllers
     {
         Log logger = new Log();
         private SurveyLogic surveyLogic = new SurveyLogic();
-        private JwtAuthenticationManager jwtAuthentication;
         private int userid;
 
         public SurveyController(IHttpContextAccessor accessor)
         {
-            userid = jwtAuthentication.Decode(accessor.HttpContext.User.Claims.ToList().Where(x => x.Type == ClaimTypes.SerialNumber).FirstOrDefault().ToString());
+            userid = Convert.ToInt32(accessor?.HttpContext.User.FindFirstValue(ClaimTypes.SerialNumber));
         }
 
         [HttpGet("SurveyGetList")]
@@ -49,6 +48,7 @@ namespace MES.API.Controllers
         {
             return logger.Logging<bool>(deleteId, "Survey", "Post", userid, "DeleteHolding", surveyLogic.DeleteSurvey(deleteId));
         }
+        [HttpPost("GetSurvey")]
         public SURVEY GetSurvey(int id)
         {
             return logger.Logging<SURVEY>(id, "Survey", "Post", userid, "GetHolding", surveyLogic.GetSurvey(id));

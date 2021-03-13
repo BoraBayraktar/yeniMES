@@ -8,6 +8,7 @@ namespace MES.API.JwtToken
 {
     public interface IJwtAuthenticationManager
     {
-        string Authenticate(UserViewModel userViewModel);
+        string Authenticate(USER user);
+        int Decode(string v);
     }
 }

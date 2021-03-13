@@ -12,20 +12,26 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Configuration;
 
 namespace MES.Web.Controllers
 {
     public class SurveyController : BaseController
     {
+        readonly IHttpContextAccessor accessor;
         #region Instance
         private IHostingEnvironment _hostingEnvironment;
-        ServiceBusiness serviceBusiness = new ServiceBusiness();
+        ServiceBusiness serviceBusiness;
+        public SurveyController(IConfiguration configuration, IHttpContextAccessor accessor)
+        {
+            serviceBusiness = new ServiceBusiness(configuration, accessor);
+        }
         #endregion
 
-        public SurveyController(IHostingEnvironment environment)
-        {
-            _hostingEnvironment = environment;
-        }
+        //public SurveyController(IHostingEnvironment environment)
+        //{
+        //    _hostingEnvironment = environment;
+        //}
         public IActionResult Index()
         {
             var surveyList = serviceBusiness.ServiceGet<List<SURVEY>>("Survey", "SurveyGetList");

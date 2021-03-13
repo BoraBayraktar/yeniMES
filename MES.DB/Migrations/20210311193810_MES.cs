@@ -856,7 +856,7 @@ namespace MES.DB.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     USERNAME = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     PASSWORD = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    NAME = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    NAME = table.Column<string>(type: "nvarchar(max)", maxLength: 5000, nullable: true),
                     SURNAME = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     EMAIL = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     DESCRIPTION = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),

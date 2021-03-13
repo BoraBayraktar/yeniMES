@@ -1,4 +1,5 @@
-﻿using MES.API.Logger;
+﻿using MES.API.JwtToken;
+using MES.API.Logger;
 using MES.Data.Logics;
 using MES.DB.Model;
 using Microsoft.AspNetCore.Authorization;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace MES.API.Controllers
@@ -19,9 +21,10 @@ namespace MES.API.Controllers
         LocationLogic locationLogic = new LocationLogic();
         Log logger = new Log();
         private int userid;
-        public LocationController()
+        private JwtAuthenticationManager jwtAuthentication;
+        public LocationController(IHttpContextAccessor accessor)
         {
-            userid = Convert.ToInt32(User.FindFirst("Name").Value);
+            userid = Convert.ToInt32(accessor?.HttpContext.User.FindFirstValue(ClaimTypes.SerialNumber));
         }
         #region Location
         [HttpGet("LocationGetList")]

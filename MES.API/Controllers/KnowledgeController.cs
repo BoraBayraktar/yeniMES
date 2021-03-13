@@ -7,8 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
-
+using MES.API.JwtToken;
 namespace MES.API.Controllers
 {
     [Authorize]
@@ -18,10 +19,11 @@ namespace MES.API.Controllers
     {
         KnowledgeLogic knowledgeLogic = new KnowledgeLogic();
         private int userid;
+        private JwtAuthenticationManager jwtAuthentication;
         Log logger = new Log();
-        public KnowledgeController()
+        public KnowledgeController(IHttpContextAccessor accessor)
         {
-            userid = Convert.ToInt32(User.FindFirst("Name").Value);
+            userid = Convert.ToInt32(accessor?.HttpContext.User.FindFirstValue(ClaimTypes.SerialNumber));
         }
         #region Knowledge
         [HttpPost("KnowledgeGetList")]

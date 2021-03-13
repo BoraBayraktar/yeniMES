@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <UserSecretsId>6cb87966-94a8-4789-9498-d5c45c6f2716</UserSecretsId>
+    <StartupObject>MES.API.Program</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>

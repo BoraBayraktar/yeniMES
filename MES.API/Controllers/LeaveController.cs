@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MES.API.JwtToken;
+using System.Security.Claims;
 
 namespace MES.API.Controllers
 {
@@ -19,9 +21,9 @@ namespace MES.API.Controllers
         LeaveLogic leaveLogic = new LeaveLogic();
         private int userid;
         Log logger = new Log();
-        public LeaveController()
+        public LeaveController(IHttpContextAccessor accessor)
         {
-            userid = Convert.ToInt32(User.FindFirst("Name").Value);
+            userid = Convert.ToInt32(accessor?.HttpContext.User.FindFirstValue(ClaimTypes.SerialNumber));
         }
         #region Leave
         [HttpGet("LeaveGetList")]

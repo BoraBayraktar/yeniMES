@@ -94,13 +94,10 @@ namespace MES.DB
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            //AppConfiguration appConfiguration = new AppConfiguration();
+            AppConfiguration appConfiguration = new AppConfiguration();
             if (!optionsBuilder.IsConfigured)
             {
-                //optionsBuilder.UseSqlServer(@"Server=.;Database=MesDB;Trusted_Connection=True;");
-                ////optionsBuilder.UseSqlServer(appConfiguration.ConnectionString);
-                //optionsBuilder.UseSqlServer(appConfiguration.ConnectionString);
-                optionsBuilder.UseSqlServer("Server =.\\MSSQLSERVER01; Database = MES; user Id = admin; password = 12345678;");
+                optionsBuilder.UseSqlServer(appConfiguration.ConnectionString);
             }
         }
 

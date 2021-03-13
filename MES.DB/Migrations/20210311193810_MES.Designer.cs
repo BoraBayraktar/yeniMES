@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MES.DB.Migrations
 {
     [DbContext(typeof(MesContext))]
-    [Migration("20210217100918_MES")]
+    [Migration("20210311193810_MES")]
     partial class MES
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -2147,8 +2147,8 @@ namespace MES.DB.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("NAME")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(5000)
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PASSWORD")
                         .HasMaxLength(50)

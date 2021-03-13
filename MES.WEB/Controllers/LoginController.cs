@@ -42,7 +42,9 @@ namespace MES.Web.Controllers
             try
             {
                 userViewModel.Password = encryption.Encrypt(userViewModel.Password);
-                USER user = serviceBusiness.ServicePost<USER>(userViewModel, "Login", "LogMain");
+                (USER,string) loginResponse = serviceBusiness.ServicePost<(USER,string)>(userViewModel, "Login", "LogMain");
+                USER user = loginResponse.Item1;
+                string jwt = loginResponse.Item2;
                 if (user == null)
                 {
                     ShowLoginFailedToastMessage();
@@ -50,29 +52,19 @@ namespace MES.Web.Controllers
                 }
                 else
                 {
-                    userViewModel.user = new USER(){ USER_ID = Convert.ToInt32(user.USER_ID)};
-                    var jwt = serviceBusiness.ServicePost<string>(userViewModel, "Login", "GetJwt");
-                    if (jwt != null)
+                    var claims = new List<Claim>
                     {
-                        var claims = new List<Claim>
-                        {
-                            new Claim(ClaimTypes.Authentication, jwt),
-                            new Claim(ClaimTypes.Name, user.USER_ID.ToString())
-                        };
-                        var userIdentity = new ClaimsIdentity(claims);
-                        ClaimsPrincipal principal = new ClaimsPrincipal(userIdentity);
-                        HttpContext.SignInAsync(principal);
-                        HttpContext.Session.SetString("token", jwt);
-                        
-                    }
+                        new Claim(ClaimTypes.Authentication, jwt),
+                    };
+                    var userIdentity = new ClaimsIdentity(claims);
+                    ClaimsPrincipal principal = new ClaimsPrincipal(userIdentity);
+                    Task claimtask = signIn(principal);
+                    HttpContext.Session.SetString("token", jwt);
                 }
-                //var username = User.Claims.Where(x=> x.Type == ClaimTypes.Name).FirstOrDefault()?.Value;
                 int uti = (int)user.USER_TYPE_ID;
-                
                 HttpContext.Session.SetObject("User", user);
                 List<MENU> modifedMenu = serviceBusiness.ServicePost<List<MENU>>(uti, "Login", "SetAuthMenu");
                 HttpContext.Session.SetObject("Menu", modifedMenu);
-                
                 return RedirectToAction("Index", "Home");
             }
             catch (System.Exception ex)
@@ -82,10 +74,10 @@ namespace MES.Web.Controllers
 
             return View();
         }
-        //public async void signIn(ClaimsPrincipal claims)
-        //{
-        //    await HttpContext.SignInAsync(claims);
-        //}
+        public async Task signIn(ClaimsPrincipal claims)
+        {
+            await HttpContext.SignInAsync(claims);
+        }
         public ActionResult ForgotPassword()
         {
             return View();

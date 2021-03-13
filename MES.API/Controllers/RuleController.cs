@@ -1,4 +1,5 @@
-﻿using MES.API.Logger;
+﻿using MES.API.JwtToken;
+using MES.API.Logger;
 using MES.Data.Logics;
 using MES.Data.Model;
 using MES.DB.Model;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace MES.API.Controllers
@@ -21,9 +23,9 @@ namespace MES.API.Controllers
         RuleLogic ruleLogic = new RuleLogic();
         Log logger = new Log();
         private int userid;
-        public RuleController()
+        public RuleController(IHttpContextAccessor accessor)
         {
-            userid = Convert.ToInt32(User.FindFirst("Name").Value);
+            userid = Convert.ToInt32(accessor?.HttpContext.User.FindFirstValue(ClaimTypes.SerialNumber));
         }
 
         [HttpGet("RuleCriteriaGetList")]

@@ -1,4 +1,5 @@
-﻿using MES.API.Logger;
+﻿using MES.API.JwtToken;
+using MES.API.Logger;
 using MES.Data.Logics;
 using MES.DB.Model;
 using Microsoft.AspNetCore.Authorization;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace MES.API.Controllers
@@ -18,10 +20,12 @@ namespace MES.API.Controllers
     {
         UserLogic userLogic = new UserLogic();
         private int userid;
+        IJwtAuthenticationManager jwtAuthentication;
         Log logger = new Log();
-        public UserController()
+        public UserController(IJwtAuthenticationManager jwtAuthenticationManager, IHttpContextAccessor accessor)
         {
-            userid = Convert.ToInt32(User.FindFirst("Name").Value);
+            this.jwtAuthentication = jwtAuthenticationManager;
+            userid = Convert.ToInt32(accessor?.HttpContext.User.FindFirstValue(ClaimTypes.SerialNumber));
         }
         #region User
         [HttpGet("UserGetList")]

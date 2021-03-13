@@ -32,9 +32,8 @@ namespace MES.DB.Model
         public int? MENU_SORT { get; set; }
 
         public int? TOPMENU_ID { get; set; }
-
         [ForeignKey("TOPMENU_ID")]
-        public virtual MENU TOPMENU { get; set; }
+        //public virtual MENU TOPMENU { get; set; }
         public virtual ICollection<MENU> SUBMENULIST { get; set; }
         public virtual ICollection<USERTYPE_MENU> USERTYPE_MENUS { get; set; }
     }

@@ -118,7 +118,8 @@ namespace MES.Web
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseDeveloperExceptionPage();
+                //app.UseExceptionHandler("/Home/Error");
             }
             //app.UseStaticFiles();
             app.UseHttpsRedirection();
