@@ -24,7 +24,6 @@ namespace MES.DB.Model
 
         public int PARAMETER_TYPE_ID { get; set; }
         public int MAIN_PROCESS_ID { get; set; }
-
         public int? PARENT_PARAMETER_ID { get; set; }
 
 

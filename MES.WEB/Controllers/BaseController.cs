@@ -9,6 +9,8 @@ using MES.Web.Models;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Caching.Memory;
 using MES.Web.Model;
+using MES.Web.Service;
+using Microsoft.Extensions.Configuration;
 
 namespace MES.Web.Controllers
 {

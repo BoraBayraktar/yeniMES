@@ -2,31 +2,35 @@
 //using System.Collections.Generic;
 //using System.Linq;
 //using System.Threading.Tasks;
-//using MES.Business;
 //using MES.Web.Model;
 //using MES.Web.Models;
+//using MES.Web.Service;
+//using Microsoft.AspNetCore.Http;
 //using Microsoft.AspNetCore.Mvc;
 //using Microsoft.AspNetCore.Mvc.Rendering;
 //using Microsoft.Extensions.Caching.Memory;
-
+//using Microsoft.Extensions.Configuration;
 
 //namespace MES.Web.Controllers
 //{
 //    public class EmailController : BaseController
 //    {
 //        #region Instance
+//        ServiceBusiness serviceBusiness;
 //        //UserLogic userLogic = new UserLogic();
 //        //UserGroupLogic userGroupLogic = new UserGroupLogic();
 //        //EmailTemplateLogic emailTemplateLogic = new EmailTemplateLogic();
 //        //ParameterLogic parameterLogic = new ParameterLogic();
 //        //MainProcessLogic mainProcessLogic = new MainProcessLogic();
-
 //        #endregion
-
+//        public EmailController(IConfiguration configuration, IHttpContextAccessor accessor)
+//        {
+//            serviceBusiness = new ServiceBusiness(configuration, accessor);
+//        }
 //        #region EmailTemplate
 //        public IActionResult EmailTemplate()
 //        {
-//            var templateList = emailTemplateLogic.GetList();
+//            var templateList = serviceBusiness.ServiceGet<List<EMAIL_TEMPLATE>>("EmailTemplate", "EmailTemplateGetList");
 //            EmailTemplateViewModel evm = new EmailTemplateViewModel();
 //            evm.EmailTemplateList = templateList;
 
@@ -52,7 +56,7 @@
 //                    string[] users = item.TO_USERS.Split(',');
 //                    foreach (var itemUser in users)
 //                    {
-//                        var user = userLogic.GetUser(Convert.ToInt32(itemUser));
+//                        var user = serviceBusiness.ServicePost<USER>(Convert.ToInt32(itemUser), "User", "GetUser");
 //                        item.Recipients += user.NAME + " " + user.SURNAME + ", ";
 //                    }
 //                }
@@ -62,7 +66,7 @@
 //                    string[] groups = item.TO_GROUPS.Split(',');
 //                    foreach (var itemGroup in groups)
 //                    {
-//                        var group = userGroupLogic.GetUserGroup(Convert.ToInt32(itemGroup));
+//                        var group = serviceBusiness.ServicePost<USER_GROUP>(Convert.ToInt32(itemGroup), "UserGroup", "GetUserGroup");
 //                        item.Recipients += group.NAME + ", ";
 //                    }
 //                }
@@ -80,16 +84,16 @@
 //        public IActionResult CreateOrEditEmailTemplate(int? id)
 //        {
 //            var evm = new EmailTemplateViewModel();
-//            var userList = userLogic.GetList();
-//            var userGroupList = userGroupLogic.GetList();
+//            var userList = serviceBusiness.ServicePost<List<USER>>(id, "User","UserGetList");
+//            var userGroupList = serviceBusiness.ServiceGet<List<USER_GROUP>>("UserGroup", "UserGroupGetList");
 //            //var parameterList = emailTemplateLogic.GetParameterList();
-//            var mainProcessList = mainProcessLogic.GetList();
+//            var mainProcessList = serviceBusiness.ServiceGet<List<MAIN_PROCESS>>("MainProcess", "MainProcessGetList");
 
 
 
 //            if (id != null)
 //            {
-//                evm.EmailTemplate = emailTemplateLogic.GetEmailTemplate(Convert.ToInt32(id));
+//                evm.EmailTemplate = serviceBusiness.ServicePost<EMAIL_TEMPLATE>(Convert.ToInt32(id),"EmailTemplate", "GetEmailTemplate");
 
 //                if (!String.IsNullOrEmpty(evm.EmailTemplate.TO_USERS))
 //                {
@@ -126,7 +130,8 @@
 //                evm.SelectedRecipients = recipients.Split(',');
 
 
-//                var mainProcessStatusList = parameterLogic.GetParameterListByParameterTypeCode("STATUS", evm.EmailTemplate.MAIN_PROCESS_ID);
+//                var mainProcessStatusList = serviceBusiness.ServicePost<List<PARAMETER>>(("STATUS", evm.EmailTemplate.MAIN_PROCESS_ID), "Parameter", "GetParameterListByParameterTypeCode");
+
 //                foreach (var item in mainProcessStatusList)
 //                {
 //                    evm.MainProcessStatusList.Add(new SelectListItem()
@@ -137,12 +142,13 @@
 //                }
 
 
-//                var parameterList = emailTemplateLogic.GetEmailTemplateParametersByMainProcessId(evm.EmailTemplate.MAIN_PROCESS_ID);
+//                var parameterList = serviceBusiness.ServicePost<List<PARAMETER>>(evm.EmailTemplate.MAIN_PROCESS_ID, "Parameter", "GetParameterTypeByMainProcessId");
+
 //                foreach (var item in parameterList)
 //                {
 //                    evm.ParameterList.Add(new SelectListItem()
 //                    {
-//                        Text = item.PARAMETER,
+//                        Text = item.MAIN_DATA_NAME,
 //                        Value = item.ID.ToString()
 //                    });
 //                }
@@ -260,17 +266,17 @@
 //            template.MAIN_PROCESS_STATUS_ID = templateModel.EmailTemplate.MAIN_PROCESS_STATUS_ID;
 
 
-//            if (id == null)
-//            {
-//                template.CREATED_USER_ID = user.USER_ID;
-//                success = emailTemplateLogic.InsertEmailTemplate(template);
-//            }
-//            else
-//            {
-//                template.ID = Convert.ToInt32(id);
-//                template.UPDATED_USER_ID = user.USER_ID;
-//                success = emailTemplateLogic.UpdateEmailTemplate(template);
-//            }
+//            //if (id == null)
+//            //{
+//            //    template.CREATED_USER_ID = user.USER_ID;
+//            //    success = emailTemplateLogic.InsertEmailTemplate(template);
+//            //}
+//            //else
+//            //{
+//            //    template.ID = Convert.ToInt32(id);
+//            //    template.UPDATED_USER_ID = user.USER_ID;
+//            //    success = emailTemplateLogic.UpdateEmailTemplate(template);
+//            //}
 
 //            ShowSuccessToastMessage();
 //            return RedirectToAction("EmailTemplate", "Email");
@@ -397,6 +403,6 @@
 //            var parameterList = emailTemplateLogic.GetEmailTemplateParametersByMainProcessId(mainProcessId);
 //            return Json(parameterList);
 //        }
-
+//#endregion
 //    }
 //}

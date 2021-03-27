@@ -44,46 +44,12 @@ namespace MES.API.Business
                 var firstMenuModel = menuLogic.GetAllMenu();
                 var userTypeMenuModel = userTypeMenuLogic.GetList().Where(x => x.UserTypeId == userTypeId).ToList();
                 var lastMenuModel = firstMenuModel.Where(item => userTypeMenuModel.Any(utm => utm.MenuId == item.MENU_ID)).ToList();
-                //var modifedMenu = AddTopMenu(lastMenuModel);
                 return lastMenuModel;
             }
             catch (Exception ex)
             {
                 return null;
             }
-        }
-        public List<MENU> RemoveTopMenu(List<MENU> menulist)
-        {
-            List<MENU> result = new List<MENU>(menulist);
-            foreach (var item in menulist)
-            {
-                //foreach(var inside in item.SUBMENULIST)
-                //{
-                //    inside.TOPMENU = null;
-                //    foreach (var item2 in inside.SUBMENULIST)
-                //    {
-                //        item2.TOPMENU = null;
-                //    }
-                //}
-            }
-            return result;
-        }
-        public List<MENU> AddTopMenu(List<MENU> lastmenu) 
-        {
-            List<MENU> result = new List<MENU>(lastmenu);
-            foreach (var item in lastmenu)
-            {
-                //if (item.TOPMENU == null) continue;
-                //if (!result.Contains(item.TOPMENU))
-                //{
-                //    result.Add(item.TOPMENU);
-                //    if (item.TOPMENU.TOPMENU != null && !result.Contains(item.TOPMENU.TOPMENU))
-                //    {
-                //        result.Add(item.TOPMENU.TOPMENU);
-                //    }
-                //}
-            }
-            return result;
         }
         public GENERAL_SETTINGS GeneralSettings()
         {

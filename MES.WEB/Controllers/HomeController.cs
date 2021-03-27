@@ -9,6 +9,7 @@ using MES.Web.Models;
 using Microsoft.AspNetCore.Hosting;
 using MES.Web.Model;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace MES.Web.Controllers
 {
@@ -21,6 +22,7 @@ namespace MES.Web.Controllers
 
         public HomeController(ILogger<HomeController> logger, IApplicationLifetime appLifetime)
         {
+            
             _logger = logger;
             //ApplicationLifetime = appLifetime;
         }

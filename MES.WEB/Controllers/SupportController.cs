@@ -5,39 +5,40 @@
 //using System.Linq;
 //using System.Threading.Tasks;
 //using DocumentFormat.OpenXml.InkML;
-//using MES.Business;
-////using MES.Entities.Migrations;
-//using MES.Entities.Model;
+//using MES.Web.Model;
 //using MES.Web.Models;
+//using MES.Web.Service;
 //using Microsoft.AspNetCore.Hosting;
 //using Microsoft.AspNetCore.Http;
 //using Microsoft.AspNetCore.Mvc;
 //using Microsoft.AspNetCore.Mvc.Rendering;
+//using Microsoft.Extensions.Configuration;
 
 //namespace MES.Web.Controllers
 //{
 //    public class SupportController : BaseController
 //    {
 //        #region Instance
-//        UserLogic userLogic = new UserLogic();
-//        UserGroupLogic userGroupLogic = new UserGroupLogic();
-//        IncidentLogic incidentLogic = new IncidentLogic();
-//        ParameterLogic parameterLogic = new ParameterLogic();
-//        IncidentHistoryLogic incidentHistoryLogic = new IncidentHistoryLogic();
-//        ServiceCatalogLogic serviceCatalogLogic = new ServiceCatalogLogic();
-//        GroupLogic groupLogic = new GroupLogic();
-//        DepartmentLogic departmentLogic = new DepartmentLogic();
-//        TitleLogic titleLogic = new TitleLogic();
-//        IncidentResolutionLogic incidentResolutionLogic = new IncidentResolutionLogic();
-//        RuleLogic ruleLogic = new RuleLogic();
-
+//        //UserLogic userLogic = new UserLogic();
+//        //UserGroupLogic userGroupLogic = new UserGroupLogic();
+//        //IncidentLogic incidentLogic = new IncidentLogic();
+//        //ParameterLogic parameterLogic = new ParameterLogic();
+//        //IncidentHistoryLogic incidentHistoryLogic = new IncidentHistoryLogic();
+//        //ServiceCatalogLogic serviceCatalogLogic = new ServiceCatalogLogic();
+//        //GroupLogic groupLogic = new GroupLogic();
+//        //DepartmentLogic departmentLogic = new DepartmentLogic();
+//        //TitleLogic titleLogic = new TitleLogic();
+//        //IncidentResolutionLogic incidentResolutionLogic = new IncidentResolutionLogic();
+//        //RuleLogic ruleLogic = new RuleLogic();
+//        ServiceBusiness serviceBusiness;
 
 //        private IHostingEnvironment _hostingEnvironment;
 
 //        #endregion
 
-//        public SupportController(IHostingEnvironment environment)
+//        public SupportController(IHostingEnvironment environment, IHttpContextAccessor accessor, IConfiguration configuration)
 //        {
+//            serviceBusiness = new ServiceBusiness(configuration, accessor);
 //            _hostingEnvironment = environment;
 
 //        }
@@ -48,9 +49,9 @@
 
 //        public IActionResult Operator()
 //        {
-//            var incidentList = incidentLogic.GetList();
-//            var incidentStatusList = parameterLogic.GetParameterListByParameterTypeCode("STATUS").Where(q => q.IS_ACTIVE == true).ToList();
-//            var groupList = groupLogic.GetList();
+//            var incidentList = serviceBusiness.ServiceGet<List<INCIDENT>>("Incident","IncidentGetList");
+//            var incidentStatusList = serviceBusiness.ServicePost<List<PARAMETER>>("STATUS", "Parameter", "GetParameterListByParameterTypeCode").Where(q => q.IS_ACTIVE == true).ToList();
+//            var groupList = serviceBusiness.ServiceGet<List<GROUP>>("Group", "GroupGetList");
 
 //            IncidentViewModel ivm = new IncidentViewModel();
 //            ivm.IncidentList = incidentList;
@@ -79,22 +80,26 @@
 
 //        public IActionResult OperatorDetail(int incidentId)
 //        {
-//            var incident = incidentLogic.GetIncident(incidentId);
+//            var incident = serviceBusiness.ServicePost<INCIDENT>(incidentId,"Incident", "GetIncident");
 //            IncidentDetailViewModel ivm = new IncidentDetailViewModel();
 //            ivm.incident = incident;
 
-//            var incidentHistoryList = incidentHistoryLogic.GetListByIncidentId(incidentId);
+//            var incidentHistoryList = serviceBusiness.ServicePost<List<INCIDENT_HISTORY>>(incidentId, "Incident", "GetListByIncidentId");
 //            ivm.IncidentHistoryList = incidentHistoryList;
 
-//            var incidentResolution = incidentResolutionLogic.GetResolutionByIncidentId(incidentId);
+//            var incidentResolution = serviceBusiness.ServicePost<INCIDENT_RESOLUTION>(incidentId,"Incident", "GetResolutionByIncidentId");
 //            ivm.incidentResolution = incidentResolution;
 
-//            var priorityList = parameterLogic.GetParameterListByParameterTypeCode("INCIDENT_PRIORITY_USER").Where(q => q.IS_ACTIVE == true).ToList();
-//            var serviceCatalogList = serviceCatalogLogic.GetList();
-//            var incidentUrgencyList = parameterLogic.GetParameterListByParameterTypeCode("INCIDENT_URGENCY").Where(q => q.IS_ACTIVE == true).ToList();
-//            var incidentImpactList = parameterLogic.GetParameterListByParameterTypeCode("INCIDENT_IMPACT").Where(q => q.IS_ACTIVE == true).ToList();
-//            var incidentStatusList = parameterLogic.GetParameterListByParameterTypeCode("STATUS").Where(q => q.IS_ACTIVE == true).ToList();
-//            var incidentSourceList = parameterLogic.GetParameterListByParameterTypeCode("INCIDENT_SOURCE").Where(q => q.IS_ACTIVE == true).ToList();
+//            var priorityList = serviceBusiness.ServicePost<List<PARAMETER>>("INCIDENT_PRIORITY_USER", "Parameter", "GetParameterListByParameterTypeCode").Where(q => q.IS_ACTIVE == true).ToList();
+//            var serviceCatalogList = serviceBusiness.ServiceGet<SERVICECATALOG>("ServiceCatalog", "ServiceCatalogGetList");
+//            var incidentUrgencyList =
+//serviceBusiness.ServicePost<List<PARAMETER>>("INCIDENT_URGENCY", "Parameter", "GetParameterListByParameterTypeCode").Where(q => q.IS_ACTIVE == true).ToList();
+//            var incidentImpactList =
+//serviceBusiness.ServicePost<List<PARAMETER>>("INCIDENT_IMPACT", "Parameter", "GetParameterListByParameterTypeCode").Where(q => q.IS_ACTIVE == true).ToList();
+//            var incidentStatusList =
+//                serviceBusiness.ServicePost<List<PARAMETER>>("STATUS", "Parameter", "GetParameterListByParameterTypeCode").Where(q => q.IS_ACTIVE == true).ToList();
+//            var incidentSourceList =
+//serviceBusiness.ServicePost<List<PARAMETER>>("INCIDENT_SOURCE", "Parameter", "GetParameterListByParameterTypeCode").Where(q => q.IS_ACTIVE == true).ToList();
 //            var incidentTypeList = parameterLogic.GetParameterListByParameterTypeCode("INCIDENT_TYPE").Where(q => q.IS_ACTIVE == true).ToList();
 
 //            var incidentCategoryList = parameterLogic.GetParameterListByParameterTypeCode("INCIDENT_CATEGORY").Where(q => q.IS_ACTIVE == true).ToList();

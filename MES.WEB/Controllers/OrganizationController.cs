@@ -81,7 +81,7 @@ namespace MES.Web.Controllers
         public IActionResult Company()
         {
             var companyList = serviceBusiness.ServiceGet<List<COMPANY>>("Company", "CompanyGetList");
-            var holdingList = serviceBusiness.ServiceGet<List<HOLDING>>("Company", "HoldingGetList");
+            var holdingList = serviceBusiness.ServiceGet<List<HOLDING>>("Holding", "HoldingGetList");
             CompanyViewModel cvm = new CompanyViewModel();
             cvm.HoldingSelectList = new List<SelectListItem>();
             cvm.CompanyList = companyList;
@@ -134,7 +134,7 @@ namespace MES.Web.Controllers
         public IActionResult Department()
         {
             var departmentList = serviceBusiness.ServiceGet<List<DEPARTMENT>>("Department", "DepartmentGetList");
-            var companyList = serviceBusiness.ServiceGet<List<COMPANY>>("Department", "CompanyGetList");
+            var companyList = serviceBusiness.ServiceGet<List<COMPANY>>("Company", "CompanyGetList");
             DepartmentViewModel dvm = new DepartmentViewModel();
             dvm.CompanySelectList = new List<SelectListItem>();
             dvm.DepartmentList = departmentList;
@@ -230,7 +230,7 @@ namespace MES.Web.Controllers
         public IActionResult Location()
         {
             var locationList = serviceBusiness.ServiceGet<List<LOCATION>>("Location", "LocationGetList");
-            var cityList = serviceBusiness.ServiceGet<List<CITY>>("Location", "CityGetList");
+            var cityList = serviceBusiness.ServiceGet<List<CITY>>("City", "CityGetList");
             LocationViewModel lvm = new LocationViewModel();
             lvm.LocationList = locationList;
             lvm.CitySelectList = new List<SelectListItem>();
@@ -432,7 +432,7 @@ namespace MES.Web.Controllers
         {
             var leaveList = serviceBusiness.ServiceGet<List<LEAVE>>("Leave", "LeaveGetList");
             var leaveTypeList = serviceBusiness.ServiceGet<List<LEAVE_TYPE>>("LeaveType", "LeaveTypeGetList");
-            var userList = serviceBusiness.ServiceGet<List<USER>>("LeaveType", "UserGetList");
+            var userList = serviceBusiness.ServiceGet<List<USER>>("User", "UserGetList");
 
             LeaveViewModel lvm = new LeaveViewModel();
             lvm.LeaveList = leaveList;
