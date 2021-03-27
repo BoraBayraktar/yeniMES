@@ -49,13 +49,19 @@ namespace MES.API.Controllers
         [HttpPost("GetGroupExpert")]
         public GROUP_EXPERT GetGroupExpert([FromBody] int id)
         {
-            return logger.Logging<GROUP_EXPERT>(id, "Group", "Post", userid, "GetGroupExpert", groupExpertLogic.GetExpert(id));
+            return logger.Logging<GROUP_EXPERT>(id, "GroupExpert", "Post", userid, "GetGroupExpert", groupExpertLogic.GetExpert(id));
         }
         [HttpPost("GetExpertListByGrpId")]
         public List<GROUP_EXPERT> GetExpertListByGrpId([FromBody] int id)
         {
-            return logger.Logging<List<GROUP_EXPERT>>(id, "Group", "Post", userid, "GetExpertListByGrpId", groupExpertLogic.GetExpertListByGrpId(id));
+            return logger.Logging<List<GROUP_EXPERT>>(id, "GroupExpert", "Post", userid, "GetExpertListByGrpId", groupExpertLogic.GetExpertListByGrpId(id));
         }
+        [HttpPost("GetExpert")]
+        public GROUP_EXPERT GetExpert([FromBody] int id)
+        {
+            return logger.Logging<GROUP_EXPERT>(id, "GroupExpert", "Post", userid, "GetExpert", groupExpertLogic.GetExpert(id));
+        }
+
         #endregion
     }
 }
