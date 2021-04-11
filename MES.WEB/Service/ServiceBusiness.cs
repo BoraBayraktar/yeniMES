@@ -80,8 +80,12 @@ namespace MES.Web.Service
                     if (response.IsSuccessStatusCode)
                     {
                         string responsestr = response.Content.ReadAsStringAsync().Result;
+                        if (typeof(T) == typeof(string))
+                        {
+                            return (T)Convert.ChangeType(responsestr, typeof(T));
+                        }
                         return JsonConvert.DeserializeObject<T>(responsestr);
-                        
+
                     }
                     else { return default(T); }
                 }

@@ -16,9 +16,14 @@ namespace MES.Data.Functions
         {
             using (MesContext context = new MesContext())
             {
-                var statusID = context.KNOWLEDGE_SETTINGS.FirstOrDefault(q => q.WHICH_STATUS_IN_VISIBLE > 0 && q.IS_DELETED == false).WHICH_STATUS_IN_VISIBLE;
 
-                    var knowledgeList = context.KNOWLEDGE_MANAGEMENT
+                
+                var statusID = context.KNOWLEDGE_SETTINGS.FirstOrDefault(q => (q.WHICH_STATUS_IN_VISIBLE > 0) && (q.IS_DELETED == false))?.WHICH_STATUS_IN_VISIBLE;
+                
+
+                //var statusID = context.KNOWLEDGE_SETTINGS.FirstOrDefault(q => (q.WHICH_STATUS_IN_VISIBLE > 0) && (q.IS_DELETED == false)).WHICH_STATUS_IN_VISIBLE;
+
+                var knowledgeList = context.KNOWLEDGE_MANAGEMENT
                                                                          .Include(q => q.CATEGORY_MODEL)
                                                                          .Include(q => q.SERVICE_MODEL)
                                                                          .Include(q => q.STATUS_MODEL)
@@ -173,33 +178,36 @@ namespace MES.Data.Functions
             string last_Order_Number = "";
             using (MesContext context = new MesContext())
             {
-                var code = context.ORDER_NUMBERS.FirstOrDefault(q => q.LAST_COUNTER > 0 && q.SYSTEM_CODE == "KNOWLEDGE" && q.IS_DELETED == false).CODE;
-                var count = context.ORDER_NUMBERS.FirstOrDefault(q => q.LAST_COUNTER > 0 && q.SYSTEM_CODE == "KNOWLEDGE" && q.IS_DELETED == false).LAST_COUNTER;
-                var format_code = context.ORDER_NUMBERS.FirstOrDefault(q => q.LAST_COUNTER > 0 && q.SYSTEM_CODE == "KNOWLEDGE" && q.IS_DELETED == false).ID_FORMAT_CODE;
-
-                if (isUpdate == false)
+                var code = context.ORDER_NUMBERS.FirstOrDefault(q => q.LAST_COUNTER > 0 && q.SYSTEM_CODE == "KNOWLEDGE" && q.IS_DELETED == false)?.CODE;
+                var count = context.ORDER_NUMBERS.FirstOrDefault(q => q.LAST_COUNTER > 0 && q.SYSTEM_CODE == "KNOWLEDGE" && q.IS_DELETED == false)?.LAST_COUNTER;
+                var format_code = context.ORDER_NUMBERS.FirstOrDefault(q => q.LAST_COUNTER > 0 && q.SYSTEM_CODE == "KNOWLEDGE" && q.IS_DELETED == false)?.ID_FORMAT_CODE;
+                if (format_code != null)
                 {
-                    int codeNumLenght = format_code.Length;
-                    int codeLenght = count.ToString().Length;
-                    int _codeNumLenght = codeNumLenght - codeLenght;
-                    for (int i = 0; i < (_codeNumLenght); i++)
+                    if (isUpdate == false)
                     {
-                       last_Order_Number += "0";
+                        int codeNumLenght = format_code.Length;
+                        int codeLenght = count.ToString().Length;
+                        int _codeNumLenght = codeNumLenght - codeLenght;
+                        for (int i = 0; i < (_codeNumLenght); i++)
+                        {
+                            last_Order_Number += "0";
+                        }
+                        result = code + "-" + last_Order_Number + count.ToString();
                     }
-                    result = code + "-" + last_Order_Number + count.ToString();
-                }
-                else
-                {
-                    int countUpdate = count + 1;
-                    int codeNumLenght = format_code.Length;
-                    int codeLenght = countUpdate.ToString().Length;
-                    int _codeNumLenght = codeNumLenght - codeLenght;
-                    for (int i = 0; i < (_codeNumLenght); i++)
+                    else
                     {
-                       last_Order_Number += "0";
+                        int countUpdate = (int)count + 1;
+                        int codeNumLenght = format_code.Length;
+                        int codeLenght = countUpdate.ToString().Length;
+                        int _codeNumLenght = codeNumLenght - codeLenght;
+                        for (int i = 0; i < (_codeNumLenght); i++)
+                        {
+                            last_Order_Number += "0";
+                        }
+                        result = code + "-" + last_Order_Number + countUpdate.ToString();
                     }
-                    result = code + "-" + last_Order_Number + countUpdate.ToString();
                 }
+                
             }            
             return result;
         }

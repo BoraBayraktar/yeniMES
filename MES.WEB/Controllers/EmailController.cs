@@ -84,9 +84,10 @@ namespace MES.Web.Controllers
         public IActionResult CreateOrEditEmailTemplate(int? id)
         {
             var evm = new EmailTemplateViewModel();
-            var userList = serviceBusiness.ServicePost<List<USER>>(id, "User", "UserGetList");
+            var userList = serviceBusiness.ServiceGet<List<USER>>("User", "UserGetList");
             var userGroupList = serviceBusiness.ServiceGet<List<USER_GROUP>>("UserGroup", "UserGroupGetList");
-            //var parameterList = emailTemplateLogic.GetParameterList();
+            //var parameterList = serviceBusiness.ServiceGet<List<EMAIL_TEMPLATE_PARAMETERS>>("EmailTemplate", "ParameterGetList");
+
             var mainProcessList = serviceBusiness.ServiceGet<List<MAIN_PROCESS>>("MainProcess", "MainProcessGetList");
 
 
@@ -381,7 +382,7 @@ namespace MES.Web.Controllers
         [HttpGet]
         public JsonResult GetParameterTypeByMainProcessId(int mainProcessId)
         {
-            var parameterTypeList = serviceBusiness.ServicePost<List<PARAMETER>>(mainProcessId, "Parameter", "GetParameterByMainProcessId"); 
+            var parameterTypeList = serviceBusiness.ServicePost<List<PARAMETER_TYPE>>(mainProcessId, "Parameter", "GetParameterTypeByMainProcessId"); 
             return Json(parameterTypeList);
         }
 

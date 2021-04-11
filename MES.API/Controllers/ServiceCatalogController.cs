@@ -20,7 +20,7 @@ namespace MES.API.Controllers
         ServiceCatalogLogic serviceCatalogLogic = new ServiceCatalogLogic();
         private int userid;
         Log logger = new Log();
-
+        
         public ServiceCatalogController(IHttpContextAccessor accessor)
         {
             userid = Convert.ToInt32(accessor?.HttpContext.User.FindFirstValue(ClaimTypes.SerialNumber));
@@ -36,6 +36,41 @@ namespace MES.API.Controllers
         public SERVICECATALOG GetServiceCatalog([FromBody] int serviceCatalogId)
         {
             return logger.Logging<SERVICECATALOG>(serviceCatalogId, "ServiceCatalog", "Post", userid, "GetServiceCatalog", serviceCatalogLogic.GetServiceCatalog(serviceCatalogId));
+        }
+        [HttpPost("InsertServiceCatalog")]
+        public bool InsertServiceCatalog(SERVICECATALOG serviceCatalog)
+        {
+            return logger.Logging<bool>(serviceCatalog, "ServiceCatalog", "Post", userid, "InsertServiceCatalog", serviceCatalogLogic.InsertServiceCatalog(serviceCatalog));
+        }
+        [HttpPost("UpdateServiceCatalog")]
+        public bool UpdateServiceCatalog(SERVICECATALOG serviceCatalog)
+        {
+            return logger.Logging<bool>(serviceCatalog, "ServiceCatalog", "Post", userid, "UpdateServiceCatalog", serviceCatalogLogic.UpdateServiceCatalog(serviceCatalog));
+        }
+        [HttpPost("DeleteServiceCatalog")]
+        public bool DeleteServiceCatalog([FromBody] int deleteid)
+        {
+            return logger.Logging<bool>(deleteid, "ServiceCatalog", "Post", userid, "DeleteServiceCatalog", serviceCatalogLogic.DeleteServiceCatalog(deleteid));
+        }
+        [HttpPost("GetParameterList")]
+        public List<PARAMETER> GetParameterList(string code)
+        {
+            return logger.Logging<List<PARAMETER>>(code, "ServiceCatalog", "Post", userid, "GetParameterList", serviceCatalogLogic.GetParameterList(code));
+        }
+        [HttpPost("GetPrmOpStatus")]
+        public List<PARAMETER> GetPrmOpStatus(string code)
+        {
+            return logger.Logging<List<PARAMETER>>(code, "ServiceCatalog", "Post", userid, "GetPrmOpStatus", serviceCatalogLogic.GetPrmOpStatus(code));
+        }
+        [HttpGet("GetUserManagerIT")]
+        public List<USER> GetUserManagerIT()
+        {
+            return logger.Logging<List<USER>>(null, "ServiceCatalog", "Get", userid, "GetUserManagerIT", serviceCatalogLogic.GetUserManagerIT());
+        }
+        [HttpGet("GetUserManagerBusiness")]
+        public List<USER> GetUserManagerBusiness()
+        {
+            return logger.Logging<List<USER>>(null, "ServiceCatalog", "Get", userid, "GetUserManagerBusiness", serviceCatalogLogic.GetUserManagerBusiness());
         }
         #endregion
     }

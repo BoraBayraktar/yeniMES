@@ -1,6 +1,7 @@
 ﻿using MES.API.Logger;
 using MES.Data.Logics;
 using MES.DB.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace MES.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class IncidentController : ControllerBase
@@ -57,6 +59,56 @@ namespace MES.API.Controllers
         {
             return logger.Logging<bool>(incidentHistory, "Incident", "Post", userid, "UpdateIncidentStatus", IncidentLogic.UpdateIncidentStatus(incidentHistory));
         }
+        [HttpPost("IncidentReject")]
+        public bool IncidentReject([FromBody] int incidentid, int userid)
+        {
+            return logger.Logging<bool>((incidentid, userid), "Incident", "Post", userid, "IncidentReject", IncidentLogic.IncidentReject(incidentid, userid));
+        }
+        [HttpPost("IncidentConfirmAndClose")]
+        public bool IncidentConfirmAndClose([FromBody] int incidentid, int userid)
+        {
+            return logger.Logging<bool>((incidentid, userid), "Incident", "Post", userid, "IncidentConfirmAndClose", IncidentLogic.IncidentConfirmAndClose(incidentid, userid));
+        }
+        [HttpGet("sumUnResolved")]
+        public int sumUnResolved()
+        {
+            return logger.Logging<int>(null, "Incident", "Get", userid, "sumUnResolved", IncidentLogic.sumUnResolved());
+        }
+        [HttpGet("sumOverdue")]
+        public int sumOverdue()
+        {
+            return logger.Logging<int>(null, "Incident", "Get", userid, "sumOverdue", IncidentLogic.sumOverdue());
+        }
+        [HttpGet("sumDuetoday")]
+        public int sumDuetoday()
+        {
+            return logger.Logging<int>(null, "Incident", "Get", userid, "sumDuetoday", IncidentLogic.sumDuetoday());
+        }
+        [HttpGet("sumOpen")]
+        public int sumOpen()
+        {
+            return logger.Logging<int>(null, "Incident", "Get", userid, "sumOpen", IncidentLogic.sumOpen());
+        }
+        [HttpGet("sumOnhold")]
+        public int sumOnhold()
+        {
+            return logger.Logging<int>(null, "Incident", "Get", userid, "sumOnhold", IncidentLogic.sumOnhold());
+        }
+        [HttpGet("sumUnassigned")]
+        public int sumUnassigned()
+        {
+            return logger.Logging<int>(null, "Incident", "Get", userid, "sumUnassigned", IncidentLogic.sumUnassigned());
+        }
+        [HttpGet("MaxCode")]
+        public string MaxCode()
+        {
+            return logger.Logging<string>(null, "Incident", "Get", userid, "MaxCode", IncidentLogic.MaxCode());
+        }
+        [HttpGet("GetIncidentType")]
+        public INCIDENT_TYPE GetIncidentType(string code)
+        {
+            return logger.Logging<INCIDENT_TYPE>(code, "Incident", "Get", userid, "GetIncidentType", IncidentLogic.GetIncidentType(code));
+        }
         #endregion
 
 
@@ -90,15 +142,11 @@ namespace MES.API.Controllers
         {
             return logger.Logging<INCIDENT_RESOLUTION>(incidentId, "Incident", "Post", userid, "GetResolutionByIncidentId", IncidentResolutionLogic.GetResolutionByIncidentId(incidentId));
         }
-
         [HttpPost("InsertIncidentResolution")]
         public bool InsertIncidentResolution(INCIDENT_RESOLUTION incidentResolution)
         {
             return logger.Logging<bool>(incidentResolution, "Incident", "Post", userid, "InsertIncidentResolution", IncidentResolutionLogic.InsertIncidentResolution(incidentResolution));
         }
-        #endregion
-
-        #region IncidentResolution
         [HttpPost("InsertIncidentFiles")]
         public bool InsertIncidentFiles(INCIDENT_FILES incidentFiles)
         {

@@ -21,13 +21,16 @@ namespace MES.API.Controllers
     {
         Log logger = new Log();
         private SurveyLogic surveyLogic = new SurveyLogic();
+        private SurveyHistoryLogic surveyHistoryLogic = new SurveyHistoryLogic();
+        private SurveyQuestionLogic surveyQuestionLogic = new SurveyQuestionLogic();
+        private SurveyAnswerLogic surveyAnswerLogic = new SurveyAnswerLogic();
         private int userid;
 
         public SurveyController(IHttpContextAccessor accessor)
         {
             userid = Convert.ToInt32(accessor?.HttpContext.User.FindFirstValue(ClaimTypes.SerialNumber));
         }
-
+        #region Survey
         [HttpGet("SurveyGetList")]
         public List<SURVEY> SurveyGetList()
         {
@@ -44,15 +47,65 @@ namespace MES.API.Controllers
             return logger.Logging<bool>(survey, "Survey", "Post", userid, "UpdateSurvey", surveyLogic.UpdateSurvey(survey));
         }
         [HttpDelete("DeleteSurvey")]
-        public bool DeleteSurvey(int deleteId)
+        public bool DeleteSurvey([FromBody] int deleteId)
         {
-            return logger.Logging<bool>(deleteId, "Survey", "Post", userid, "DeleteHolding", surveyLogic.DeleteSurvey(deleteId));
+            return logger.Logging<bool>(deleteId, "Survey", "Post", userid, "DeleteSurvey", surveyLogic.DeleteSurvey(deleteId));
         }
         [HttpPost("GetSurvey")]
-        public SURVEY GetSurvey(int id)
+        public SURVEY GetSurvey([FromBody]int id)
         {
-            return logger.Logging<SURVEY>(id, "Survey", "Post", userid, "GetHolding", surveyLogic.GetSurvey(id));
+            return logger.Logging<SURVEY>(id, "Survey", "Post", userid, "GetSurvey", surveyLogic.GetSurvey(id));
+        }
+        #endregion
+
+        #region SurveyQuestion
+        [HttpPost("SurveyQuestionGetListById")]
+        public List<SURVEY_QUESTION> SurveyQuestionGetListById([FromBody] int id)
+        {
+            return logger.Logging<List<SURVEY_QUESTION>>(id, "Survey", "Post", userid, "SurveyQuestionGetListById", surveyQuestionLogic.GetListBySurveyId(id));
+        }
+        [HttpPost("InsertSurveyQuestion")]
+        public bool InsertSurveyQuestion(SURVEY_QUESTION surveyQuestion)
+        {
+            return logger.Logging<bool>(surveyQuestion, "Survey", "Post", userid, "InsertSurveyQuestion", surveyQuestionLogic.InsertSurveyQuestion(surveyQuestion));
+        }
+        [HttpPost("UpdateSurveyQuestion")]
+        public bool UpdateSurveyQuestion(SURVEY_QUESTION surveyQuestion)
+        {
+            return logger.Logging<bool>(surveyQuestion, "Survey", "Post", userid, "UpdateSurveyQuestion", surveyQuestionLogic.UpdateSurveyQuestion(surveyQuestion));
+        }
+        [HttpDelete("DeleteSurveyQuestion")]
+        public bool DeleteSurveyQuestion([FromBody] int deleteId)
+        {
+            return logger.Logging<bool>(deleteId, "Survey", "Post", userid, "DeleteSurveyQuestion", surveyQuestionLogic.DeleteSurveyQuestion(deleteId));
+        }
+        #endregion
+
+        #region SurveyHistory
+        [HttpPost("GetSurveyHistory")]
+        public SURVEY_HISTORY GetSurveyHistory([FromBody] int id)
+        {
+            return logger.Logging<SURVEY_HISTORY>(id, "Survey", "Post", userid, "GetSurveyHistory", surveyHistoryLogic.GetSurveyHistory(id));
+        }
+        [HttpPost("InsertSurveyHistory")]
+        public bool InsertSurveyHistory(SURVEY_HISTORY surveyHistory)
+        {
+            return logger.Logging<bool>(surveyHistory, "Survey", "Post", userid, "InsertSurveyHistory", surveyHistoryLogic.InsertSurveyHistory(surveyHistory));
+        }
+        [HttpPost("IsDeletedSurveyHistory")]
+        public bool IsDeletedSurveyHistory([FromBody] int id)
+        {
+            return logger.Logging<bool>(id, "Survey", "Post", userid, "IsDeletedSurveyHistory", surveyHistoryLogic.IsDeletedSurveyHistory(id));
         }
 
+        #endregion
+
+        #region SurveyAnswer
+        [HttpPost("InsertSurveyQuestionAnswer")]
+        public bool InsertSurveyQuestionAnswer(SURVEY_QUESTION_ANSWER surveyQuestionAnswer)
+        {
+            return logger.Logging<bool>(surveyQuestionAnswer, "Survey", "Post", userid, "InsertSurveyQuestionAnswer", surveyAnswerLogic.InsertAnswer(surveyQuestionAnswer));
+        }
+        #endregion
     }
 }

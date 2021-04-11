@@ -44,5 +44,25 @@ namespace MES.API.Controllers
             return logger.Logging<List<EMAIL_TEMPLATE_PARAMETERS>>(mainProcessId, "Parameter", "Post", userid, "GetParameterByMainProcessId", emailTemplateLogic.GetEmailTemplateParametersByMainProcessId(mainProcessId));
         }
         #endregion
+
+        #region EmailTemplateParameter
+        [HttpGet("ParameterGetList")]
+        public List<EMAIL_TEMPLATE_PARAMETERS> ParameterGetList()
+        {
+            return logger.Logging<List<EMAIL_TEMPLATE_PARAMETERS>>(null, "EmailTemplate", "Get", userid, "ParameterGetList", emailTemplateLogic.GetParameterList());
+        }
+        //[HttpPost("DeleteEmailTemplate")]
+        //public bool DeleteEmailTemplate([FromBody] int deleteId)
+        //{
+        //    return logger.Logging<bool>(deleteId, "EmailTemplate", "Post", userid, "DeleteEmail", emailTemplateLogic.DeleteEmailTemplate(deleteId));
+
+        //}
+
+        //[HttpPost("GetEmailTemplateParametersByMainProcessId")]
+        //public List<EMAIL_TEMPLATE_PARAMETERS> GetEmailTemplateParametersByMainProcessId([FromBody] int mainProcessId)
+        //{
+        //    return logger.Logging<List<EMAIL_TEMPLATE_PARAMETERS>>(mainProcessId, "Parameter", "Post", userid, "GetParameterByMainProcessId", emailTemplateLogic.GetEmailTemplateParametersByMainProcessId(mainProcessId));
+        //}
+        #endregion
     }
 }
