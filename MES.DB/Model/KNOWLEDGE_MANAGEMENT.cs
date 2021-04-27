@@ -24,7 +24,12 @@ namespace MES.DB.Model
         public int KNOWLEDGE_STATUS_ID { get; set; }
         [DataType(DataType.MultilineText)]
         public string KNOWLEDGE_DESCRIPTION { get; set; }
+        public int? CREATED_USER_ID { get; set; }
+
+        public int? UPDATED_USER_ID { get; set; }
+
         
+
         [ForeignKey("KNOWLEDGE_SERVICE_ID")]
         public virtual SERVICECATALOG SERVICE_MODEL { get; set; }
 
@@ -33,5 +38,11 @@ namespace MES.DB.Model
 
         [ForeignKey("KNOWLEDGE_CATEGORY_ID")]
         public virtual PARAMETER CATEGORY_MODEL { get; set; }
+
+        [ForeignKey("CREATED_USER_ID")]
+        public virtual USER CREATED_USER { get; set; }
+
+        [ForeignKey("UPDATED_USER_ID")]
+        public USER UPDATED_USER { get; set; }
     }
 }

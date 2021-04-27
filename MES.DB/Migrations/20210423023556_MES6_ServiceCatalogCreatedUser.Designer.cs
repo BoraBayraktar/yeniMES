@@ -4,14 +4,16 @@ using MES.DB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MES.DB.Migrations
 {
     [DbContext(typeof(MesContext))]
-    partial class MesContextModelSnapshot : ModelSnapshot
+    [Migration("20210423023556_MES6_ServiceCatalogCreatedUser")]
+    partial class MES6_ServiceCatalogCreatedUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -773,9 +775,6 @@ namespace MES.DB.Migrations
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("CREATED_USER_ID")
-                        .HasColumnType("int");
-
                     b.Property<string>("FILE_NAME")
                         .HasColumnType("nvarchar(max)");
 
@@ -792,16 +791,9 @@ namespace MES.DB.Migrations
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("UPDATED_USER_ID")
-                        .HasColumnType("int");
-
                     b.HasKey("ID");
 
-                    b.HasIndex("CREATED_USER_ID");
-
                     b.HasIndex("KNOWLEDGE_ID");
-
-                    b.HasIndex("UPDATED_USER_ID");
 
                     b.ToTable("KNOWLEDGE_FILES");
                 });
@@ -851,9 +843,6 @@ namespace MES.DB.Migrations
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("UPDATED_USER_ID")
-                        .HasColumnType("int");
-
                     b.HasKey("ID");
 
                     b.HasIndex("CREATED_USER_ID");
@@ -863,8 +852,6 @@ namespace MES.DB.Migrations
                     b.HasIndex("KNOWLEDGE_SERVICE_ID");
 
                     b.HasIndex("KNOWLEDGE_STATUS_ID");
-
-                    b.HasIndex("UPDATED_USER_ID");
 
                     b.ToTable("KNOWLEDGE_MANAGEMENT");
                 });
@@ -2692,25 +2679,13 @@ namespace MES.DB.Migrations
 
             modelBuilder.Entity("MES.DB.Model.KNOWLEDGE_FILES", b =>
                 {
-                    b.HasOne("MES.DB.Model.USER", "CREATED_USER")
-                        .WithMany()
-                        .HasForeignKey("CREATED_USER_ID");
-
                     b.HasOne("MES.DB.Model.KNOWLEDGE_MANAGEMENT", "KNOWLEDGE")
                         .WithMany()
                         .HasForeignKey("KNOWLEDGE_ID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MES.DB.Model.USER", "UPDATED_USER")
-                        .WithMany()
-                        .HasForeignKey("UPDATED_USER_ID");
-
-                    b.Navigation("CREATED_USER");
-
                     b.Navigation("KNOWLEDGE");
-
-                    b.Navigation("UPDATED_USER");
                 });
 
             modelBuilder.Entity("MES.DB.Model.KNOWLEDGE_MANAGEMENT", b =>
@@ -2737,10 +2712,6 @@ namespace MES.DB.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MES.DB.Model.USER", "UPDATED_USER")
-                        .WithMany()
-                        .HasForeignKey("UPDATED_USER_ID");
-
                     b.Navigation("CATEGORY_MODEL");
 
                     b.Navigation("CREATED_USER");
@@ -2748,8 +2719,6 @@ namespace MES.DB.Migrations
                     b.Navigation("SERVICE_MODEL");
 
                     b.Navigation("STATUS_MODEL");
-
-                    b.Navigation("UPDATED_USER");
                 });
 
             modelBuilder.Entity("MES.DB.Model.KNOWLEDGE_SETTINGS", b =>

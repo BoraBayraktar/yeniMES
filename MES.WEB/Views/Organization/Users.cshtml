@@ -309,7 +309,7 @@
                 clearForm();
                 $.ajax({
                     url: '/Organization/GetUser?id=' + userId,
-                    type: "GET",
+                    type: "POST",
                     dataType: "json",
                     success: function (data) {
                         $("#id").val(userId);

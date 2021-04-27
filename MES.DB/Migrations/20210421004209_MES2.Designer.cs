@@ -4,14 +4,16 @@ using MES.DB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MES.DB.Migrations
 {
     [DbContext(typeof(MesContext))]
-    partial class MesContextModelSnapshot : ModelSnapshot
+    [Migration("20210421004209_MES2")]
+    partial class MES2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -57,6 +59,9 @@ namespace MES.DB.Migrations
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("CREATED_USER_ID")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IS_DELETED")
                         .HasColumnType("bit");
 
@@ -69,6 +74,9 @@ namespace MES.DB.Migrations
 
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("UPDATED_USER_ID")
+                        .HasColumnType("int");
 
                     b.HasKey("CITY_ID");
 
@@ -91,6 +99,9 @@ namespace MES.DB.Migrations
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("CREATED_USER_ID")
+                        .HasColumnType("int");
+
                     b.Property<string>("DESCRIPTION")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
@@ -107,6 +118,9 @@ namespace MES.DB.Migrations
 
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("UPDATED_USER_ID")
+                        .HasColumnType("int");
 
                     b.HasKey("COMPANY_ID");
 
@@ -129,6 +143,9 @@ namespace MES.DB.Migrations
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("CREATED_USER_ID")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IS_DELETED")
                         .HasColumnType("bit");
 
@@ -138,6 +155,9 @@ namespace MES.DB.Migrations
 
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("UPDATED_USER_ID")
+                        .HasColumnType("int");
 
                     b.HasKey("COUNTRY_ID");
 
@@ -161,6 +181,9 @@ namespace MES.DB.Migrations
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("CREATED_USER_ID")
+                        .HasColumnType("int");
+
                     b.Property<string>("DESCRIPTION")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
@@ -174,6 +197,9 @@ namespace MES.DB.Migrations
 
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("UPDATED_USER_ID")
+                        .HasColumnType("int");
 
                     b.HasKey("DEPARTMENT_ID");
 
@@ -192,6 +218,9 @@ namespace MES.DB.Migrations
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("CREATED_USER_ID")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IS_DELETED")
                         .HasColumnType("bit");
 
@@ -201,6 +230,9 @@ namespace MES.DB.Migrations
 
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("UPDATED_USER_ID")
+                        .HasColumnType("int");
 
                     b.HasKey("ID");
 
@@ -219,6 +251,9 @@ namespace MES.DB.Migrations
 
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("CREATED_USER_ID")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IS_DELETED")
                         .HasColumnType("bit");
@@ -256,6 +291,9 @@ namespace MES.DB.Migrations
 
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("UPDATED_USER_ID")
+                        .HasColumnType("int");
 
                     b.HasKey("ID");
 
@@ -324,6 +362,9 @@ namespace MES.DB.Migrations
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("CREATED_USER_ID")
+                        .HasColumnType("int");
+
                     b.Property<int>("GROUP_ASSIGNTYPE_ID")
                         .HasColumnType("int");
 
@@ -351,6 +392,9 @@ namespace MES.DB.Migrations
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("UPDATED_USER_ID")
+                        .HasColumnType("int");
+
                     b.HasKey("ID");
 
                     b.HasIndex("GROUP_MANAGER_ID");
@@ -370,6 +414,9 @@ namespace MES.DB.Migrations
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("CREATED_USER_ID")
+                        .HasColumnType("int");
+
                     b.Property<string>("EXPERT_EMAIL")
                         .HasColumnType("nvarchar(max)");
 
@@ -388,6 +435,9 @@ namespace MES.DB.Migrations
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("UPDATED_USER_ID")
+                        .HasColumnType("int");
+
                     b.HasKey("ID");
 
                     b.HasIndex("GROUP_ID");
@@ -405,6 +455,9 @@ namespace MES.DB.Migrations
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("CREATED_USER_ID")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IS_DELETED")
                         .HasColumnType("bit");
 
@@ -414,6 +467,9 @@ namespace MES.DB.Migrations
 
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("UPDATED_USER_ID")
+                        .HasColumnType("int");
 
                     b.HasKey("ID");
 
@@ -434,6 +490,9 @@ namespace MES.DB.Migrations
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("CREATED_USER_ID")
+                        .HasColumnType("int");
+
                     b.Property<int?>("CUSTOMER_ID")
                         .HasColumnType("int");
 
@@ -450,6 +509,9 @@ namespace MES.DB.Migrations
 
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("UPDATED_USER_ID")
+                        .HasColumnType("int");
 
                     b.HasKey("HOLDING_ID");
 
@@ -536,8 +598,6 @@ namespace MES.DB.Migrations
 
                     b.HasIndex("CATEGORY_ID");
 
-                    b.HasIndex("CREATED_USER_ID");
-
                     b.HasIndex("INCIDENT_IMPACT_ID");
 
                     b.HasIndex("INCIDENT_PRIORITY_ID");
@@ -555,8 +615,6 @@ namespace MES.DB.Migrations
                     b.HasIndex("SERVICE_CATALOG_ID");
 
                     b.HasIndex("SUB_CATEGORY_ID");
-
-                    b.HasIndex("UPDATED_USER_ID");
 
                     b.ToTable("INCIDENT");
                 });
@@ -678,8 +736,6 @@ namespace MES.DB.Migrations
 
                     b.HasIndex("CATEGORY_ID");
 
-                    b.HasIndex("CREATED_USER_ID");
-
                     b.HasIndex("INCIDENT_ID");
 
                     b.HasIndex("INCIDENT_IMPACT_ID");
@@ -700,8 +756,6 @@ namespace MES.DB.Migrations
 
                     b.HasIndex("SUB_CATEGORY_ID");
 
-                    b.HasIndex("UPDATED_USER_ID");
-
                     b.ToTable("INCIDENT_HISTORY");
                 });
 
@@ -714,6 +768,9 @@ namespace MES.DB.Migrations
 
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("CREATED_USER_ID")
+                        .HasColumnType("int");
 
                     b.Property<int>("INCIDENT_ID")
                         .HasColumnType("int");
@@ -735,6 +792,9 @@ namespace MES.DB.Migrations
 
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("UPDATED_USER_ID")
+                        .HasColumnType("int");
 
                     b.HasKey("ID");
 
@@ -797,11 +857,7 @@ namespace MES.DB.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("CREATED_USER_ID");
-
                     b.HasIndex("KNOWLEDGE_ID");
-
-                    b.HasIndex("UPDATED_USER_ID");
 
                     b.ToTable("KNOWLEDGE_FILES");
                 });
@@ -856,15 +912,11 @@ namespace MES.DB.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("CREATED_USER_ID");
-
                     b.HasIndex("KNOWLEDGE_CATEGORY_ID");
 
                     b.HasIndex("KNOWLEDGE_SERVICE_ID");
 
                     b.HasIndex("KNOWLEDGE_STATUS_ID");
-
-                    b.HasIndex("UPDATED_USER_ID");
 
                     b.ToTable("KNOWLEDGE_MANAGEMENT");
                 });
@@ -879,11 +931,17 @@ namespace MES.DB.Migrations
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("CREATED_USER_ID")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IS_DELETED")
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("UPDATED_USER_ID")
+                        .HasColumnType("int");
 
                     b.Property<int>("WHICH_STATUS_IN_VISIBLE")
                         .HasColumnType("int");
@@ -904,6 +962,9 @@ namespace MES.DB.Migrations
 
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("CREATED_USER_ID")
+                        .HasColumnType("int");
 
                     b.Property<string>("CronType")
                         .HasColumnType("nvarchar(max)");
@@ -941,6 +1002,9 @@ namespace MES.DB.Migrations
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("UPDATED_USER_ID")
+                        .HasColumnType("int");
+
                     b.Property<string>("Username")
                         .HasColumnType("nvarchar(max)");
 
@@ -958,6 +1022,9 @@ namespace MES.DB.Migrations
 
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("CREATED_USER_ID")
+                        .HasColumnType("int");
 
                     b.Property<string>("DESCRIPTION")
                         .HasMaxLength(100)
@@ -980,6 +1047,9 @@ namespace MES.DB.Migrations
 
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("UPDATED_USER_ID")
+                        .HasColumnType("int");
 
                     b.Property<int>("USER_ID")
                         .HasColumnType("int");
@@ -1007,6 +1077,9 @@ namespace MES.DB.Migrations
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("CREATED_USER_ID")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IS_DELETED")
                         .HasColumnType("bit");
 
@@ -1016,6 +1089,9 @@ namespace MES.DB.Migrations
 
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("UPDATED_USER_ID")
+                        .HasColumnType("int");
 
                     b.HasKey("LEAVE_TYPE_ID");
 
@@ -1039,6 +1115,9 @@ namespace MES.DB.Migrations
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("CREATED_USER_ID")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IS_DELETED")
                         .HasColumnType("bit");
 
@@ -1048,6 +1127,9 @@ namespace MES.DB.Migrations
 
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("UPDATED_USER_ID")
+                        .HasColumnType("int");
 
                     b.HasKey("LOCATION_ID");
 
@@ -1135,6 +1217,9 @@ namespace MES.DB.Migrations
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("CREATED_USER_ID")
+                        .HasColumnType("int");
+
                     b.Property<string>("DEFAULT_ADDRESS")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
@@ -1163,6 +1248,9 @@ namespace MES.DB.Migrations
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("UPDATED_USER_ID")
+                        .HasColumnType("int");
+
                     b.Property<string>("USERNAME")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
@@ -1181,6 +1269,9 @@ namespace MES.DB.Migrations
 
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("CREATED_USER_ID")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IS_DELETED")
                         .HasColumnType("bit");
@@ -1210,6 +1301,9 @@ namespace MES.DB.Migrations
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("UPDATED_USER_ID")
+                        .HasColumnType("int");
+
                     b.HasKey("ID");
 
                     b.ToTable("MAIL_TO_SEND");
@@ -1224,6 +1318,9 @@ namespace MES.DB.Migrations
 
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("CREATED_USER_ID")
+                        .HasColumnType("int");
 
                     b.Property<int>("DOMAIN_ID")
                         .HasColumnType("int");
@@ -1241,6 +1338,9 @@ namespace MES.DB.Migrations
 
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("UPDATED_USER_ID")
+                        .HasColumnType("int");
 
                     b.HasKey("ID");
 
@@ -1315,6 +1415,9 @@ namespace MES.DB.Migrations
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("CREATED_USER_ID")
+                        .HasColumnType("int");
+
                     b.Property<string>("ID_FORMAT_CODE")
                         .IsRequired()
                         .HasMaxLength(7)
@@ -1342,6 +1445,9 @@ namespace MES.DB.Migrations
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("UPDATED_USER_ID")
+                        .HasColumnType("int");
+
                     b.HasKey("ID");
 
                     b.HasIndex("MAIN_PROCESS_ID");
@@ -1358,6 +1464,9 @@ namespace MES.DB.Migrations
 
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("CREATED_USER_ID")
+                        .HasColumnType("int");
 
                     b.Property<string>("DESCRIPTION")
                         .HasMaxLength(50)
@@ -1388,6 +1497,9 @@ namespace MES.DB.Migrations
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("UPDATED_USER_ID")
+                        .HasColumnType("int");
+
                     b.HasKey("ID");
 
                     b.HasIndex("MAIN_PROCESS_ID");
@@ -1413,6 +1525,9 @@ namespace MES.DB.Migrations
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("CREATED_USER_ID")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IS_DELETED")
                         .HasColumnType("bit");
 
@@ -1425,6 +1540,9 @@ namespace MES.DB.Migrations
 
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("UPDATED_USER_ID")
+                        .HasColumnType("int");
 
                     b.HasKey("PARAMETER_TYPE_ID");
 
@@ -1446,6 +1564,9 @@ namespace MES.DB.Migrations
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("CREATED_USER_ID")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IS_DELETED")
                         .HasColumnType("bit");
 
@@ -1454,6 +1575,9 @@ namespace MES.DB.Migrations
 
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("UPDATED_USER_ID")
+                        .HasColumnType("int");
 
                     b.Property<int>("USER_ID")
                         .HasColumnType("int");
@@ -1482,6 +1606,9 @@ namespace MES.DB.Migrations
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("CREATED_USER_ID")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IS_DELETED")
                         .HasColumnType("bit");
 
@@ -1491,6 +1618,9 @@ namespace MES.DB.Migrations
 
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("UPDATED_USER_ID")
+                        .HasColumnType("int");
 
                     b.HasKey("REGION_ID");
 
@@ -1508,6 +1638,9 @@ namespace MES.DB.Migrations
 
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("CREATED_USER_ID")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IS_DELETED")
                         .HasColumnType("bit");
@@ -1534,6 +1667,9 @@ namespace MES.DB.Migrations
 
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("UPDATED_USER_ID")
+                        .HasColumnType("int");
 
                     b.HasKey("RULE_ID");
 
@@ -1613,6 +1749,9 @@ namespace MES.DB.Migrations
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("CREATED_USER_ID")
+                        .HasColumnType("int");
+
                     b.Property<string>("CRITERIA")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
@@ -1629,6 +1768,9 @@ namespace MES.DB.Migrations
 
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("UPDATED_USER_ID")
+                        .HasColumnType("int");
 
                     b.Property<string>("VALUE")
                         .HasMaxLength(50)
@@ -1688,8 +1830,6 @@ namespace MES.DB.Migrations
 
                     b.HasKey("SERVICE_ID");
 
-                    b.HasIndex("CREATED_USER_ID");
-
                     b.HasIndex("OPERATIONAL_STATUS_ID");
 
                     b.HasIndex("SERVICE_MANAGER_BUSINESS_ID");
@@ -1697,8 +1837,6 @@ namespace MES.DB.Migrations
                     b.HasIndex("SERVICE_MANAGER_IT_ID");
 
                     b.HasIndex("SERVICE_PARAMETER_ID");
-
-                    b.HasIndex("UPDATED_USER_ID");
 
                     b.ToTable("SERVICECATALOG");
                 });
@@ -1712,6 +1850,9 @@ namespace MES.DB.Migrations
 
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("CREATED_USER_ID")
+                        .HasColumnType("int");
 
                     b.Property<int>("EFFORT_DAY")
                         .HasColumnType("int");
@@ -1743,6 +1884,9 @@ namespace MES.DB.Migrations
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("UPDATED_USER_ID")
+                        .HasColumnType("int");
+
                     b.Property<int>("WORKING_SCHEDULE_ID")
                         .HasColumnType("int");
 
@@ -1771,6 +1915,9 @@ namespace MES.DB.Migrations
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("CREATED_USER_ID")
+                        .HasColumnType("int");
+
                     b.Property<string>("CUSTOMER_ID")
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
@@ -1791,6 +1938,9 @@ namespace MES.DB.Migrations
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("UPDATED_USER_ID")
+                        .HasColumnType("int");
+
                     b.HasKey("ID");
 
                     b.HasIndex("SLA_ID");
@@ -1808,6 +1958,9 @@ namespace MES.DB.Migrations
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("CREATED_USER_ID")
+                        .HasColumnType("int");
+
                     b.Property<int>("EVENT_ID")
                         .HasColumnType("int");
 
@@ -1822,6 +1975,9 @@ namespace MES.DB.Migrations
 
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("UPDATED_USER_ID")
+                        .HasColumnType("int");
 
                     b.HasKey("ID");
 
@@ -1841,6 +1997,9 @@ namespace MES.DB.Migrations
 
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("CREATED_USER_ID")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("EXECUTION_DATE")
                         .HasColumnType("datetime2");
@@ -1884,6 +2043,9 @@ namespace MES.DB.Migrations
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("UPDATED_USER_ID")
+                        .HasColumnType("int");
+
                     b.HasKey("SURVEY_ID");
 
                     b.HasIndex("SURVEY_PARAMETER_ID");
@@ -1901,6 +2063,9 @@ namespace MES.DB.Migrations
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("CREATED_USER_ID")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IS_DELETED")
                         .HasColumnType("bit");
 
@@ -1912,6 +2077,9 @@ namespace MES.DB.Migrations
 
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("UPDATED_USER_ID")
+                        .HasColumnType("int");
 
                     b.Property<int>("USER_ID")
                         .HasColumnType("int");
@@ -1938,6 +2106,9 @@ namespace MES.DB.Migrations
 
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("CREATED_USER_ID")
+                        .HasColumnType("int");
 
                     b.Property<string>("EVALUATION_1")
                         .HasMaxLength(50)
@@ -1975,6 +2146,9 @@ namespace MES.DB.Migrations
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("UPDATED_USER_ID")
+                        .HasColumnType("int");
+
                     b.HasKey("ID");
 
                     b.HasIndex("SURVEY_ID");
@@ -1996,6 +2170,9 @@ namespace MES.DB.Migrations
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("CREATED_USER_ID")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IS_DELETED")
                         .HasColumnType("bit");
 
@@ -2007,6 +2184,9 @@ namespace MES.DB.Migrations
 
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("UPDATED_USER_ID")
+                        .HasColumnType("int");
 
                     b.HasKey("ID");
 
@@ -2063,6 +2243,9 @@ namespace MES.DB.Migrations
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("CREATED_USER_ID")
+                        .HasColumnType("int");
+
                     b.Property<bool>("ISACTIVE")
                         .HasColumnType("bit");
 
@@ -2074,6 +2257,9 @@ namespace MES.DB.Migrations
 
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("UPDATED_USER_ID")
+                        .HasColumnType("int");
 
                     b.HasKey("ID");
 
@@ -2091,6 +2277,9 @@ namespace MES.DB.Migrations
 
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("CREATED_USER_ID")
+                        .HasColumnType("int");
 
                     b.Property<string>("DESCRIPTION")
                         .HasMaxLength(100)
@@ -2113,6 +2302,9 @@ namespace MES.DB.Migrations
 
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("UPDATED_USER_ID")
+                        .HasColumnType("int");
 
                     b.Property<int>("YEAR")
                         .HasColumnType("int");
@@ -2138,6 +2330,9 @@ namespace MES.DB.Migrations
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("CREATED_USER_ID")
+                        .HasColumnType("int");
+
                     b.Property<string>("DESCRIPTION")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
@@ -2151,6 +2346,9 @@ namespace MES.DB.Migrations
 
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("UPDATED_USER_ID")
+                        .HasColumnType("int");
 
                     b.HasKey("TITLE_ID");
 
@@ -2166,6 +2364,9 @@ namespace MES.DB.Migrations
 
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("CREATED_USER_ID")
+                        .HasColumnType("int");
 
                     b.Property<int?>("DEPARTMENT_ID")
                         .HasColumnType("int");
@@ -2212,6 +2413,9 @@ namespace MES.DB.Migrations
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("UPDATED_USER_ID")
+                        .HasColumnType("int");
+
                     b.Property<string>("USERNAME")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
@@ -2251,6 +2455,9 @@ namespace MES.DB.Migrations
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("CREATED_USER_ID")
+                        .HasColumnType("int");
+
                     b.Property<bool>("Checked")
                         .HasColumnType("bit");
 
@@ -2259,6 +2466,9 @@ namespace MES.DB.Migrations
 
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("UPDATED_USER_ID")
+                        .HasColumnType("int");
 
                     b.HasKey("UserTypeId", "MenuId");
 
@@ -2281,6 +2491,9 @@ namespace MES.DB.Migrations
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("CREATED_USER_ID")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IS_DELETED")
                         .HasColumnType("bit");
 
@@ -2290,6 +2503,9 @@ namespace MES.DB.Migrations
 
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("UPDATED_USER_ID")
+                        .HasColumnType("int");
 
                     b.HasKey("USER_GROUP_ID");
 
@@ -2310,6 +2526,9 @@ namespace MES.DB.Migrations
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("CREATED_USER_ID")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IS_DELETED")
                         .HasColumnType("bit");
 
@@ -2319,6 +2538,9 @@ namespace MES.DB.Migrations
 
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("UPDATED_USER_ID")
+                        .HasColumnType("int");
 
                     b.HasKey("USER_TYPE_ID");
 
@@ -2339,6 +2561,9 @@ namespace MES.DB.Migrations
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("CREATED_USER_ID")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IS_DELETED")
                         .HasColumnType("bit");
 
@@ -2348,6 +2573,9 @@ namespace MES.DB.Migrations
 
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("UPDATED_USER_ID")
+                        .HasColumnType("int");
 
                     b.HasKey("ID");
 
@@ -2363,6 +2591,9 @@ namespace MES.DB.Migrations
 
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("CREATED_USER_ID")
+                        .HasColumnType("int");
 
                     b.Property<TimeSpan>("END_TIME")
                         .HasColumnType("time");
@@ -2382,6 +2613,9 @@ namespace MES.DB.Migrations
 
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("UPDATED_USER_ID")
+                        .HasColumnType("int");
 
                     b.HasKey("WORKING_SCHEDULE_ID");
 
@@ -2496,10 +2730,6 @@ namespace MES.DB.Migrations
                         .WithMany()
                         .HasForeignKey("CATEGORY_ID");
 
-                    b.HasOne("MES.DB.Model.USER", "CREATED_USER")
-                        .WithMany()
-                        .HasForeignKey("CREATED_USER_ID");
-
                     b.HasOne("MES.DB.Model.PARAMETER", "INCIDENT_IMPACT")
                         .WithMany()
                         .HasForeignKey("INCIDENT_IMPACT_ID");
@@ -2540,17 +2770,11 @@ namespace MES.DB.Migrations
                         .WithMany()
                         .HasForeignKey("SUB_CATEGORY_ID");
 
-                    b.HasOne("MES.DB.Model.USER", "UPDATED_USER")
-                        .WithMany()
-                        .HasForeignKey("UPDATED_USER_ID");
-
                     b.Navigation("ASSIGNED_GROUP");
 
                     b.Navigation("ASSIGNED_USER");
 
                     b.Navigation("CATEGORY");
-
-                    b.Navigation("CREATED_USER");
 
                     b.Navigation("INCIDENT_IMPACT");
 
@@ -2569,8 +2793,6 @@ namespace MES.DB.Migrations
                     b.Navigation("SERVICE_CATALOG");
 
                     b.Navigation("SUB_CATEGORY");
-
-                    b.Navigation("UPDATED_USER");
                 });
 
             modelBuilder.Entity("MES.DB.Model.INCIDENT_FILES", b =>
@@ -2597,10 +2819,6 @@ namespace MES.DB.Migrations
                     b.HasOne("MES.DB.Model.PARAMETER", "CATEGORY")
                         .WithMany()
                         .HasForeignKey("CATEGORY_ID");
-
-                    b.HasOne("MES.DB.Model.USER", "CREATED_USER")
-                        .WithMany()
-                        .HasForeignKey("CREATED_USER_ID");
 
                     b.HasOne("MES.DB.Model.INCIDENT", "INCIDENT")
                         .WithMany()
@@ -2644,17 +2862,11 @@ namespace MES.DB.Migrations
                         .WithMany()
                         .HasForeignKey("SUB_CATEGORY_ID");
 
-                    b.HasOne("MES.DB.Model.USER", "UPDATED_USER")
-                        .WithMany()
-                        .HasForeignKey("UPDATED_USER_ID");
-
                     b.Navigation("ASSIGNED_GROUP");
 
                     b.Navigation("ASSIGNED_USER");
 
                     b.Navigation("CATEGORY");
-
-                    b.Navigation("CREATED_USER");
 
                     b.Navigation("INCIDENT");
 
@@ -2675,8 +2887,6 @@ namespace MES.DB.Migrations
                     b.Navigation("SERVICE_CATALOG");
 
                     b.Navigation("SUB_CATEGORY");
-
-                    b.Navigation("UPDATED_USER");
                 });
 
             modelBuilder.Entity("MES.DB.Model.INCIDENT_RESOLUTION", b =>
@@ -2692,33 +2902,17 @@ namespace MES.DB.Migrations
 
             modelBuilder.Entity("MES.DB.Model.KNOWLEDGE_FILES", b =>
                 {
-                    b.HasOne("MES.DB.Model.USER", "CREATED_USER")
-                        .WithMany()
-                        .HasForeignKey("CREATED_USER_ID");
-
                     b.HasOne("MES.DB.Model.KNOWLEDGE_MANAGEMENT", "KNOWLEDGE")
                         .WithMany()
                         .HasForeignKey("KNOWLEDGE_ID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MES.DB.Model.USER", "UPDATED_USER")
-                        .WithMany()
-                        .HasForeignKey("UPDATED_USER_ID");
-
-                    b.Navigation("CREATED_USER");
-
                     b.Navigation("KNOWLEDGE");
-
-                    b.Navigation("UPDATED_USER");
                 });
 
             modelBuilder.Entity("MES.DB.Model.KNOWLEDGE_MANAGEMENT", b =>
                 {
-                    b.HasOne("MES.DB.Model.USER", "CREATED_USER")
-                        .WithMany()
-                        .HasForeignKey("CREATED_USER_ID");
-
                     b.HasOne("MES.DB.Model.PARAMETER", "CATEGORY_MODEL")
                         .WithMany()
                         .HasForeignKey("KNOWLEDGE_CATEGORY_ID")
@@ -2737,19 +2931,11 @@ namespace MES.DB.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MES.DB.Model.USER", "UPDATED_USER")
-                        .WithMany()
-                        .HasForeignKey("UPDATED_USER_ID");
-
                     b.Navigation("CATEGORY_MODEL");
-
-                    b.Navigation("CREATED_USER");
 
                     b.Navigation("SERVICE_MODEL");
 
                     b.Navigation("STATUS_MODEL");
-
-                    b.Navigation("UPDATED_USER");
                 });
 
             modelBuilder.Entity("MES.DB.Model.KNOWLEDGE_SETTINGS", b =>
@@ -2891,10 +3077,6 @@ namespace MES.DB.Migrations
 
             modelBuilder.Entity("MES.DB.Model.SERVICECATALOG", b =>
                 {
-                    b.HasOne("MES.DB.Model.USER", "CREATED_USER")
-                        .WithMany()
-                        .HasForeignKey("CREATED_USER_ID");
-
                     b.HasOne("MES.DB.Model.PARAMETER", "PARAMETER_OPSTATUSMODEL")
                         .WithMany()
                         .HasForeignKey("OPERATIONAL_STATUS_ID")
@@ -2919,17 +3101,9 @@ namespace MES.DB.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MES.DB.Model.USER", "UPDATED_USER")
-                        .WithMany()
-                        .HasForeignKey("UPDATED_USER_ID");
-
-                    b.Navigation("CREATED_USER");
-
                     b.Navigation("PARAMETER_OPSTATUSMODEL");
 
                     b.Navigation("PARAMETERMODEL");
-
-                    b.Navigation("UPDATED_USER");
 
                     b.Navigation("USER_MANAGERBUSINESSMODEL");
 

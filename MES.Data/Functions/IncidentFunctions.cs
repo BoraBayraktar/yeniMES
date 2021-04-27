@@ -17,7 +17,7 @@ namespace MES.Data.Functions
         {
             using (MesContext context = new MesContext())
             {
-                var incidentList = context.INCIDENT
+                var incidentList = context.INCIDENT.Include(q => q.CREATED_USER)
                                                    .Include(q => q.REPORTING_USER)
                                                    .Include(q => q.INCIDENT_STATUS)
                                                    .Include(q => q.INCIDENT_PRIORITY)

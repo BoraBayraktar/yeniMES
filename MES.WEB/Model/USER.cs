@@ -16,7 +16,7 @@ namespace MES.Web.Model
         public string USERNAME { get; set; }
         [StringLength(50)]
         public string PASSWORD { get; set; }
-        [StringLength(50)]
+        [StringLength(5000)]
         public string NAME { get; set; }
         [StringLength(50)]
         public string SURNAME { get; set; }

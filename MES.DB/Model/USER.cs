@@ -14,7 +14,7 @@ namespace MES.DB.Model
 
         [StringLength(50)]
         public string USERNAME { get; set; }
-        [StringLength(50)]
+        [StringLength(5000)]
         public string PASSWORD { get; set; }
         [StringLength(5000)]
         public string NAME { get; set; }

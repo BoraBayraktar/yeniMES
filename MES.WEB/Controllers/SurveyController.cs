@@ -139,7 +139,9 @@ namespace MES.Web.Controllers
         {
             if (surveyViewModel.StartDate != null)
             {
-                var sDate = Convert.ToDateTime(surveyViewModel.StartDate).ToUniversalTime();
+                //ToUniversalTime Removed because it returns 1 day before
+                var sDate = Convert.ToDateTime(surveyViewModel.StartDate);
+                //var sDate = Convert.ToDateTime(surveyViewModel.StartDate).ToUniversalTime();
                 surveyViewModel.StartDate = sDate;
             }
             var user = HttpContext.Session.GetObject<USER>("User");
@@ -272,14 +274,17 @@ namespace MES.Web.Controllers
 
             foreach (var item in surveyViewModel.QuestionList)
             {
+                item.IS_DELETED = false;
                 item.SURVEY_ID = survey.SURVEY_ID;
                 if (item.ID == 0)
                 {
+                    item.CREATED_DATE = DateTime.Now;
                     //item.CREATED_USER_ID = user.USER_ID;
                     success = serviceBusiness.ServicePost<bool>(item, "Survey", "InsertSurveyQuestion");
                 }
                 else
                 {
+                    item.UPDATED_DATE = DateTime.Now;
                     //item.UPDATED_USER_ID = user.USER_ID;
                     success = serviceBusiness.ServicePost<bool>(item, "Survey", "UpdateSurveyQuestion");
                 }

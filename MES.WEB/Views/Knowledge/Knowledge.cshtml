@@ -42,8 +42,8 @@
 
                         @*created user*@
 
-                        @*@Html.DropDownListFor(m => m.knowledge.CREATED_USER_ID, new SelectList(Model.UserList, "Value", "Text", user.USER_ID.ToString()),
-                       new { @class = "form-control", id = "txtCreatedUser" })*@
+                        @Html.DropDownListFor(m => m.knowledge.CREATED_USER_ID, new SelectList(Model.UserList, "Value", "Text", user.USER_ID.ToString()),
+                       new { @class = "form-control", id = "txtCreatedUser" })
 
 
                     </div>

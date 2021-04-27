@@ -14,9 +14,19 @@ namespace MES.Web.Model
         public bool IS_APPROVED { get; set; }
         public DateTime? RESOLVED_DATE { get; set; }
         public int INCIDENT_ID { get; set; }
+        public int? CREATED_USER_ID { get; set; }
+        public int? UPDATED_USER_ID { get; set; }
+
+
 
         [ForeignKey("INCIDENT_ID")]
         public virtual INCIDENT INCIDENT { get; set; }
+
+        [ForeignKey("CREATED_USER_ID")]
+        public USER CREATED_USER { get; set; }
+
+        [ForeignKey("UPDATED_USER_ID")]
+        public USER UPDATED_USER { get; set; }
 
     }
 }

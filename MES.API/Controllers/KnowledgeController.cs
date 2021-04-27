@@ -42,12 +42,12 @@ namespace MES.API.Controllers
             return logger.Logging<List<SERVICECATALOG>>(null, "Knowledge", "Get", userid, "GetServiceCatalog", knowledgeLogic.GetServiceCatalog());
         }
         [HttpPost("GetKnowledgeCategory")]
-        public List<PARAMETER> GetKnowledgeCategory(string code)
+        public List<PARAMETER> GetKnowledgeCategory([FromBody]string code)
         {
             return logger.Logging<List<PARAMETER>>(code, "Knowledge", "Post", userid, "GetKnowledgeCategory", knowledgeLogic.GetKnowledgeCategory(code));
         }
         [HttpPost("GetKnowledgeStatus")]
-        public List<PARAMETER> GetKnowledgeStatus(string code)
+        public List<PARAMETER> GetKnowledgeStatus([FromBody]string code)
         {
             return logger.Logging<List<PARAMETER>>(code, "Knowledge", "Post", userid, "GetKnowledgeStatus", knowledgeLogic.GetKnowledgeStatus(code));
         }
@@ -67,7 +67,7 @@ namespace MES.API.Controllers
             return logger.Logging<bool>(userID, "Knowledge", "Post", userid, "DeleteKnowledge", knowledgeLogic.DeleteKnowledge(userID));
         }
         [HttpPost("KnowledgeNo")]
-        public string KnowledgeNo(bool isUpdate)
+        public string KnowledgeNo([FromBody]bool isUpdate)
         {
             return logger.Logging<string>(isUpdate, "Knowledge", "Post", userid, "KnowledgeNo", knowledgeLogic.KnowledgeNo(isUpdate));
         }

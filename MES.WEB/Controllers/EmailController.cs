@@ -131,7 +131,7 @@ namespace MES.Web.Controllers
                 evm.SelectedRecipients = recipients.Split(',');
 
 
-                var mainProcessStatusList = serviceBusiness.ServicePost<List<PARAMETER>>(("STATUS", evm.EmailTemplate.MAIN_PROCESS_ID), "Parameter", "GetParameterListByParameterTypeCode");
+                var mainProcessStatusList = serviceBusiness.ServicePost<List<PARAMETER>>(("STATUS", evm.EmailTemplate.MAIN_PROCESS_ID), "Parameter", "GetParameterListByParameterTypeCode").Where(status=> status.IS_ACTIVE == true);
 
                 foreach (var item in mainProcessStatusList)
                 {
@@ -356,7 +356,9 @@ namespace MES.Web.Controllers
         public JsonResult DeleteParameter(int deleteId)
         {
             bool success = false;
-            success = serviceBusiness.ServicePost<bool>(deleteId, "Parameter", "DeleteEmailTemplate");
+            PARAMETER parameter = serviceBusiness.ServicePost<PARAMETER>(deleteId,"Parameter", "GetParameter");
+            parameter.IS_ACTIVE = false;
+            success = serviceBusiness.ServicePost<bool>(parameter, "Parameter", "UpdateParameter");
             return Json(new { success = success });
         }
 

@@ -180,9 +180,9 @@ namespace MES.Web.Controllers
 
                     serviceBusiness.ServicePut<int>(passwordChange.ID, "Login", "UpdatePassChange");
 
-                    List<(int, string)> list = new List<(int, string)>();
-                    list.Add((passwordChange.USER_ID,encryption.Encrypt(userViewModel.NewPassword)));
-                    serviceBusiness.ServicePut<List<(int, string)>>(list, "Login", "UserChangePassword");
+                    
+                    (int, string) IdPassword = (passwordChange.USER_ID,encryption.Encrypt(userViewModel.NewPassword));
+                    serviceBusiness.ServicePut<(int, string)>(IdPassword, "Login", "UserChangePassword");
                 }
                 ShowToastMessage("success", "İşlem Başarılı", "Şifreniz başarıyla değiştirilmiştir.");
                 return RedirectToAction("Index", "Login");

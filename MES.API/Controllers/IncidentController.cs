@@ -104,8 +104,8 @@ namespace MES.API.Controllers
         {
             return logger.Logging<string>(null, "Incident", "Get", userid, "MaxCode", IncidentLogic.MaxCode());
         }
-        [HttpGet("GetIncidentType")]
-        public INCIDENT_TYPE GetIncidentType(string code)
+        [HttpPost("GetIncidentType")]
+        public INCIDENT_TYPE GetIncidentType([FromBody]string code)
         {
             return logger.Logging<INCIDENT_TYPE>(code, "Incident", "Get", userid, "GetIncidentType", IncidentLogic.GetIncidentType(code));
         }

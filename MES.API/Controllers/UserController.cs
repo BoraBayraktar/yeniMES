@@ -1,4 +1,5 @@
-﻿using MES.API.JwtToken;
+﻿using MES.API.Encrypter;
+using MES.API.JwtToken;
 using MES.API.Logger;
 using MES.Data.Logics;
 using MES.DB.Model;
@@ -21,6 +22,7 @@ namespace MES.API.Controllers
         UserLogic userLogic = new UserLogic();
         private int userid;
         IJwtAuthenticationManager jwtAuthentication;
+        private Encryption encryption = new Encryption();
         Log logger = new Log();
         public UserController(IJwtAuthenticationManager jwtAuthenticationManager, IHttpContextAccessor accessor)
         {
@@ -36,11 +38,13 @@ namespace MES.API.Controllers
         [HttpPost("InsertUser")]
         public bool InsertUser(USER user)
         {
+            user.PASSWORD = encryption.Decrypt(user.PASSWORD);
             return logger.Logging<bool>(user, "User", "Post", userid, "InsertUser", userLogic.InsertUser(user));
         }
         [HttpPost("UpdateUser")]
         public bool UpdateUser(USER user)
         {
+            user.PASSWORD = encryption.Decrypt(user.PASSWORD);
             return logger.Logging<bool>(user, "User", "Post", userid, "UpdateUser", userLogic.UpdateUser(user));
         }
         [HttpPost("DeleteUser")]
@@ -51,7 +55,9 @@ namespace MES.API.Controllers
         [HttpPost("GetUser")]
         public USER GetUser([FromBody] int id)
         {
-            return logger.Logging<USER>(id, "User", "Post", userid, "GetUser", userLogic.GetUser(id));
+            USER user =  logger.Logging<USER>(id, "User", "Post", userid, "GetUser", userLogic.GetUser(id));
+            user.PASSWORD = null;
+            return user;
         }
         #endregion
     }

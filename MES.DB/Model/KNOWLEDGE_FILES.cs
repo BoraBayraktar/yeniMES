@@ -15,7 +15,15 @@ namespace MES.DB.Model
         public string FILE_PATH { get; set; }
         public int KNOWLEDGE_ID { get; set; }
         public string FILE_NAME { get; set; }
+
+        public int? CREATED_USER_ID { get; set; }
+        public int? UPDATED_USER_ID { get; set; }
+
         [ForeignKey("KNOWLEDGE_ID")]
-        public virtual KNOWLEDGE_MANAGEMENT KNOWLEDGE { get; set; }        
+        public virtual KNOWLEDGE_MANAGEMENT KNOWLEDGE { get; set; }
+        [ForeignKey("CREATED_USER_ID")]
+        public USER CREATED_USER { get; set; }
+        [ForeignKey("UPDATED_USER_ID")]
+        public USER UPDATED_USER { get; set; }
     }
 }

@@ -29,6 +29,11 @@ namespace MES.DB.Model
 
         public int SERVICE_MANAGER_BUSINESS_ID { get; set; }
 
+        public int? CREATED_USER_ID { get; set; }
+        public int? UPDATED_USER_ID { get; set; }
+
+
+
         [ForeignKey("SERVICE_PARAMETER_ID")]
         public virtual PARAMETER PARAMETERMODEL { get; set; }
 
@@ -41,6 +46,10 @@ namespace MES.DB.Model
         [ForeignKey("SERVICE_MANAGER_BUSINESS_ID")]
         public virtual USER USER_MANAGERBUSINESSMODEL { get; set; }
 
-
+        [ForeignKey("CREATED_USER_ID")]
+        public USER CREATED_USER { get; set; }
+        
+        [ForeignKey("UPDATED_USER_ID")]
+        public USER UPDATED_USER { get; set; }
     }
 }

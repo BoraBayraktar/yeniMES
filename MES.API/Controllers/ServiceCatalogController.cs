@@ -53,12 +53,12 @@ namespace MES.API.Controllers
             return logger.Logging<bool>(deleteid, "ServiceCatalog", "Post", userid, "DeleteServiceCatalog", serviceCatalogLogic.DeleteServiceCatalog(deleteid));
         }
         [HttpPost("GetParameterList")]
-        public List<PARAMETER> GetParameterList(string code)
+        public List<PARAMETER> GetParameterList([FromBody]string code)
         {
             return logger.Logging<List<PARAMETER>>(code, "ServiceCatalog", "Post", userid, "GetParameterList", serviceCatalogLogic.GetParameterList(code));
         }
         [HttpPost("GetPrmOpStatus")]
-        public List<PARAMETER> GetPrmOpStatus(string code)
+        public List<PARAMETER> GetPrmOpStatus([FromBody]string code)
         {
             return logger.Logging<List<PARAMETER>>(code, "ServiceCatalog", "Post", userid, "GetPrmOpStatus", serviceCatalogLogic.GetPrmOpStatus(code));
         }

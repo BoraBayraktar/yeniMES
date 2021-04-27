@@ -36,7 +36,7 @@ namespace MES.Web.Model
         public int? ASSIGNED_GROUP_ID { get; set; }
         public int? ASSIGNED_USER_ID { get; set; }
 
-         public int INCIDENT_ID { get; set; }
+        public int INCIDENT_ID { get; set; }
 
         public bool VISIBLE_TO_USER { get; set; }
         public bool VISIBLE_TO_OPERATOR { get; set; }
@@ -45,6 +45,9 @@ namespace MES.Web.Model
         public int? EFFORT_DAY { get; set; }
         public int? EFFORT_HOUR { get; set; }
         public int? EFFORT_MINUTE { get; set; }
+
+        public int? CREATED_USER_ID { get; set; }
+        public int? UPDATED_USER_ID { get; set; }
 
 
 
@@ -83,5 +86,10 @@ namespace MES.Web.Model
 
         [ForeignKey("INCIDENT_STATUS_ID")]
         public PARAMETER INCIDENT_STATUS { get; set; }
+
+        [ForeignKey("CREATED_USER_ID")]
+        public USER CREATED_USER { get; set; }
+        [ForeignKey("UPDATED_USER_ID")]
+        public USER UPDATED_USER { get; set; }
     }
 }

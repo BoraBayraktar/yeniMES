@@ -45,14 +45,14 @@ namespace MES.Web
             services.AddMvc();
             services.AddDistributedMemoryCache();
             services.AddSession();
-
-            services.AddControllersWithViews();
-            //.AddNewtonsoftJson(options =>
-            //{
-            //    options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-            //    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-
-            //});
+            
+            services.AddControllersWithViews()
+            .AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                options.SerializerSettings.Formatting = Formatting.None;
+            }).AddJsonOptions(options=> options.JsonSerializerOptions.PropertyNamingPolicy = null);
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(options =>
             {
@@ -64,13 +64,13 @@ namespace MES.Web
             //    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             //});
 
-            JsonConvert.DefaultSettings = () => new JsonSerializerSettings
-            {
-                Formatting = Formatting.Indented,
-                ReferenceLoopHandling = ReferenceLoopHandling.Serialize,
-                PreserveReferencesHandling = PreserveReferencesHandling.Objects
-            };
-            
+            //JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+            //{
+            //    Formatting = Formatting.None,
+            //    ReferenceLoopHandling = ReferenceLoopHandling.Serialize,
+            //    PreserveReferencesHandling = PreserveReferencesHandling.Objects
+            //};
+
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddMemoryCache();
 

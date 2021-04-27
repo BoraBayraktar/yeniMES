@@ -39,6 +39,7 @@ namespace MES.API
             var Key = "KDFSDG3425TGHTH6HG45YRJRYJY234T3G3G53Y54YHY46H6J456";
             services.AddControllers().AddNewtonsoftJson(options =>
             {
+                options.SerializerSettings.Formatting = Formatting.Indented;
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
             services.AddHttpContextAccessor();

@@ -51,7 +51,7 @@
                         <td>@(item.PARAMETER_OPSTATUSMODEL == null ? "-" : (item.PARAMETER_OPSTATUSMODEL.MAIN_DATA_NAME))</td>
                         <td>@(item.USER_MANAGERITMODEL == null ? "-" : (item.USER_MANAGERITMODEL.NAME + " " + item.USER_MANAGERITMODEL.SURNAME))</td>
                         <td>@(item.USER_MANAGERBUSINESSMODEL == null ? "-" : (item.USER_MANAGERBUSINESSMODEL.NAME + " " + item.USER_MANAGERBUSINESSMODEL.SURNAME))</td>
-                        @*<td>@(item.CREATED_USER == null ? "-" : (item.CREATED_USER.NAME + " " + item.CREATED_USER.SURNAME))</td>*@
+                        <td>@(item.CREATED_USER == null ? "-" : (item.CREATED_USER.NAME + " " + item.CREATED_USER.SURNAME))</td>
                         <td>
                             <a href="/ServiceCatalog/ServiceCatalog?id=@item.SERVICE_ID" class="btn btn-sm btn-clean btn-icon" title="Güncelle">
                                 <i class="la la-edit"></i>

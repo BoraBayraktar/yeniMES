@@ -52,12 +52,12 @@ namespace MES.API.Controllers
             return logger.Logging<PARAMETER>(id, "Parameter", "Post", userid, "GetParameter", parameterLogic.GetParameter(id));
         }
         [HttpPost("GetParameterListByParameterTypeCodeMainProcessId")]
-        public List<PARAMETER> GetParameterListByParameterTypeCode(string code, int mainProcessId)
+        public List<PARAMETER> GetParameterListByParameterTypeCodeMainProcessId((string, int) codeAndId)
         {
-            return logger.Logging<List<PARAMETER>>((code, mainProcessId), "Parameter", "Post", userid, "GetParameterListByParameterTypeCodeMainProcessId", parameterLogic.GetParameterListByParameterTypeCode(code, mainProcessId));
+            return logger.Logging<List<PARAMETER>>(codeAndId, "Parameter", "Post", userid, "GetParameterListByParameterTypeCodeMainProcessId", parameterLogic.GetParameterListByParameterTypeCode(codeAndId.Item1, codeAndId.Item2));
         }
         [HttpPost("GetParameterListByParameterTypeCode")]
-        public List<PARAMETER> GetParameterListByParameterTypeCode(string code)
+        public List<PARAMETER> GetParameterListByParameterTypeCode([FromBody] string code)
         {
             return logger.Logging<List<PARAMETER>>(code, "Parameter", "Post", userid, "GetParameterListByParameterTypeCode", parameterLogic.GetParameterListByParameterTypeCode(code));
         }

@@ -29,6 +29,10 @@ namespace MES.Web.Controllers
             var user = HttpContext.Session.GetObject<USER>("User");
 
             var knowledgeList = serviceBusiness.ServicePost<List<KNOWLEDGE_MANAGEMENT>>(user.USER_ID, "Knowledge", "KnowledgeGetList");
+            foreach (var item in knowledgeList)
+            {
+                item.CREATED_USER = serviceBusiness.ServicePost<USER>(item.CREATED_USER_ID, "User", "GetUser");
+            }
             KnowledgeViewModel kvm = new KnowledgeViewModel();
             kvm.knowledgeList = knowledgeList;
 
@@ -125,13 +129,13 @@ namespace MES.Web.Controllers
 
             if (id == null)
             {
-                //knowledge.CREATED_USER_ID = user.USER_ID;
+                knowledge.CREATED_USER_ID = user.USER_ID;
                 success = serviceBusiness.ServicePost<bool>(knowledge, "Knowledge", "InsertKnowledge");
             }
             else
             {
                 knowledge.ID = Convert.ToInt32(id);
-                //knowledge.UPDATED_USER_ID = user.USER_ID;
+                knowledge.UPDATED_USER_ID = user.USER_ID;
                 success = serviceBusiness.ServicePost<bool>(knowledge,"Knowledge", "UpdateKnowledge");
             }
 
@@ -150,7 +154,7 @@ namespace MES.Web.Controllers
             {
                 if (!String.IsNullOrEmpty(_knowledgeFiles.FILE_PATH))
                 {
-                    //_knowledgeFiles.CREATED_USER_ID = user.USER_ID;
+                    _knowledgeFiles.CREATED_USER_ID = user.USER_ID;
                     _knowledgeFiles.KNOWLEDGE_ID = knowledge.ID;
                     _knowledgeFiles.FILE_NAME = localFileName;
                     var successFile = serviceBusiness.ServicePost<bool>(_knowledgeFiles,"Knowledge","InsertKnowledgeFiles");
@@ -182,13 +186,13 @@ namespace MES.Web.Controllers
 
             if (id == null)
             {
-                //know.CREATED_USER_ID = user.USER_ID;
+                know.CREATED_USER_ID = user.USER_ID;
                 success = serviceBusiness.ServicePost<bool>(know,"Knowledge","InsertKnowledge");
             }
             else
             {
                 know.ID = Convert.ToInt32(id);
-                //know.UPDATED_USER_ID = user.USER_ID;
+                know.UPDATED_USER_ID = user.USER_ID;
                 success = serviceBusiness.ServicePost<bool>(know, "Knowledge", "UpdateKnowledge");
             }
             return Json(new { success = success });

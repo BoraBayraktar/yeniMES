@@ -79,9 +79,9 @@ namespace MES.API.Business
         {
             passwordChangeLogic.UpdatePasswordChange(pcId);
         }
-        public void UserChangePassword(List<(int, string)> list)
+        public void UserChangePassword((int, string) IdPassword)
         {
-            userLogic.UserChangePassword(list.First().Item1, encryption.Decrypt(list.First().Item2));
+            userLogic.UserChangePassword(IdPassword.Item1, encryption.Decrypt(IdPassword.Item2));
         }
     }
 }

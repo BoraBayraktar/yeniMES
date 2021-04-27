@@ -4,14 +4,16 @@ using MES.DB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MES.DB.Migrations
 {
     [DbContext(typeof(MesContext))]
-    partial class MesContextModelSnapshot : ModelSnapshot
+    [Migration("20210421213814_MES3")]
+    partial class MES3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -481,9 +483,6 @@ namespace MES.DB.Migrations
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("CREATED_USER_ID")
-                        .HasColumnType("int");
-
                     b.Property<string>("DESCRIPTION")
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
@@ -525,9 +524,6 @@ namespace MES.DB.Migrations
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("UPDATED_USER_ID")
-                        .HasColumnType("int");
-
                     b.HasKey("ID");
 
                     b.HasIndex("ASSIGNED_GROUP_ID");
@@ -535,8 +531,6 @@ namespace MES.DB.Migrations
                     b.HasIndex("ASSIGNED_USER_ID");
 
                     b.HasIndex("CATEGORY_ID");
-
-                    b.HasIndex("CREATED_USER_ID");
 
                     b.HasIndex("INCIDENT_IMPACT_ID");
 
@@ -555,8 +549,6 @@ namespace MES.DB.Migrations
                     b.HasIndex("SERVICE_CATALOG_ID");
 
                     b.HasIndex("SUB_CATEGORY_ID");
-
-                    b.HasIndex("UPDATED_USER_ID");
 
                     b.ToTable("INCIDENT");
                 });
@@ -604,9 +596,6 @@ namespace MES.DB.Migrations
 
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
-
-                    b.Property<int?>("CREATED_USER_ID")
-                        .HasColumnType("int");
 
                     b.Property<string>("DESCRIPTION")
                         .HasMaxLength(250)
@@ -661,9 +650,6 @@ namespace MES.DB.Migrations
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("UPDATED_USER_ID")
-                        .HasColumnType("int");
-
                     b.Property<bool>("VISIBLE_TO_OPERATOR")
                         .HasColumnType("bit");
 
@@ -677,8 +663,6 @@ namespace MES.DB.Migrations
                     b.HasIndex("ASSIGNED_USER_ID");
 
                     b.HasIndex("CATEGORY_ID");
-
-                    b.HasIndex("CREATED_USER_ID");
 
                     b.HasIndex("INCIDENT_ID");
 
@@ -699,8 +683,6 @@ namespace MES.DB.Migrations
                     b.HasIndex("SERVICE_CATALOG_ID");
 
                     b.HasIndex("SUB_CATEGORY_ID");
-
-                    b.HasIndex("UPDATED_USER_ID");
 
                     b.ToTable("INCIDENT_HISTORY");
                 });
@@ -773,9 +755,6 @@ namespace MES.DB.Migrations
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("CREATED_USER_ID")
-                        .HasColumnType("int");
-
                     b.Property<string>("FILE_NAME")
                         .HasColumnType("nvarchar(max)");
 
@@ -792,16 +771,9 @@ namespace MES.DB.Migrations
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("UPDATED_USER_ID")
-                        .HasColumnType("int");
-
                     b.HasKey("ID");
 
-                    b.HasIndex("CREATED_USER_ID");
-
                     b.HasIndex("KNOWLEDGE_ID");
-
-                    b.HasIndex("UPDATED_USER_ID");
 
                     b.ToTable("KNOWLEDGE_FILES");
                 });
@@ -815,9 +787,6 @@ namespace MES.DB.Migrations
 
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
-
-                    b.Property<int?>("CREATED_USER_ID")
-                        .HasColumnType("int");
 
                     b.Property<bool>("IS_ACTIVE")
                         .HasColumnType("bit");
@@ -851,20 +820,13 @@ namespace MES.DB.Migrations
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("UPDATED_USER_ID")
-                        .HasColumnType("int");
-
                     b.HasKey("ID");
-
-                    b.HasIndex("CREATED_USER_ID");
 
                     b.HasIndex("KNOWLEDGE_CATEGORY_ID");
 
                     b.HasIndex("KNOWLEDGE_SERVICE_ID");
 
                     b.HasIndex("KNOWLEDGE_STATUS_ID");
-
-                    b.HasIndex("UPDATED_USER_ID");
 
                     b.ToTable("KNOWLEDGE_MANAGEMENT");
                 });
@@ -1651,9 +1613,6 @@ namespace MES.DB.Migrations
                     b.Property<DateTime>("CREATED_DATE")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("CREATED_USER_ID")
-                        .HasColumnType("int");
-
                     b.Property<string>("DESCRIPTION")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
@@ -1683,12 +1642,7 @@ namespace MES.DB.Migrations
                     b.Property<DateTime?>("UPDATED_DATE")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("UPDATED_USER_ID")
-                        .HasColumnType("int");
-
                     b.HasKey("SERVICE_ID");
-
-                    b.HasIndex("CREATED_USER_ID");
 
                     b.HasIndex("OPERATIONAL_STATUS_ID");
 
@@ -1697,8 +1651,6 @@ namespace MES.DB.Migrations
                     b.HasIndex("SERVICE_MANAGER_IT_ID");
 
                     b.HasIndex("SERVICE_PARAMETER_ID");
-
-                    b.HasIndex("UPDATED_USER_ID");
 
                     b.ToTable("SERVICECATALOG");
                 });
@@ -2496,10 +2448,6 @@ namespace MES.DB.Migrations
                         .WithMany()
                         .HasForeignKey("CATEGORY_ID");
 
-                    b.HasOne("MES.DB.Model.USER", "CREATED_USER")
-                        .WithMany()
-                        .HasForeignKey("CREATED_USER_ID");
-
                     b.HasOne("MES.DB.Model.PARAMETER", "INCIDENT_IMPACT")
                         .WithMany()
                         .HasForeignKey("INCIDENT_IMPACT_ID");
@@ -2540,17 +2488,11 @@ namespace MES.DB.Migrations
                         .WithMany()
                         .HasForeignKey("SUB_CATEGORY_ID");
 
-                    b.HasOne("MES.DB.Model.USER", "UPDATED_USER")
-                        .WithMany()
-                        .HasForeignKey("UPDATED_USER_ID");
-
                     b.Navigation("ASSIGNED_GROUP");
 
                     b.Navigation("ASSIGNED_USER");
 
                     b.Navigation("CATEGORY");
-
-                    b.Navigation("CREATED_USER");
 
                     b.Navigation("INCIDENT_IMPACT");
 
@@ -2569,8 +2511,6 @@ namespace MES.DB.Migrations
                     b.Navigation("SERVICE_CATALOG");
 
                     b.Navigation("SUB_CATEGORY");
-
-                    b.Navigation("UPDATED_USER");
                 });
 
             modelBuilder.Entity("MES.DB.Model.INCIDENT_FILES", b =>
@@ -2597,10 +2537,6 @@ namespace MES.DB.Migrations
                     b.HasOne("MES.DB.Model.PARAMETER", "CATEGORY")
                         .WithMany()
                         .HasForeignKey("CATEGORY_ID");
-
-                    b.HasOne("MES.DB.Model.USER", "CREATED_USER")
-                        .WithMany()
-                        .HasForeignKey("CREATED_USER_ID");
 
                     b.HasOne("MES.DB.Model.INCIDENT", "INCIDENT")
                         .WithMany()
@@ -2644,17 +2580,11 @@ namespace MES.DB.Migrations
                         .WithMany()
                         .HasForeignKey("SUB_CATEGORY_ID");
 
-                    b.HasOne("MES.DB.Model.USER", "UPDATED_USER")
-                        .WithMany()
-                        .HasForeignKey("UPDATED_USER_ID");
-
                     b.Navigation("ASSIGNED_GROUP");
 
                     b.Navigation("ASSIGNED_USER");
 
                     b.Navigation("CATEGORY");
-
-                    b.Navigation("CREATED_USER");
 
                     b.Navigation("INCIDENT");
 
@@ -2675,8 +2605,6 @@ namespace MES.DB.Migrations
                     b.Navigation("SERVICE_CATALOG");
 
                     b.Navigation("SUB_CATEGORY");
-
-                    b.Navigation("UPDATED_USER");
                 });
 
             modelBuilder.Entity("MES.DB.Model.INCIDENT_RESOLUTION", b =>
@@ -2692,33 +2620,17 @@ namespace MES.DB.Migrations
 
             modelBuilder.Entity("MES.DB.Model.KNOWLEDGE_FILES", b =>
                 {
-                    b.HasOne("MES.DB.Model.USER", "CREATED_USER")
-                        .WithMany()
-                        .HasForeignKey("CREATED_USER_ID");
-
                     b.HasOne("MES.DB.Model.KNOWLEDGE_MANAGEMENT", "KNOWLEDGE")
                         .WithMany()
                         .HasForeignKey("KNOWLEDGE_ID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MES.DB.Model.USER", "UPDATED_USER")
-                        .WithMany()
-                        .HasForeignKey("UPDATED_USER_ID");
-
-                    b.Navigation("CREATED_USER");
-
                     b.Navigation("KNOWLEDGE");
-
-                    b.Navigation("UPDATED_USER");
                 });
 
             modelBuilder.Entity("MES.DB.Model.KNOWLEDGE_MANAGEMENT", b =>
                 {
-                    b.HasOne("MES.DB.Model.USER", "CREATED_USER")
-                        .WithMany()
-                        .HasForeignKey("CREATED_USER_ID");
-
                     b.HasOne("MES.DB.Model.PARAMETER", "CATEGORY_MODEL")
                         .WithMany()
                         .HasForeignKey("KNOWLEDGE_CATEGORY_ID")
@@ -2737,19 +2649,11 @@ namespace MES.DB.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MES.DB.Model.USER", "UPDATED_USER")
-                        .WithMany()
-                        .HasForeignKey("UPDATED_USER_ID");
-
                     b.Navigation("CATEGORY_MODEL");
-
-                    b.Navigation("CREATED_USER");
 
                     b.Navigation("SERVICE_MODEL");
 
                     b.Navigation("STATUS_MODEL");
-
-                    b.Navigation("UPDATED_USER");
                 });
 
             modelBuilder.Entity("MES.DB.Model.KNOWLEDGE_SETTINGS", b =>
@@ -2891,10 +2795,6 @@ namespace MES.DB.Migrations
 
             modelBuilder.Entity("MES.DB.Model.SERVICECATALOG", b =>
                 {
-                    b.HasOne("MES.DB.Model.USER", "CREATED_USER")
-                        .WithMany()
-                        .HasForeignKey("CREATED_USER_ID");
-
                     b.HasOne("MES.DB.Model.PARAMETER", "PARAMETER_OPSTATUSMODEL")
                         .WithMany()
                         .HasForeignKey("OPERATIONAL_STATUS_ID")
@@ -2919,17 +2819,9 @@ namespace MES.DB.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MES.DB.Model.USER", "UPDATED_USER")
-                        .WithMany()
-                        .HasForeignKey("UPDATED_USER_ID");
-
-                    b.Navigation("CREATED_USER");
-
                     b.Navigation("PARAMETER_OPSTATUSMODEL");
 
                     b.Navigation("PARAMETERMODEL");
-
-                    b.Navigation("UPDATED_USER");
 
                     b.Navigation("USER_MANAGERBUSINESSMODEL");
 

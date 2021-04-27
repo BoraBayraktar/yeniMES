@@ -330,7 +330,7 @@ namespace MES.Web.Controllers
         {
             bool success = false;
 
-            //incidentDetailModel.incident.UPDATED_USER_ID = SessionUser.USER_ID;
+            incidentDetailModel.incident.UPDATED_USER_ID = SessionUser.USER_ID;
 
             success = serviceBusiness.ServicePost<bool>(incidentDetailModel.incident, "Incident", "UpdateIncidentDetail");
 
@@ -340,7 +340,7 @@ namespace MES.Web.Controllers
                 INCIDENT_HISTORY history = new INCIDENT_HISTORY()
                 {
                     CREATED_DATE = DateTime.Now,
-                    //CREATED_USER_ID = SessionUser.USER_ID,
+                    CREATED_USER_ID = SessionUser.USER_ID,
                     DESCRIPTION = incidentDetailModel.incidentHistory.DESCRIPTION,
                     INCIDENT_ID = incidentDetailModel.incident.ID,
                     INCIDENT_PRIORITY_ID = incidentDetailModel.incident.INCIDENT_PRIORITY_ID,
@@ -365,7 +365,7 @@ namespace MES.Web.Controllers
                         {
                             INCIDENT_ID = incidentDetailModel.incident.ID,
                             CREATED_DATE = DateTime.Now,
-                           // CREATED_USER_ID = SessionUser.USER_ID,
+                            CREATED_USER_ID = SessionUser.USER_ID,
                             IS_APPROVED = false,
                             IS_DELETED = false,
                             RESOLVED_CODE = incidentDetailModel.incidentResolution.RESOLVED_CODE,
@@ -425,21 +425,24 @@ namespace MES.Web.Controllers
             incidentViewModel.incident.INCIDENT_STATUS_ID = 1;
 
 
-            //incidentViewModel.incident.CREATED_USER_ID = SessionUser.USER_ID;
+            incidentViewModel.incident.CREATED_USER_ID = SessionUser.USER_ID;
             success = serviceBusiness.ServicePost<bool>(incidentViewModel.incident, "Incident", "InsertIncident"); //incidentLogic.InsertIncident(incidentViewModel.incident);
             if (success)
             {
                 INCIDENT_HISTORY history = new INCIDENT_HISTORY()
                 {
                     CREATED_DATE = DateTime.Now,
-                    //CREATED_USER_ID = SessionUser.USER_ID,
+                    CREATED_USER_ID = SessionUser.USER_ID,
                     DESCRIPTION = incidentViewModel.incident.DESCRIPTION,
                     INCIDENT_ID = incidentViewModel.incident.ID,
                     INCIDENT_PRIORITY_ID = incidentViewModel.incident.INCIDENT_PRIORITY_ID,
                     INCIDENT_STATUS_ID = incidentViewModel.incident.INCIDENT_STATUS_ID,
                     IS_DELETED = false,
-                    INCIDENT_TYPE_ID = serviceBusiness.ServicePost<INCIDENT_TYPE>("ST", "Incident", "GetIncidentType").INCIDENT_TYPE_ID
+                    INCIDENT_TYPE_ID = serviceBusiness.ServicePost<INCIDENT_TYPE>("ST", "Incident", "GetIncidentType").INCIDENT_TYPE_ID,
+                    VISIBLE_TO_OPERATOR = true,
+                    VISIBLE_TO_USER = true
                 };
+                
                 var successHistory = serviceBusiness.ServicePost<bool>(history, "Incident", "InsertIncidentHistory");
 
                 if (successHistory)
@@ -665,126 +668,126 @@ namespace MES.Web.Controllers
                                     }
                                 }
                                 break;
-                            //case "Kullanıcı":
-                            //    if (incidentViewModel.incident.CREATED_USER_ID == Convert.ToInt32(detail.VALUE))
-                            //    {
-                            //        if (detail.CONDITION == "Ve")
-                            //        {
-                            //            if (sonuc)
-                            //            {
-                            //                sonuc = true;
-                            //            }
-                            //            else
-                            //            {
-                            //                sonuc = false;
-                            //            }
-                            //        }
-                            //        else
-                            //        {
-                            //            sonuc = true;
-                            //        }
-                            //    }
-                            //    else
-                            //    {
-                            //        if (detail.CONDITION == "Ve")
-                            //        {
-                            //            sonuc = false;
-                            //        }
-                            //        else
-                            //        {
-                            //            if (sonuc)
-                            //            {
-                            //                sonuc = true;
-                            //            }
-                            //            else
-                            //            {
-                            //                sonuc = false;
-                            //            }
-                            //        }
-                            //    }
-                            //    break;
-                            //case "Kullanıcı Departman":
-                            //    var user =  serviceBusiness.ServicePost<USER>(Convert.ToInt32(incidentViewModel.incident.CREATED_USER_ID), "User", "GetUser");
-                            //    if (Convert.ToInt32(user.DEPARTMENT_ID) == Convert.ToInt32(detail.VALUE))
-                            //    {
-                            //        if (detail.CONDITION == "Ve")
-                            //        {
-                            //            if (sonuc)
-                            //            {
-                            //                sonuc = true;
-                            //            }
-                            //            else
-                            //            {
-                            //                sonuc = false;
-                            //            }
-                            //        }
-                            //        else
-                            //        {
-                            //            sonuc = true;
-                            //        }
-                            //    }
-                            //    else
-                            //    {
-                            //        if (detail.CONDITION == "Ve")
-                            //        {
-                            //            sonuc = false;
-                            //        }
-                            //        else
-                            //        {
-                            //            if (sonuc)
-                            //            {
-                            //                sonuc = true;
-                            //            }
-                            //            else
-                            //            {
-                            //                sonuc = false;
-                            //            }
-                            //        }
-                            //    }
-                            //    break;
-                            //case "Kullanıcı Şirketi":
-                            //    var ksUser = serviceBusiness.ServicePost<USER>(Convert.ToInt32(incidentViewModel.incident.CREATED_USER_ID), "User", "GetUser");
-                            //    if (ksUser.DEPARTMENT_ID != null)
-                            //    {
-                            //        var ksDepartment =  serviceBusiness.ServicePost<DEPARTMENT>(Convert.ToInt32(ksUser.DEPARTMENT_ID), "Department", "GetDepartment");
-                            //        if (Convert.ToInt32(ksDepartment.COMPANY_ID) == Convert.ToInt32(detail.VALUE))
-                            //        {
-                            //            if (detail.CONDITION == "Ve")
-                            //            {
-                            //                if (sonuc)
-                            //                {
-                            //                    sonuc = true;
-                            //                }
-                            //                else
-                            //                {
-                            //                    sonuc = false;
-                            //                }
-                            //            }
-                            //            else
-                            //            {
-                            //                sonuc = true;
-                            //            }
-                            //        }
-                            //        else
-                            //        {
-                            //            if (detail.CONDITION == "Ve")
-                            //            {
-                            //                sonuc = false;
-                            //            }
-                            //            else
-                            //            {
-                            //                if (sonuc)
-                            //                {
-                            //                    sonuc = true;
-                            //                }
-                            //                else
-                            //                {
-                            //                    sonuc = false;
-                            //                }
-                            //            }
-                            //        }
-                            //    }
-                            //    break;
+                            case "Kullanıcı":
+                                if (incidentViewModel.incident.CREATED_USER_ID == Convert.ToInt32(detail.VALUE))
+                                {
+                                    if (detail.CONDITION == "Ve")
+                                    {
+                                        if (sonuc)
+                                        {
+                                            sonuc = true;
+                                        }
+                                        else
+                                        {
+                                            sonuc = false;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        sonuc = true;
+                                    }
+                                }
+                                else
+                                {
+                                    if (detail.CONDITION == "Ve")
+                                    {
+                                        sonuc = false;
+                                    }
+                                    else
+                                    {
+                                        if (sonuc)
+                                        {
+                                            sonuc = true;
+                                        }
+                                        else
+                                        {
+                                            sonuc = false;
+                                        }
+                                    }
+                                }
+                                break;
+                            case "Kullanıcı Departman":
+                                var user = serviceBusiness.ServicePost<USER>(Convert.ToInt32(incidentViewModel.incident.CREATED_USER_ID), "User", "GetUser");
+                                if (Convert.ToInt32(user.DEPARTMENT_ID) == Convert.ToInt32(detail.VALUE))
+                                {
+                                    if (detail.CONDITION == "Ve")
+                                    {
+                                        if (sonuc)
+                                        {
+                                            sonuc = true;
+                                        }
+                                        else
+                                        {
+                                            sonuc = false;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        sonuc = true;
+                                    }
+                                }
+                                else
+                                {
+                                    if (detail.CONDITION == "Ve")
+                                    {
+                                        sonuc = false;
+                                    }
+                                    else
+                                    {
+                                        if (sonuc)
+                                        {
+                                            sonuc = true;
+                                        }
+                                        else
+                                        {
+                                            sonuc = false;
+                                        }
+                                    }
+                                }
+                                break;
+                            case "Kullanıcı Şirketi":
+                                var ksUser = serviceBusiness.ServicePost<USER>(Convert.ToInt32(incidentViewModel.incident.CREATED_USER_ID), "User", "GetUser");
+                                if (ksUser.DEPARTMENT_ID != null)
+                                {
+                                    var ksDepartment = serviceBusiness.ServicePost<DEPARTMENT>(Convert.ToInt32(ksUser.DEPARTMENT_ID), "Department", "GetDepartment");
+                                    if (Convert.ToInt32(ksDepartment.COMPANY_ID) == Convert.ToInt32(detail.VALUE))
+                                    {
+                                        if (detail.CONDITION == "Ve")
+                                        {
+                                            if (sonuc)
+                                            {
+                                                sonuc = true;
+                                            }
+                                            else
+                                            {
+                                                sonuc = false;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            sonuc = true;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (detail.CONDITION == "Ve")
+                                        {
+                                            sonuc = false;
+                                        }
+                                        else
+                                        {
+                                            if (sonuc)
+                                            {
+                                                sonuc = true;
+                                            }
+                                            else
+                                            {
+                                                sonuc = false;
+                                            }
+                                        }
+                                    }
+                                }
+                                break;
                             case "Öncelik":
                                 if (incidentViewModel.incident.INCIDENT_PRIORITY_ID == Convert.ToInt32(detail.VALUE))
                                 {
@@ -1205,7 +1208,7 @@ namespace MES.Web.Controllers
 
             bool success = false;
 
-            //incidentHistory.UPDATED_USER_ID = user.USER_ID;
+            incidentHistory.UPDATED_USER_ID = user.USER_ID;
 
             success = serviceBusiness.ServicePost<bool>(incidentHistory, "Incident", "UpdateIncidentStatus");
 
@@ -1385,7 +1388,7 @@ namespace MES.Web.Controllers
                 });
             }
 
-
+            ivm.incident.CREATED_USER = serviceBusiness.ServicePost<USER>(ivm.incident.CREATED_USER_ID, "User", "GetUser");
             return View(ivm);
         }
 
@@ -1395,7 +1398,7 @@ namespace MES.Web.Controllers
         {
             bool success = false;
 
-            //incidentDetailModel.incident.UPDATED_USER_ID = SessionUser.USER_ID;
+            incidentDetailModel.incident.UPDATED_USER_ID = SessionUser.USER_ID;
 
             var getIncident = serviceBusiness.ServicePost<INCIDENT>(incidentDetailModel.incident.ID, "Incident", "GetIncident");
 
@@ -1595,126 +1598,126 @@ namespace MES.Web.Controllers
                                     }
                                 }
                                 break;
-                            //case "Kullanıcı":
-                            //    if (incidentDetailModel.incident.CREATED_USER_ID == Convert.ToInt32(detail.VALUE))
-                            //    {
-                            //        if (detail.CONDITION == "Ve")
-                            //        {
-                            //            if (sonuc)
-                            //            {
-                            //                sonuc = true;
-                            //            }
-                            //            else
-                            //            {
-                            //                sonuc = false;
-                            //            }
-                            //        }
-                            //        else
-                            //        {
-                            //            sonuc = true;
-                            //        }
-                            //    }
-                            //    else
-                            //    {
-                            //        if (detail.CONDITION == "Ve")
-                            //        {
-                            //            sonuc = false;
-                            //        }
-                            //        else
-                            //        {
-                            //            if (sonuc)
-                            //            {
-                            //                sonuc = true;
-                            //            }
-                            //            else
-                            //            {
-                            //                sonuc = false;
-                            //            }
-                            //        }
-                            //    }
-                            //    break;
-                            //case "Kullanıcı Departman":
-                            //    var user =  serviceBusiness.ServicePost<USER>(Convert.ToInt32(incidentDetailModel.incident.CREATED_USER_ID), "User", "GetUser");
-                            //    if (Convert.ToInt32(user.DEPARTMENT_ID) == Convert.ToInt32(detail.VALUE))
-                            //    {
-                            //        if (detail.CONDITION == "Ve")
-                            //        {
-                            //            if (sonuc)
-                            //            {
-                            //                sonuc = true;
-                            //            }
-                            //            else
-                            //            {
-                            //                sonuc = false;
-                            //            }
-                            //        }
-                            //        else
-                            //        {
-                            //            sonuc = true;
-                            //        }
-                            //    }
-                            //    else
-                            //    {
-                            //        if (detail.CONDITION == "Ve")
-                            //        {
-                            //            sonuc = false;
-                            //        }
-                            //        else
-                            //        {
-                            //            if (sonuc)
-                            //            {
-                            //                sonuc = true;
-                            //            }
-                            //            else
-                            //            {
-                            //                sonuc = false;
-                            //            }
-                            //        }
-                            //    }
-                            //    break;
-                            //case "Kullanıcı Şirketi":
-                            //    var ksUser = serviceBusiness.ServicePost<USER>(Convert.ToInt32(incidentDetailModel.incident.CREATED_USER_ID), "User", "GetUser"); 
-                            //    if (ksUser.DEPARTMENT_ID != null)
-                            //    {
-                            //        var ksDepartment = serviceBusiness.ServicePost<DEPARTMENT>(Convert.ToInt32(ksUser.DEPARTMENT_ID), "Department", "GetDepartment"); 
-                            //        if (Convert.ToInt32(ksDepartment.COMPANY_ID) == Convert.ToInt32(detail.VALUE))
-                            //        {
-                            //            if (detail.CONDITION == "Ve")
-                            //            {
-                            //                if (sonuc)
-                            //                {
-                            //                    sonuc = true;
-                            //                }
-                            //                else
-                            //                {
-                            //                    sonuc = false;
-                            //                }
-                            //            }
-                            //            else
-                            //            {
-                            //                sonuc = true;
-                            //            }
-                            //        }
-                            //        else
-                            //        {
-                            //            if (detail.CONDITION == "Ve")
-                            //            {
-                            //                sonuc = false;
-                            //            }
-                            //            else
-                            //            {
-                            //                if (sonuc)
-                            //                {
-                            //                    sonuc = true;
-                            //                }
-                            //                else
-                            //                {
-                            //                    sonuc = false;
-                            //                }
-                            //            }
-                            //        }
-                            //    }
-                            //    break;
+                            case "Kullanıcı":
+                                if (incidentDetailModel.incident.CREATED_USER_ID == Convert.ToInt32(detail.VALUE))
+                                {
+                                    if (detail.CONDITION == "Ve")
+                                    {
+                                        if (sonuc)
+                                        {
+                                            sonuc = true;
+                                        }
+                                        else
+                                        {
+                                            sonuc = false;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        sonuc = true;
+                                    }
+                                }
+                                else
+                                {
+                                    if (detail.CONDITION == "Ve")
+                                    {
+                                        sonuc = false;
+                                    }
+                                    else
+                                    {
+                                        if (sonuc)
+                                        {
+                                            sonuc = true;
+                                        }
+                                        else
+                                        {
+                                            sonuc = false;
+                                        }
+                                    }
+                                }
+                                break;
+                            case "Kullanıcı Departman":
+                                var user = serviceBusiness.ServicePost<USER>(Convert.ToInt32(incidentDetailModel.incident.CREATED_USER_ID), "User", "GetUser");
+                                if (Convert.ToInt32(user.DEPARTMENT_ID) == Convert.ToInt32(detail.VALUE))
+                                {
+                                    if (detail.CONDITION == "Ve")
+                                    {
+                                        if (sonuc)
+                                        {
+                                            sonuc = true;
+                                        }
+                                        else
+                                        {
+                                            sonuc = false;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        sonuc = true;
+                                    }
+                                }
+                                else
+                                {
+                                    if (detail.CONDITION == "Ve")
+                                    {
+                                        sonuc = false;
+                                    }
+                                    else
+                                    {
+                                        if (sonuc)
+                                        {
+                                            sonuc = true;
+                                        }
+                                        else
+                                        {
+                                            sonuc = false;
+                                        }
+                                    }
+                                }
+                                break;
+                            case "Kullanıcı Şirketi":
+                                var ksUser = serviceBusiness.ServicePost<USER>(Convert.ToInt32(incidentDetailModel.incident.CREATED_USER_ID), "User", "GetUser");
+                                if (ksUser.DEPARTMENT_ID != null)
+                                {
+                                    var ksDepartment = serviceBusiness.ServicePost<DEPARTMENT>(Convert.ToInt32(ksUser.DEPARTMENT_ID), "Department", "GetDepartment");
+                                    if (Convert.ToInt32(ksDepartment.COMPANY_ID) == Convert.ToInt32(detail.VALUE))
+                                    {
+                                        if (detail.CONDITION == "Ve")
+                                        {
+                                            if (sonuc)
+                                            {
+                                                sonuc = true;
+                                            }
+                                            else
+                                            {
+                                                sonuc = false;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            sonuc = true;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (detail.CONDITION == "Ve")
+                                        {
+                                            sonuc = false;
+                                        }
+                                        else
+                                        {
+                                            if (sonuc)
+                                            {
+                                                sonuc = true;
+                                            }
+                                            else
+                                            {
+                                                sonuc = false;
+                                            }
+                                        }
+                                    }
+                                }
+                                break;
                             case "Öncelik":
                                 if (incidentDetailModel.incident.INCIDENT_PRIORITY_ID == Convert.ToInt32(detail.VALUE))
                                 {

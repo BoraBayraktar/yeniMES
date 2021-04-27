@@ -23,6 +23,10 @@ namespace MES.Web.Controllers
         {
             var serviceList = serviceBusiness.ServiceGet<List<SERVICECATALOG>>("ServiceCatalog", "ServiceCatalogGetList");
             ServiceCatalogViewModel scvm = new ServiceCatalogViewModel();
+            //foreach (var item in serviceList)
+            //{
+            //    item.CREATED_USER = serviceBusiness.ServicePost<USER>(item.CREATED_USER_ID, "User", "GetUser");
+            //}
             scvm.serviceCatalogList = serviceList;
             return View(scvm);
         }
@@ -77,7 +81,6 @@ namespace MES.Web.Controllers
                     Value = item.USER_ID.ToString()
                 });
             }
-
             return View(scvm);
         }
 

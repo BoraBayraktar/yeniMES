@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using MES.Web.Encrypter;
 using MES.Web.Model;
 using MES.Web.Models;
 using MES.Web.Service;
@@ -24,7 +25,7 @@ namespace MES.Web.Controllers
         IHostingEnvironment _hostingEnvironment;
         IHttpContextAccessor accessor;
         ServiceBusiness serviceBusiness;
-
+        private Encryption encryption = new Encryption();
         #endregion
 
         [Obsolete]
@@ -379,11 +380,12 @@ namespace MES.Web.Controllers
 
             return View(uvm);
         }
-        [HttpPost]
+        //[HttpPost]
         public JsonResult CreateOrEditUser(int? id, USER user, IFormFile imageFile)
         {
             bool success = false;
             var currentUser = HttpContext.Session.GetObject<USER>("User");
+            user.PASSWORD = encryption.Encrypt(user.PASSWORD);
             if (imageFile != null)
             {
                 var uploads = Path.Combine(_hostingEnvironment.ContentRootPath, @"Content/images/user");
@@ -406,8 +408,13 @@ namespace MES.Web.Controllers
             }
             else
             {
+                
                 //user.UPDATED_USER_ID = currentUser.USER_ID;
                 user.USER_ID = Convert.ToInt32(id);
+                if (user.USER_ID == SessionUser.USER_ID)
+                {
+                    SessionUser = user;
+                }
                 success = serviceBusiness.ServicePost<bool>(user, "User", "UpdateUser");
             }
             return Json(new { success = success });

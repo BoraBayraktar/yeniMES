@@ -84,7 +84,7 @@
                         </div>
                         <div class="form-group">
                             <label for="exampleInputPassword1">Toplam Gün</label>
-                            @Html.TextBoxFor(m => m.leave.TOTAL_DAY, new { @class = "form-control", @placeholder = "Gün", @required = true, @id = "totalDay" })
+                            @Html.TextBoxFor(m => m.leave.TOTAL_DAY, new { @class = "form-control", @placeholder = "Gün", @required = true, @id = "totalDay" ,@type = "number", @min = "0", @oninput = "validity.valid||(value='');" })
                         </div>
                         <div class="form-group">
                             <label>Başlangıç Tarihi - Bitiş Tarihi</label>

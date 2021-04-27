@@ -13,7 +13,6 @@ namespace MES.DB.Model
 
         //[ForeignKey("CREATED_USER_ID")]
         //public USER CREATED_USER { get; set; }
-
         //[ForeignKey("UPDATED_USER_ID")]
         //public USER UPDATED_USER { get; set; }
 

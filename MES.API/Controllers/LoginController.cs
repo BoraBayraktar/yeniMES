@@ -74,17 +74,17 @@ namespace MES.API.Controllers
         {
             return logger.Logging<PASSWORD_CHANGE_HISTORY>(guid, "LoginController", "Post", userid, "GetPassChange", loginBusiness.GetPassChange(guid));
         }
-        [HttpPut("UpdatePassChange")]
+        [HttpPost("UpdatePassChange")]
         public void UpdatePassChange([FromBody] int pcId)
         {
             logger.LoggingNoReturn(pcId, "LoginController", "Put", userid, "UpdatePassChange");
             loginBusiness.UpdatePassChange(pcId);
         }
-        [HttpPut("UserChangePassword")]
-        public void UserChangePassword(List<(int, string)> list)
+        [HttpPost("UserChangePassword")]
+        public void UserChangePassword((int, string) IdPassword)
         {
-            logger.LoggingNoReturn(list, "LoginController", "Put", userid, "UserChangePassword");
-            loginBusiness.UserChangePassword(list);
+            logger.LoggingNoReturn(IdPassword, "LoginController", "Put", userid, "UserChangePassword");
+            loginBusiness.UserChangePassword(IdPassword);
         }
 
     }
