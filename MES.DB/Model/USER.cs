@@ -14,7 +14,7 @@ namespace MES.DB.Model
 
         [StringLength(50)]
         public string USERNAME { get; set; }
-        [StringLength(5000)]
+        [StringLength(50)]
         public string PASSWORD { get; set; }
         [StringLength(5000)]
         public string NAME { get; set; }
@@ -24,13 +24,13 @@ namespace MES.DB.Model
         public string EMAIL { get; set; }
         [StringLength(100)]
         public string DESCRIPTION { get; set; }
-		public bool? ISLDAP { get; set; }
+        public bool? ISLDAP { get; set; }
 
-		public int? DEPARTMENT_ID { get; set; }
+        public int? DEPARTMENT_ID { get; set; }
         public int? TITLE_ID { get; set; }
         public int? USER_TYPE_ID { get; set; }
         public int? LOCATION_ID { get; set; }
-
+        public int? COMPANY_ID { get; set; }
         public int? MANAGER_ID { get; set; }
 
         public int? USER_GROUP_ID { get; set; }
@@ -49,43 +49,58 @@ namespace MES.DB.Model
         public virtual LOCATION LOCATION { get; set; }
         [ForeignKey("USER_GROUP_ID")]
         public virtual USER_GROUP USER_GROUP { get; set; }
-
+        [ForeignKey("COMPANY_ID")]
+        public virtual COMPANY COMPANY { get; set; }
 
         [NotMapped]
-        public string USER_TYPE_NAME { 
-            get 
+        public string USER_TYPE_NAME
+        {
+            get
             {
-                if (USER_TYPE!= null)
+                if (USER_TYPE != null)
                     return USER_TYPE.NAME;
                 return null;
-            } 
-        }        
+            }
+        }
         [NotMapped]
-        public string DEPARTMENT_NAME { 
-            get 
+        public string DEPARTMENT_NAME
+        {
+            get
             {
                 if (DEPARTMENT != null)
                     return DEPARTMENT.NAME;
                 return null;
-            } 
-        }        
+            }
+        }
         [NotMapped]
-        public string TITLE_NAME { 
-            get 
+        public string TITLE_NAME
+        {
+            get
             {
                 if (TITLE != null)
                     return TITLE.NAME;
                 return null;
-            } 
-        }        
+            }
+        }
         [NotMapped]
-        public string LOCATION_NAME { 
-            get 
+        public string LOCATION_NAME
+        {
+            get
             {
                 if (LOCATION != null)
                     return LOCATION.NAME;
                 return null;
-            } 
+            }
+        }
+        [NotMapped]
+        public string COMPANY_NAME
+        {
+            get
+            {
+                if (COMPANY != null)
+                    return COMPANY.NAME;
+                return null;
+            }
         }
 
     }

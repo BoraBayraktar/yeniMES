@@ -30,6 +30,7 @@ namespace MES.Data.Functions
                                            .Include(q => q.USER_TYPE)
                                            .Include(q => q.LOCATION)
                                            .Include(q => q.USER_GROUP)
+                                           .Include(q => q.COMPANY)
                                            .Where(q => q.IS_DELETED == false)
                                            .ToList();
                 return userList;
@@ -118,7 +119,7 @@ namespace MES.Data.Functions
                         _user.USER_ISACTIVE = user.USER_ISACTIVE;
                         _user.IMAGE_PATH = user.IMAGE_PATH;
                         _user.USER_ISACTIVE = user.USER_ISACTIVE;
-
+                        _user.COMPANY_ID = user.COMPANY_ID;
                     }
                     context.Entry(_user).State = EntityState.Modified;
                     context.SaveChanges();

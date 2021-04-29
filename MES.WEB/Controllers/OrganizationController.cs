@@ -114,6 +114,8 @@ namespace MES.Web.Controllers
                 //company.UPDATED_USER_ID = user.USER_ID;
                 success = serviceBusiness.ServicePost<bool>(company, "Company", "UpdateCompany");
             }
+            
+            
             return Json(new { success = success });
         }
         [HttpPost]
@@ -163,9 +165,14 @@ namespace MES.Web.Controllers
             }
             else
             {
+                
                 department.DEPARTMENT_ID = Convert.ToInt32(id);
                 //department.UPDATED_USER_ID = user.USER_ID;
                 success = serviceBusiness.ServicePost<bool>(department, "Department", "UpdateDepartment");
+            }
+            if (id == SessionUser.DEPARTMENT_ID)
+            {
+                SessionUser = serviceBusiness.ServicePost<USER>(SessionUser.USER_ID, "User", "GetUser");
             }
             return Json(new { success = success });
         }
@@ -209,6 +216,10 @@ namespace MES.Web.Controllers
                 title.TITLE_ID = Convert.ToInt32(id);
                 //title.UPDATED_USER_ID = user.USER_ID;
                 success = serviceBusiness.ServicePost<bool>(title, "Title", "UpdateTitle");
+            }
+            if (id == SessionUser.TITLE_ID)
+            {
+                SessionUser = serviceBusiness.ServicePost<USER>(SessionUser.USER_ID, "User", "GetUser");
             }
             return Json(new { success = success });
         }
@@ -332,11 +343,11 @@ namespace MES.Web.Controllers
             var titleList = serviceBusiness.ServiceGet<List<TITLE>>("Title", "TitleGetList");
             var userGroupList = serviceBusiness.ServiceGet<List<USER_GROUP>>("UserGroup", "UserGroupGetList");
             var userTypeList = serviceBusiness.ServiceGet<List<USER_TYPE>>("UserType", "UserTypeGetList");
+            var companyList = serviceBusiness.ServiceGet<List<COMPANY>>("Company", "CompanyGetList");
 
 
             UserViewModel uvm = new UserViewModel();
             uvm.UserList = userList;
-
             foreach (var item in departmentList)
             {
                 uvm.DepartmentSelectList.Add(new SelectListItem()
@@ -375,6 +386,14 @@ namespace MES.Web.Controllers
                 {
                     Text = item.NAME,
                     Value = item.USER_TYPE_ID.ToString()
+                });
+            }
+            foreach (var item in companyList)
+            {
+                uvm.CompanySelectList.Add(new SelectListItem()
+                {
+                    Text = item.NAME,
+                    Value = item.COMPANY_ID.ToString()
                 });
             }
 

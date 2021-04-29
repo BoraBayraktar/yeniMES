@@ -16,6 +16,7 @@ namespace MES.Web.Models
             LocationSelectList = new List<SelectListItem>();
             UserGroupSelectList = new List<SelectListItem>();
             UserTypeSelectList = new List<SelectListItem>();
+            CompanySelectList = new List<SelectListItem>();
         }
         public string Username { get; set; }
         public string Password { get; set; }
@@ -32,5 +33,7 @@ namespace MES.Web.Models
         public List<SelectListItem> LocationSelectList { get; set; }
         public List<SelectListItem> UserGroupSelectList { get; set; }
         public List<SelectListItem> UserTypeSelectList { get; set; }
+
+        public List<SelectListItem> CompanySelectList { get; set; }
     }
 }

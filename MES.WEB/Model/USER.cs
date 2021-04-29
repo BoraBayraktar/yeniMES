@@ -30,7 +30,7 @@ namespace MES.Web.Model
         public int? TITLE_ID { get; set; }
         public int? USER_TYPE_ID { get; set; }
         public int? LOCATION_ID { get; set; }
-
+        public int? COMPANY_ID { get; set; }
         public int? MANAGER_ID { get; set; }
 
         public int? USER_GROUP_ID { get; set; }
@@ -49,7 +49,8 @@ namespace MES.Web.Model
         public virtual LOCATION LOCATION { get; set; }
         [ForeignKey("USER_GROUP_ID")]
         public virtual USER_GROUP USER_GROUP { get; set; }
-
+        [ForeignKey("COMPANY_ID")]
+        public virtual COMPANY COMPANY { get; set; }
 
         [NotMapped]
         public string USER_TYPE_NAME { 
@@ -87,6 +88,15 @@ namespace MES.Web.Model
                 return null;
             } 
         }
-
+        [NotMapped]
+        public string COMPANY_NAME
+        {
+            get
+            {
+                if (COMPANY != null)
+                    return COMPANY.NAME;
+                return null;
+            }
+        }
     }
 }

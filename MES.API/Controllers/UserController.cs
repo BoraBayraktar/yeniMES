@@ -38,13 +38,11 @@ namespace MES.API.Controllers
         [HttpPost("InsertUser")]
         public bool InsertUser(USER user)
         {
-            user.PASSWORD = encryption.Decrypt(user.PASSWORD);
             return logger.Logging<bool>(user, "User", "Post", userid, "InsertUser", userLogic.InsertUser(user));
         }
         [HttpPost("UpdateUser")]
         public bool UpdateUser(USER user)
         {
-            user.PASSWORD = encryption.Decrypt(user.PASSWORD);
             return logger.Logging<bool>(user, "User", "Post", userid, "UpdateUser", userLogic.UpdateUser(user));
         }
         [HttpPost("DeleteUser")]

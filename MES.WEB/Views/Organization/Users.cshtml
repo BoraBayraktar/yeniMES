@@ -63,6 +63,7 @@
                     <th>Kullanıcı Adı</th>
                     @*<th>Açıklama</th>*@
                     <th>Email</th>
+                    <th>Şirket</th>
                     <th>Şube</th>
                     <th>Departman</th>
                     <th>Ünvan</th>
@@ -81,6 +82,7 @@
                     <td>@item.USERNAME</td>
                     @*<td>@item.DESCRIPTION</td>*@
                     <td>@item.EMAIL</td>
+                    <td>@(item.COMPANY == null ? "-" : (item.COMPANY_NAME))</td>
                     <td>@(item.LOCATION == null ? "-" : (item.LOCATION.NAME))</td>
                     <td>@(item.DEPARTMENT == null ? "-" : (item.DEPARTMENT.NAME))</td>
                     <td>@(item.TITLE == null ? "-" : (item.TITLE.NAME))</td>
@@ -135,6 +137,12 @@
                         </div>
                     </div>
                     <div class="form-group row">
+                        <label class="col-lg-2 col-form-label text-left">Şirket:</label>
+                        <div class="col-lg-3">
+                            @Html.DropDownListFor(m => m.user.COMPANY_ID, Model.CompanySelectList, "Seçiniz", new { @class = "form-control selectpicker", id = "drpCompany" })
+                        </div>
+                    </div>
+                    <div class="form-group row">
                         <label class="col-lg-2 col-form-label text-left">Şube:</label>
                         <div class="col-lg-3">
                             @Html.DropDownListFor(m => m.user.LOCATION_ID, Model.LocationSelectList, "Seçiniz", new { @class = "form-control selectpicker", id = "drpLocation" })
@@ -163,7 +171,7 @@
                         <div class="col-lg-3">
                             <span class="switch switch-sm switch-icon" style="margin-left:10px;">
                                 <label>
-                                    @Html.CheckBoxFor(m => m.user.USER_ISACTIVE, new { id = "aktif" })
+                                    @Html.CheckBoxFor(m => m.user.USER_ISACTIVE, new { @class = "form-control", id = "active" })
                                     <span></span>
                                 </label>
                             </span>
@@ -176,9 +184,9 @@
                         </div>
                     </div>
                     @*<div class="form-group">
-                            <label>Kullanıcı Grubu</label>
-                            @Html.DropDownListFor(m => m.user.USER_GROUP_ID, Model.UserGroupSelectList, "Seçiniz", new { @class = "form-control selectpicker", id = "drpUserGroup" })
-                        </div>*@
+            <label>Kullanıcı Grubu</label>
+            @Html.DropDownListFor(m => m.user.USER_GROUP_ID, Model.UserGroupSelectList, "Seçiniz", new { @class = "form-control selectpicker", id = "drpUserGroup" })
+        </div>*@
                     <div class="form-group row">
                         <label class="col-lg-2 col-form-label text-left">Resim</label>
                         <div class="col-lg-8">
@@ -324,9 +332,10 @@
                         $("#drpTitle").val(data.TITLE_ID);
                         $("#drpUserType").val(data.USER_TYPE_ID);
                         //$("#drpUserGroup").val(data.USER_GROUP_ID);
-
+                        $("#active").prop('checked', data.USER_ISACTIVE);
                         $("#drpLocation").trigger('change');
                         $("#drpDepartment").trigger('change');
+                        $("#drpCompany").trigger('checked');
                         $("#drpTitle").trigger('change');
                         $("#drpUserType").trigger('change');
                         $("#drpUserGroup").trigger('change');
@@ -360,9 +369,10 @@
             $("#drpTitle").val('');
             $("#drpUserType").val('');
             //$("#drpUserGroup").val('');
-
+            $("#active").prop('checked', false);
             $("#drpLocation").trigger('change');
             $("#drpDepartment").trigger('change');
+            $("#drpCompany").trigger('change');
             $("#drpTitle").trigger('change');
             $("#drpUserType").trigger('change');
             $("#drpUserGroup").trigger('change');

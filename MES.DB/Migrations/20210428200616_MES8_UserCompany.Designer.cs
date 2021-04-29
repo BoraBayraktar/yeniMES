@@ -4,14 +4,16 @@ using MES.DB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MES.DB.Migrations
 {
     [DbContext(typeof(MesContext))]
-    partial class MesContextModelSnapshot : ModelSnapshot
+    [Migration("20210428200616_MES8_UserCompany")]
+    partial class MES8_UserCompany
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

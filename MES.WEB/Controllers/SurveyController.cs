@@ -259,7 +259,8 @@ namespace MES.Web.Controllers
                 success = serviceBusiness.ServicePost<bool>(survey, "Survey", "UpdateSurvey");
             }
 
-
+            var surveyList = serviceBusiness.ServiceGet<List<SURVEY>>("Survey", "SurveyGetList");
+            survey = surveyList.Where(x=>x.SURVEY_NAME == survey.SURVEY_NAME).FirstOrDefault();
             var questionList = serviceBusiness.ServicePost<List<SURVEY_QUESTION>>(survey.SURVEY_ID, "Survey",  "SurveyQuestionGetListById");
 
             foreach (var item in questionList)

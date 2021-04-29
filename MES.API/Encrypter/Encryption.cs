@@ -5,13 +5,12 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.DataProtection;
 
 namespace MES.API.Encrypter
 {
     public class Encryption
     {
-        private const string Key = "qHJhfH@jUıolMunP373U3ubrf3F3U½+^+&7/%Fuf4ıjfnFN4V_r3_343Rr3r4ttT443T2Tg1312324/(&43TgRGGRT3T43T4G4h43iN3RzxcDVdvDEFgegGrhRT?=5!4#$½£$2NTHTNhrew324er4RWFrERfe";
+        private const string Key = "91A5B3F3D4E16F65A4D3F37774CD1";
         public string Encrypt(string input)
         {
             if (input == null)
