@@ -53,7 +53,7 @@ namespace MES.Web.Controllers
             if (checkStatus)
                 result = serviceBusiness.ServicePost<bool>(new USERTYPE_MENU() { UserTypeId = usertypeId, MenuId = menuId, Checked = true }, "UserTypeMenu", "InsertUserTypeMenu");
             else
-                result = serviceBusiness.ServicePost<bool>(new USERTYPE_MENU(){ UserTypeId = usertypeId, MenuId = menuId, Checked =         true }, "UserTypeMenu", "InsertUserTypeMenu");
+                result = serviceBusiness.ServicePost<bool>(new USERTYPE_MENU(){ UserTypeId = usertypeId, MenuId = menuId, Checked = true }, "UserTypeMenu", "DeleteUserTypeMenu");
             return Ok();
         }
 

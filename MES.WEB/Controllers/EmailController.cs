@@ -86,7 +86,7 @@ namespace MES.Web.Controllers
             var evm = new EmailTemplateViewModel();
             var userList = serviceBusiness.ServiceGet<List<USER>>("User", "UserGetList");
             var userGroupList = serviceBusiness.ServiceGet<List<USER_GROUP>>("UserGroup", "UserGroupGetList");
-            //var parameterList = serviceBusiness.ServiceGet<List<EMAIL_TEMPLATE_PARAMETERS>>("EmailTemplate", "ParameterGetList");
+            var parameterList = serviceBusiness.ServiceGet<List<EMAIL_TEMPLATE_PARAMETERS>>("EmailTemplate", "ParameterGetList");
 
             var mainProcessList = serviceBusiness.ServiceGet<List<MAIN_PROCESS>>("MainProcess", "MainProcessGetList");
 
@@ -143,16 +143,16 @@ namespace MES.Web.Controllers
                 }
 
 
-                var parameterList = serviceBusiness.ServicePost<List<PARAMETER>>(evm.EmailTemplate.MAIN_PROCESS_ID, "Parameter", "GetParameterTypeByMainProcessId");
+                //var parameterList = serviceBusiness.ServicePost<List<PARAMETER>>(evm.EmailTemplate.MAIN_PROCESS_ID, "Parameter", "GetParameterTypeByMainProcessId"); 
 
-                foreach (var item in parameterList)
-                {
-                    evm.ParameterList.Add(new SelectListItem()
-                    {
-                        Text = item.MAIN_DATA_NAME,
-                        Value = item.ID.ToString()
-                    });
-                }
+                //foreach (var item in parameterList)
+                //{
+                //    evm.ParameterList.Add(new SelectListItem()
+                //    {
+                //        Text = item.MAIN_DATA_NAME,
+                //        Value = item.ID.ToString()
+                //    });
+                //}
 
             }
 
@@ -174,14 +174,14 @@ namespace MES.Web.Controllers
                 });
             }
 
-            //foreach (var item in parameterList)
-            //{
-            //    evm.ParameterList.Add(new SelectListItem()
-            //    {
-            //        Text = item.PARAMETER,
-            //        Value = item.ID.ToString()
-            //    });
-            //}
+            foreach (var item in parameterList)
+            {
+                evm.ParameterList.Add(new SelectListItem()
+                {
+                    Text = item.PARAMETER,
+                    Value = item.ID.ToString()
+                });
+            }
 
             foreach (var item in mainProcessList)
             {
@@ -356,9 +356,7 @@ namespace MES.Web.Controllers
         public JsonResult DeleteParameter(int deleteId)
         {
             bool success = false;
-            PARAMETER parameter = serviceBusiness.ServicePost<PARAMETER>(deleteId,"Parameter", "GetParameter");
-            parameter.IS_ACTIVE = false;
-            success = serviceBusiness.ServicePost<bool>(parameter, "Parameter", "UpdateParameter");
+            success = serviceBusiness.ServicePost<bool>(deleteId, "Parameter", "DeleteParameter");
             return Json(new { success = success });
         }
 
